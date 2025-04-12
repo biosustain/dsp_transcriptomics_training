@@ -1,0 +1,35 @@
+# Build website and save it on gh-pages branch
+name: build-and-save-website
+
+# Only run this when the master branch is ch
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# This job installs dependencies, builds the website and pushes it to `gh-pages`
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Build the site
+        run: |
+          sphinx-build -nW --keep-going -b html .  _build
+
+      # If we've pushed to main, push the book's HTML to github-pages
+      - if: ${{ github.ref == 'refs/heads/main' }}
+        name: Save to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_build
+          # cname: website.com
