@@ -1,6 +1,16 @@
-# Static website Template
+# Transcriptomics course
 
-This is a template for a static website using Sphinx and GitHub Pages.
+Are you ready to dive into the world of transcriptomics? Next-generation sequencing (NGS) technologies have revolutionized RNA sequencing (RNAseq), enabling comprehensive global transcriptome analysis. Such RNAseq experiments generate vast amounts of data that require specialized bioinformatic methods and workflows for processing and performing downstream statistical analysis.
+
+## Objectives
+- Theory on Illumina short-read sequencing technology for transcriptome analysis
+- Theory and practical sessions for
+  - RNAseq data processing using nf-core/rnaseq pipeline
+  - Statistical data analysis and visualization of RNAseq results analysis
+  - Enrichment analysis - Gain biological insights from transcriptomic data
+  - Effective results reporting using the in-house developed software vuegen (https://github.com/Multiomics-Analytics-Group/vuegen) 
+
+The course is designed for people with no or little knowledge and practical experience in transcriptomic analysis using RNA sequencing (RNAseq).
 
 ```{toctree}
 :maxdepth: 2
