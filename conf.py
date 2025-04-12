@@ -6,9 +6,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "Data Science Platform notes template"
+project = "Transcriptomics course"
 copyright = "2024, DTU Biosustain, Informatics Platform, DSP"
-author = "Henry Webel"
+author = "Albert Palleja"
 
 
 # -- General configuration ---------------------------------------------------

@@ -8,7 +8,7 @@ Are you ready to dive into the world of transcriptomics? Next-generation sequenc
   - RNAseq data processing using nf-core/rnaseq pipeline
   - Statistical data analysis and visualization of RNAseq results analysis
   - Enrichment analysis - Gain biological insights from transcriptomic data
-  - Effective results reporting using the in-house developed software vuegen (https://github.com/Multiomics-Analytics-Group/vuegen) 
+  - Effective results reporting using the in-house developed software [vuegen](https://github.com/Multiomics-Analytics-Group/vuegen) 
 
 The course is designed for people with no or little knowledge and practical experience in transcriptomic analysis using RNA sequencing (RNAseq).
 
@@ -22,8 +22,18 @@ about
 ```{toctree}
 :maxdepth: 2
 :hidden:
-:caption: A topic
+:caption: Course information
 
-folder_topic/article_topic
+course_information/Instructions
+course_information/Location
+course_information/Timing
+```
+
+```{toctree}
+:maxdepth: 2
+:hidden:
+:caption: Course contents
+
+course_contents/Contents
 ```
 
