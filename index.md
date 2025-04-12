@@ -12,6 +12,7 @@ Are you ready to dive into the world of transcriptomics? Next-generation sequenc
 
 The course is designed for people with no or little knowledge and practical experience in transcriptomic analysis using RNA sequencing (RNAseq).
 
+
 ```{toctree}
 :maxdepth: 2
 :hidden:
