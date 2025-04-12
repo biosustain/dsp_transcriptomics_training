@@ -1,0 +1,40 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+    "name": "Ubuntu",
+    // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+    "image": "mcr.microsoft.com/devcontainers/base:noble",
+    "features": {
+      "ghcr.io/devcontainers/features/docker-in-docker:2": {
+        "moby": true,
+        "azureDnsAutoDetection": true,
+        "installDockerBuildx": true,
+        "installDockerComposeSwitch": true,
+        "version": "latest",
+        "dockerDashComposeVersion": "v2"
+      },
+      "ghcr.io/devcontainers/features/python:1": {
+        "installTools": true,
+        "version": "os-provided"
+      },
+      "ghcr.io/rocker-org/devcontainer-features/rstudio-server:0": {
+      "singleUser": true,
+      "version": "stable"
+      },
+      "ghcr.io/robsyme/features/nextflow:1": {}
+    },
+    
+    "postAttachCommand": {
+      "rstudio-start": "rserver"
+    },
+    
+    "forwardPorts": [8787],
+    
+    "portsAttributes": {
+      "8787": {
+        "label": "RStudio IDE"
+      }
+    }
+
+}
+     
