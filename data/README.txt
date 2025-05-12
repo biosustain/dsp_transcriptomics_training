@@ -40,3 +40,14 @@ https://www.ebi.ac.uk/ena/browser/view/PRJNA1116098
 #Azure storage
 TO BE FILLED IN
 
+
+##Genome reference files
+
+#desciptions and details on genome files
+https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/dna/README
+
+#gtf annottion file
+https://ftp.ensembl.org/pub/release-113/gtf/mus_musculus/Mus_musculus.GRCm39.113.gtf.gz
+
+#genome references file
+https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/dna/
