@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Timing &#8212; Transcriptomics course  documentation</title>
+    <title>Analysis reporting with Vuegen &#8212; Transcriptomics course  documentation</title>
   
   
   
@@ -41,13 +41,12 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'course_information/Timing';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'course_contents/VueGen_report';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contents" href="../course_contents/Contents.html" />
-    <link rel="prev" title="Location" href="Location.html" />
+    <link rel="prev" title="Contents" href="Contents.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -170,15 +169,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course information</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="Instructions.html">Instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Location.html">Location</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Timing</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../course_information/Instructions.html">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../course_information/Location.html">Location</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../course_information/Timing.html">Timing</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course contents</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../course_contents/Contents.html">Contents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../course_contents/VueGen_report.html">Analysis reporting with Vuegen</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Contents.html">Contents</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Analysis reporting with Vuegen</a></li>
 </ul>
 
     </div>
@@ -248,7 +247,7 @@
       
       
       
-      <li><a href="../_sources/course_information/Timing.md" target="_blank"
+      <li><a href="../_sources/course_contents/VueGen_report.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -319,7 +318,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -330,11 +331,23 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Timing</h1>
+    <h1>Analysis reporting with Vuegen</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-the-required-packages">Install the required packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vuegen-report">VueGen Report</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vuegen-gui-app">VueGen GUI (app)</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -344,20 +357,44 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="timing">
-<h1>Timing<a class="headerlink" href="#timing" title="Link to this heading">#</a></h1>
-<p>This is the agenda for the course on Tuesday 27th May 2025</p>
-<p>Course duration: 8:30 - 16:30</p>
-<blockquote>
-<div><p>8:30 - 9:00 Course presentation -  Coffee
-9:00 - 10:30 Transcriptomics Introduction (theoretical part)
-10:45 - 12:00 Data processing with <a class="reference external" href="https://nf-co.re/rnaseq/3.18.0/" rel="noreferrer" target="_blank">nf-core/rnaseq</a>
-12:00 - 12:30 Lunch
-12:30 - 13:30 Data analysis part I
-13:45 - 14:30 Data analysis part II
-14:45 - 15:45 Data analysis part III
-15:45 - 16:30 Scientific reporting with <a class="reference external" href="https://github.com/Multiomics-Analytics-Group/vuegen" rel="noreferrer" target="_blank">vuegen</a></p>
-</div></blockquote>
+  <section class="tex2jax_ignore mathjax_ignore" id="analysis-reporting-with-vuegen">
+<h1>Analysis reporting with Vuegen<a class="headerlink" href="#analysis-reporting-with-vuegen" title="Link to this heading">#</a></h1>
+<p>In the GitHub workspace, we will use the base conda environment which you can activate
+with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>base
+</pre></div>
+</div>
+<section id="install-the-required-packages">
+<h2>Install the required packages<a class="headerlink" href="#install-the-required-packages" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://vuegen.readthedocs.io" rel="noreferrer" target="_blank">vuegen</a> for the report generation (developed by Henry Webel from DSP and Sebastian Ayala and Alberto Santos from MoNA at DTU Biosustain)</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>vuegen
+</pre></div>
+</div>
+</section>
+<section id="vuegen-report">
+<h2>VueGen Report<a class="headerlink" href="#vuegen-report" title="Link to this heading">#</a></h2>
+<p>We saved some of the analyses (plots and tables) from the R markdown to <code class="docutils literal notranslate"><span class="pre">results/report</span></code> folder.</p>
+<p>You can use the following command to generate a VueGen report from them:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vuegen<span class="w"> </span>-dir<span class="w"> </span>results/report
+</pre></div>
+</div>
+<p>This will create a streamlit app in the <code class="docutils literal notranslate"><span class="pre">streamlit_report</span></code> folder. Check the options
+availble for the command line tool vuegen with the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vuegen</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>Create and start the streamlit app with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vuegen<span class="w"> </span>-dir<span class="w"> </span>results/report<span class="w"> </span>-st_autorun
+</pre></div>
+</div>
+<section id="vuegen-gui-app">
+<h3>VueGen GUI (app)<a class="headerlink" href="#vuegen-gui-app" title="Link to this heading">#</a></h3>
+<p>If you are interested to know more about VueGen and used for your own research projects check out some tutorials in youtube
+<a class="reference external" href="https://www.youtube.com/playlist?list=PLTbkQyef1c2S3qGzzva_JLlgdwsXjHCHH" rel="noreferrer" target="_blank">tutorials on youtube</a>, and also our <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2025.03.05.641152v1.full.pdf" rel="noreferrer" target="_blank">paper</a></p>
+</section>
+</section>
 </section>
 
 
@@ -372,22 +409,13 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="Location.html"
+       href="Contents.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Location</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../course_contents/Contents.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Contents</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -395,6 +423,25 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-the-required-packages">Install the required packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vuegen-report">VueGen Report</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vuegen-gui-app">VueGen GUI (app)</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

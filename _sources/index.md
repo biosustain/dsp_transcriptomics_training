@@ -36,5 +36,6 @@ course_information/Timing
 :caption: Course contents
 
 course_contents/Contents
+course_contents/VueGen_report
 ```
 
