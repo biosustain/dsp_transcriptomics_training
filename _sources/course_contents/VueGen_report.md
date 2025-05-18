@@ -1,5 +1,9 @@
 # Analysis reporting with Vuegen
 
+VueGen is a Python package that automates the creation of scientific reports. 
+
+With VueGen, users can produce reports by simply specifying a directory containing output files, such as plots, tables, networks, Markdown text, HTML components, and API calls, along with the report format. Supported formats include documents (PDF, HTML, DOCX, ODT), presentations (PPTX, Reveal.js), Jupyter notebooks, and Streamlit web applications.
+
 In the GitHub workspace, we will use the base conda environment which you can activate
 with the following command:
 
@@ -38,7 +42,7 @@ Create and start the streamlit app with the following command:
 vuegen -dir results/report -st_autorun
 ```
 
-### VueGen GUI (app)
+## Further information about VueGen
 
-If you are interested to know more about VueGen and used for your own research projects check out some tutorials in youtube
-[tutorials on youtube](https://www.youtube.com/playlist?list=PLTbkQyef1c2S3qGzzva_JLlgdwsXjHCHH), and also our [paper](https://www.biorxiv.org/content/10.1101/2025.03.05.641152v1.full.pdf)
+If you are interested to know more about VueGen and use it for your own research projects, check out some tutorials in youtube
+[tutorials on youtube](https://www.youtube.com/playlist?list=PLTbkQyef1c2S3qGzzva_JLlgdwsXjHCHH), and also our biorxiv [paper](https://www.biorxiv.org/content/10.1101/2025.03.05.641152v1.full.pdf)
