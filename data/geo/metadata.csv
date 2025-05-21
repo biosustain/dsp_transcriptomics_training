@@ -1,6 +1,5 @@
 ﻿Sample,Sample_name,Age,Condition,ID,Comparison,Group,Replicate,sample_details
 GSM8289121,Y_control_1,young,control,Y_control_1,Young_control,control_young,r1,"Pancreas, not treated, 7w of age, mouse 1"
-GSM8289122,Y_control_2,young,control,Y_control_2,Young_control,control_young,r2,"Pancreas, not treated, 7w of age, mouse 2"
 GSM8289123,Y_control_3,young,control,Y_control_3,Young_control,control_young,r3,"Pancreas, not treated, 7w of age, mouse 3"
 GSM8289126,Y_5H_1,young,cae5H,Y_5H_1,Young_5H,cae5H_young,r1,"Pancreas, not treated, 18 months of age, mouse 2"
 GSM8289127,Y_5H_2,young,cae5H,Y_5H_2,Young_5H,cae5H_young,r2,"Pancreas, not treated, 18 months of age, mouse 3"
