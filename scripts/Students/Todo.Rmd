@@ -81,7 +81,9 @@ bulk RNASeq
 * Data location \
 [data](https://github.com/biosustain/dsp_transcriptomics_training/tree/main/data)
 
-> /data
+```{r, eval=FALSE, echo=TRUE, include=TRUE}
+/data
+```
 
 * Reference data used 
 Mus musculus GRC39
@@ -98,19 +100,108 @@ This tutorial is ...: **methods** and **results**. In the results section, it is
 
 ## Setup
 
-Install all libraries and load it
+Install all libraries 
 
+<div class="tip">
+  <strong>💡 Tip:</strong> Execute this step only one time..
+</div>
+
+```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+# ───────────────────────────────────────────────
+# 📦 Install Required Packages
+# ───────────────────────────────────────────────
+
+# CRAN packages
+cran_packages <- c(
+  "tidyverse", "readr", "ggpubr", "RColorBrewer",
+  "pheatmap", "factoextra", "knitr", "kableExtra",
+  "EnhancedVolcano", "enrichplot"
+)
+
+# Bioconductor packages
+bioc_packages <- c(
+  "DESeq2", "AnnotationDbi", "org.Mm.eg.db",
+  "msigdbr", "fgsea", "clusterProfiler", "DOSE", "europepmc"
+)
+
+# Install CRAN packages if missing
+install_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+invisible(lapply(cran_packages, install_if_missing))
+
+# Install BiocManager if not present
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
+
+# Install Bioconductor packages if missing
+install_bioc_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    BiocManager::install(pkg)
+  }
+}
+
+invisible(lapply(bioc_packages, install_bioc_if_missing))
+
+# ───────────────────────────────────────────────
+# ✅ Done! You're ready to go.
+# ───────────────────────────────────────────────
+
+```
+
+
+<div class="remember">
+  <strong>📌 Remember:</strong> Load all the libraries before starting the tutorial.
+</div>
 
 ```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 
-library(tidyverse)
-library(readr)
-library(DESeq2)
-library(ggpubr)
-library(RColorBrewer)
-library(pheatmap)
-library(factoextra)
+# ───────────────────────────────────────────────
+# 📦 Data Handling & Wrangling
+# ───────────────────────────────────────────────
+library(tidyverse)    # Collection of R packages for data science (ggplot2, dplyr, etc.)
+library(readr)        # Fast and friendly functions to read rectangular data
 
+# ───────────────────────────────────────────────
+# 🧬 Differential Expression Analysis
+# ───────────────────────────────────────────────
+library(DESeq2)       # Core package for RNA-seq differential analysis
+
+# ───────────────────────────────────────────────
+# 🎨 Plotting & Visualization
+# ───────────────────────────────────────────────
+library(ggpubr)       # Publication-ready plots built on ggplot2
+library(RColorBrewer) # Color palettes for maps and heatmaps
+library(pheatmap)     # Pretty heatmaps
+library(factoextra)   # Visualization tools for multivariate data (e.g., PCA)
+library(EnhancedVolcano) # Easy and elegant volcano plots
+library(enrichplot)   # Visualization of enrichment results
+
+# ───────────────────────────────────────────────
+# 📊 Tables & Reporting
+# ───────────────────────────────────────────────
+library(knitr)        # Dynamic report generation
+library(kableExtra)   # Beautiful tables with kable()
+
+# ───────────────────────────────────────────────
+# 🔍 Annotation & Enrichment Analysis
+# ───────────────────────────────────────────────
+library(AnnotationDbi)    # Interface to Bioconductor annotation databases
+library(org.Mm.eg.db)     # Annotation database for *Mus musculus* (mouse)
+library(msigdbr)          # MSigDB gene sets in tidy format
+library(fgsea)            # Fast implementation of Gene Set Enrichment Analysis (GSEA)
+library(clusterProfiler)  # Universal enrichment tool
+library(DOSE)             # Disease Ontology enrichment analysis
+library(europepmc)        # Query Europe PMC database (for literature mining)
+
+# ───────────────────────────────────────────────
+# ✅ Notes
+# - Remember to install missing packages via BiocManager or install.packages().
+# ───────────────────────────────────────────────
 ```
 
 
@@ -148,7 +239,7 @@ samples_info <- read.table(paste0(path, "/metadata.csv"),
 
 
 
-```{r sample_Load, echo=F, include=TRUE}
+```{r sample_Load, echo=TRUE, include=TRUE, eval=FALSE}
 DT::datatable(data = samples_info, rownames = FALSE, 
               extensions = c('Buttons', 'Scroller'), 
               options = list(dom = 'Bfrtip', buttons = c('copy', 'csv'),
@@ -215,6 +306,11 @@ shapiro.test(as.numeric(count_x[1,]))
 ```{r shapiro3, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 ggpubr::ggqqplot(as.numeric(count_x[1,])) 
 ```
+
+
+::: boxy
+The data is not normalized. \ 
+:::
 
 
 <div class="tip">
@@ -601,8 +697,8 @@ analyze_contrast <- function(dds, contrast, alpha = 0.05, lfcThreshold = 1) {
   bar_res <- barplot(assay(dds)[ix,], las = 1.5, main = rownames(dds)[ix])
   resSig <- subset(res, padj < alpha)
   print(summary(resSig, alpha = alpha, na.last = NA))
-  merged_df <- merge(as.data.frame(res), df_count_mat_wo3, by = 0, all.x = TRUE, row.names = TRUE)
-  df_res_for_plot <- merge(as.data.frame(results(dds, contrast = contrast, alpha = alpha, lfcThreshold = lfcThreshold)), df_count_mat_wo3, by = 0, all.x = TRUE, row.names = TRUE)
+  merged_df <- merge(as.data.frame(res), filter_count, by = 0, all.x = TRUE, row.names = TRUE)
+  df_res_for_plot <- merge(as.data.frame(results(dds, contrast = contrast, alpha = alpha, lfcThreshold = lfcThreshold)), filter_count, by = 0, all.x = TRUE, row.names = TRUE)
   return(list(
     res = res, 
     bar_res = bar_res, 
@@ -634,85 +730,80 @@ Here, we ask five different questions:
 </div>
 
 
+## The effect of treatment in Young (the main effect)
+
+
+```{r , echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+dds <- DESeq(dds)
+```
+
+
 ```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
-library(knitr)
-library(kableExtra)
 
-#################################################################
-######The effect of treatment in Young (the main effect).########
-#################################################################
-#dds2 <- dds3
-filtered_count_dds3 <- counts(dds3)
-#write.table(filtered_count_dds3,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/00_filtered_count_dds3.tsv',quote=FALSE,sep="\t")
-#dds$Group <- relevel(dds$Group, ref = "control_young")
-
-#contrast=c("Condition","control","cae5H"))
-
-
+filtered_count_dds3 <- counts(dds)
 contrast_1 <- c("Condition", "control", "cae5H")
-result_1 <- analyze_contrast(dds2, contrast_1)
+result_1 <- analyze_contrast(dds, contrast_1)
 merged_df_1 <- result_1$merged_df
 df_res_for_plot_1 <- result_1$df_res_for_plot
 resSig_1 <- result_1$resSig
-
-#write.table(resSig_1,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/01_R1_resSig.tsv',quote=FALSE,sep="\t")
-#write.table(df_res_for_plot_1,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/df_res_for_plot_1.tsv',quote=FALSE,sep="\t")
-
 ##########################END####################################
 
-#################################################################
-########The effect of treatment in Aged##########################
+
+```
+
+The effect of treatment in Aged##########################
 #This is, by definition, the main effect plus the interaction term (the extra condition effect in Aged Aged compared to Age Control).
-#################################################################
+
+```{r , echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 contrast_2 <- list(c("Condition_cae5H_vs_control", "Ageaged.Conditioncae5H"))
-result_2 <- analyze_contrast(dds2, contrast_2)
+result_2 <- analyze_contrast(dds, contrast_2)
 merged_df_2 <- result_2$merged_df
 df_res_for_plot_2 <- result_2$df_res_for_plot
 resSig_2 <- result_2$resSig
-#write.table(resSig_2,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/02_R2_resSig.tsv',quote=FALSE,sep="\t")
 
-#write.table(res_1_for_plot,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/res_1_for_plot.tsv',quote=FALSE,sep="\t") 
+```
 
 
-##########################END####################################
-
-#################################################################
-#############Aged and Young-type###################
+Aged and Young-type###################
 #What is the difference between Aged and Young-type without treatment (Control)?
 #As Ctrl is the reference level, we can just retrieve the “Age_aged_vs_young”.
-#################################################################
+
+
+```{r , echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
 contrast_3 <- c("Age", "young", "aged")
-result_3 <- analyze_contrast(dds2, contrast_3)
+result_3 <- analyze_contrast(dds, contrast_3)
 merged_df_3 <- result_3$merged_df
 df_res_for_plot_3 <- result_3$df_res_for_plot
 resSig_3 <- result_3$resSig
-#write.table(resSig_3,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/03_R3_resSig.tsv',quote=FALSE,sep="\t")
-##########################END####################################
 
-##########################START##############################
+```
+
 #With treatment, what is the difference between Aged and Young?
-#################################################################
+
+```{r , echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 contrast_4 <- list(c("Age_aged_vs_young", "Ageaged.Conditioncae5H"))
-result_4 <- analyze_contrast(dds2, contrast_4)
+result_4 <- analyze_contrast(dds, contrast_4)
 merged_df_4 <- result_4$merged_df
 df_res_for_plot_4 <- result_4$df_res_for_plot
 resSig_4 <- result_4$resSig
-#write.table(resSig_4,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/04_R4_resSig.tsv',quote=FALSE,sep="\t")
-##########################END####################################
 
-###########################START##############################
+```
+
 #The different response in Ages (interaction term)
 #Is the effect of treatment different across Ages? This is the interaction term.
-#################################################################
+
+
+```{r , echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
 contrast_5 <- list(c("Ageaged.Conditioncae5H"))
-result_5 <- analyze_contrast(dds2, contrast_5, alpha = 0.01, lfcThreshold = 1)
+result_5 <- analyze_contrast(dds, contrast_5, alpha = 0.01, lfcThreshold = 1)
 merged_df_5 <- result_5$merged_df
 df_res_for_plot_5 <- result_5$df_res_for_plot
 resSig_5 <- result_5$resSig
-#write.table(resSig_5,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/05_R5_resSig.tsv',quote=FALSE,sep="\t")
-##########################END####################################
-
 ```
+
 
 
 #### Volcano Plot
@@ -722,43 +813,7 @@ resSig_5 <- result_5$resSig
 **x = log2FoldChange 2 and y = padj 0.001**
 
 ```{r Volcano, eval=FALSE, include=TRUE, echo=TRUE, warning=FALSE}
-####################################################################
-######## RES 1#############
-####################################################################
-library(EnhancedVolcano)
 
-head(merged_df_1[order(merged_df_1$padj),], 5)
-volc_res1.1 <-  EnhancedVolcano(merged_df_1,
-    lab = merged_df_1$gene_name,
-    x = 'log2FoldChange',
-    y = 'padj',
-    selectLab = c("Dstn",  "Rcan1", "Krt18", "Csrp1", "Actb"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    pCutoff = 0.001,
-    title = 'Effect of treatment in Young',
-    subtitle = 'Effect of different conditions: control vs cae5f',
-    FCcutoff = 2,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray') 
-
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/05_resultsSigTab_Volc_all_R1.png", volc_res1.1, width = 12.5, height = 14.6)
-
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/05_resultsSigTab_Volc_all_R1_ES.png", volc_res1, width = 12.5, height = 14.6)
-
-####Second_Plot######
 head(df_res_for_plot_1[order(df_res_for_plot_1$padj),], 5)
 volc_res1 <-  EnhancedVolcano(df_res_for_plot_1,
     lab = df_res_for_plot_1$Row.names,
@@ -794,291 +849,8 @@ file1 <- as.data.frame(volc_res1$data)
 file2 <- as.data.frame(volc_res1$data$Sig)
 sig_column <- file2[, 1]
 file1$Sig <- sig_column
-#write.table(file1,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/01_R1.tsv',quote=FALSE,sep="\t")
+#write.table(file1,file='/Results/DFs/01_R1.tsv',quote=FALSE,sep="\t")
 ############################END#################################
-
-##########################START##############################
-######## RES 2 ##########
-################################################################
-head(df_res_for_plot_2[order(df_res_for_plot_2$padj),], 5) 
-volc_res2 <-  EnhancedVolcano(df_res_for_plot_2,
-    lab = df_res_for_plot_2$Row.names,
-    x = 'log2FoldChange',
-    y = 'padj',
-   selectLab = c("ENSMUSG00000049382",  "ENSMUSG00000062825", "ENSMUSG00000029580", "ENSMUSG00000015932", "ENSMUSG00000022951"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    #pCutoff = 10e-14,
-    pCutoff = 0.001,
-    title = 'Effect of treatment in Aged',
-    subtitle = 'Effect of different conditions: control vs cae5f',
-    FCcutoff = 4,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/06_resultsSigTab_Volc_all_ENS_Res2.png", volc_res2, width = 12.5, height = 14.6)
-
-
-####Second_Plot######
-
-head(merged_df_2[order(merged_df_2$padj),], 5) 
-volc_res2.1 <-  EnhancedVolcano(merged_df_2,
-    lab = merged_df_2$gene_name,
-    x = 'log2FoldChange',
-    y = 'padj',
-   selectLab = c("Klf6",  "Cdh1", "Dstn", "Rcan1", "Krt18"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    pCutoff = 0.001,
-    title = 'Effect of treatment in Aged',
-    subtitle = 'Effect of different conditions: control vs cae5f',
-    FCcutoff = 4,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-
-
-###Exporting File
-file2.1 <- as.data.frame(volc_res2.1$data)
-file2 <- as.data.frame(volc_res2.1$data$Sig)
-sig_column <- file2[, 1]
-file2.1$Sig <- sig_column
-#write.table(file1,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/02_R2.tsv',quote=FALSE,sep="\t")
-
-############################END#################################
-
-############################START##############################
-head(df_res_for_plot_3[order(df_res_for_plot_3$padj),], 5) 
-volc_res3 <-  EnhancedVolcano(df_res_for_plot_3,
-    lab = df_res_for_plot_3$Row.names,
-    x = 'log2FoldChange',
-    y = 'padj',
-    ylim = c(0, -log10(10e-21)),
-   selectLab = c("ENSMUSG00000100001",  "ENSMUSG00000020173", "ENSMUSG00000029260", "ENSMUSG00000033685", "ENSMUSG00000068341"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    pCutoff = 0.001,
-    title = 'Difference between Aged and Young without treatment',
-    subtitle = 'Controls across Ages',
-    FCcutoff = 1,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/06_resultsSigTab_Volc_all_Res3Es.png", volc_res3, width = 12.5, height = 14.6)
-
-####Second_Plot######
-
-head(merged_df_3[order(merged_df_3$padj),], 5) 
-volc_res3.1 <-  EnhancedVolcano(merged_df_3,
-    lab = merged_df_3$gene_name,
-    x = 'log2FoldChange',
-    y = 'padj',
-    ylim = c(0, -log10(10e-21)),
-    selectLab = c("1810007D17Rik",  "Cobl", "Ugt2b34", "Ucp2", "Reg3d"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    #pCutoff = 10e-14,
-    pCutoff = 0.001,
-    title = 'Difference between Aged and Young without treatment',
-    subtitle = 'Controls across Ages',
-    FCcutoff = 1,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/06_resultsSigTab_Volc_all_Res3.png", volc_res3.1, width = 12.5, height = 14.6)
-
-# Exporting File
-file3 <- as.data.frame(volc_res3.1$data)
-file2 <- as.data.frame(volc_res3.1$data$Sig)
-sig_column <- file2[, 1]
-file3$Sig <- sig_column
-#write.table(file1,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/03_R3.tsv',quote=FALSE,sep="\t")
-############################END#################################
-
-#########################START################################
-head(df_res_for_plot_4[order(df_res_for_plot_4$padj),], 5) 
-volc_res4 <-  EnhancedVolcano(df_res_for_plot_4,
-    lab = df_res_for_plot_4$Row.names,
-    x = 'log2FoldChange',
-    y = 'padj',
-    ylim = c(0, -log10(10e-51)),
-   selectLab = c("ENSMUSG00000100001",  "ENSMUSG00000020173", "ENSMUSG00000039899", "ENSMUSG00000035775", "ENSMUSG00000034394"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    pCutoff = 0.001,
-    title = 'Difference between Aged and Young',
-    subtitle = 'Effect of different conditions between Ages',
-    FCcutoff = 1,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-
-
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/07_resultsSigTab_Volc_all_Res4Es.png", volc_res4, width = 12.5, height = 14.6)
-
-####Second_Plot######
-head(merged_df_4[order(merged_df_4$padj),], 5) 
-volc_res4.1 <-  EnhancedVolcano(merged_df_4,
-    lab = merged_df_4$gene_name,
-    x = 'log2FoldChange',
-    y = 'padj',
-    ylim = c(0, -log10(10e-51)),
-    selectLab = c("1810007D17Rik",  "Cobl", "Fgl2", "Krt20", "Lif"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    pCutoff = 0.001,
-    title = 'Difference between Aged and Young',
-    subtitle = 'Effect of different conditions between Ages',
-    FCcutoff = 1,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/07_resultsSigTab_Volc_all_Res4.png", volc_res4.1, width = 12.5, height = 14.6)
-
-# Exporting File
-file4 <- as.data.frame(volc_res4.1$data)
-file2 <- as.data.frame(volc_res4.1$data$Sig)
-sig_column <- file2[, 1]
-file4$Sig <- sig_column
-#write.table(file1,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/04_R4.tsv',quote=FALSE,sep="\t")
-############################END#################################
-
-######################START###################################
-head(df_res_for_plot_5[order(df_res_for_plot_5$padj),], 5) 
-volc_res5 <-  EnhancedVolcano(df_res_for_plot_5,
-    lab = df_res_for_plot_5$Row.names,
-    x = 'log2FoldChange',
-    y = 'padj',
-    ylim = c(0, -log10(10e-21)),
-   selectLab = c("ENSMUSG00000015932",  "ENSMUSG00000022565", "ENSMUSG00000032115", "ENSMUSG00000031824", "ENSMUSG00000040606"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    pCutoff = 0.01,
-    title = 'Different response in Ages',
-    subtitle = 'Is the effect of treatment(Condition) different across ages?',
-    FCcutoff = 1,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/08_resultsSigTab_Volc_all_Res5Es.png", volc_res5, width = 12.5, height = 14.6)
-
-####Second_Plot######
-head(merged_df_5[order(merged_df_5$padj),], 5) 
-volc_res5.1 <-  EnhancedVolcano(merged_df_5,
-    lab = merged_df_5$gene_name,
-    x = 'log2FoldChange',
-    y = 'padj',
-    ylim = c(0, -log10(10e-21)),
-   selectLab = c("Dstn",  "Plec", "Hyou1", "6430548M08Rik", "Kazn"),
-    xlab = bquote(~Log[1]~ 'fold change'),
-    pCutoff = 0.01,
-    title = 'Different response in Ages',
-    subtitle = 'Is the effect of treatment(Condition) different across ages?',
-    FCcutoff = 1,
-    pointSize = 3.0,
-    labSize = 4.0,
-    labCol = 'black',
-    labFace = 'bold',
-    boxedLabels = TRUE,
-    colAlpha = 4/5,
-    legendPosition = 'right',
-    legendLabSize = 14,
-    legendIconSize = 4.0,
-    drawConnectors = TRUE,
-    widthConnectors = 1.0,
-    gridlines.major = FALSE,
-    gridlines.minor = FALSE,border = 'partial',
-    borderWidth = 0.5,
-    colConnectors = 'gray')
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/08_resultsSigTab_Volc_all_Res5.png", volc_res5.1, width = 12.5, height = 14.6)
-
-# Exporting File
-file5 <- as.data.frame(volc_res5.1$data)
-file2 <- as.data.frame(volc_res5.1$data$Sig)
-sig_column <- file2[, 1]
-file5$Sig <- sig_column
-#write.table(file1,file='/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/05_R5.tsv',quote=FALSE,sep="\t")
 
 ```
 
@@ -1095,13 +867,11 @@ Euclidean sample distances after vst transformation \
 
 
 ```{r HeatMap, eval=FALSE, include=TRUE, echo=TRUE, warning=FALSE}
-vst_res_1 = vst(dds2)
-library(pheatmap)
-
+vst_res_1 = vst(dds)
 #vst_res_1 = vst(dds3)
 #row.names(vst_res_1)=dds3$genes_name
 ######
-df9 <- as.data.frame(colData(dds3)[,c("Age","Condition")])
+df9 <- as.data.frame(colData(dds)[,c("Age","Condition")])
 df9$Age = factor(df9$Age, levels = c("young", "aged"))
 metaR_bat <- c("#C0C0C0","#BC8F8F") 
 names(metaR_bat) <- levels(df9$Age)
@@ -1195,14 +965,8 @@ fgsea is an R-package for fast preranked gene set enrichment analysis (GSEA). Th
 GSEA assumes you use as input all genes in your data set, that are ranked on e.g. signed log p-value, and the algorithm then identifies which gene sets are enriched at the top (and bottom) of your ranked list. You may interpret this as gene sets being activated and suppressed, respectively, by your treatment compared to the reference.
 
 ```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
-library(AnnotationDbi)
-library(org.Mm.eg.db)
 
-
-#df_res_for_plot_1, df_res_for_plot_1, df_res_for_plot_1, df_res_for_plot_1, df_res_for_plot_5
-
-
-res2 <- df_res_for_plot_1 #df_res_for_plot_2 
+res2 <- df_res_for_plot_1 
 res2$Row.names <- res2$Row.names
 dge_df <- res2
 
@@ -1358,12 +1122,12 @@ gsea_result_df <- data.frame(gsea_results@result)
 #readr::write_tsv(
 #  gsea_result_df,
 #    "/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/06_Res5_SRP123625_gsea_results.tsv"
-)
+#)
 
 ```
 
 
-```{r, echo = F, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+```{r, echo=TRUE, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 #### Visualizing results
 
 gsea_result_df %>%
@@ -1402,13 +1166,13 @@ most_positive_nes_plotdf3
 
 
 
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/19_Res5_most_positive_nes_plot.png", most_positive_nes_plotdf3, width = 6.74, height = 5.47)
+#ggsave("/Results/19_Res5_most_positive_nes_plot.png", most_positive_nes_plotdf3, width = 6.74, height = 5.47)
 
 ```
 
 
 
-```{r, echo = F, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+```{r, echo=TRUE, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 #### Most Negative
 gsea_result_df %>%
   # Return the 3 rows with the smallest (most negative) NES values
@@ -1442,7 +1206,7 @@ most_negative_nes_plot3 <- enrichplot::gseaplot(
   color.line = "#0d76ff"
 )
 most_negative_nes_plot3
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/20_Res5_most_negative_nes_plot.png", most_negative_nes_plot3, width = 6.74, height = 5.47)
+#/Results/20_Res5_most_negative_nes_plot.png", most_negative_nes_plot3, width = 6.74, height = 5.47)
 
 ```
 
@@ -1450,7 +1214,6 @@ most_negative_nes_plot3
 #### DotPlot Showing 10 Categories
 
 ```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
-require(DOSE)
 Res2_Dotplot <- dotplot(gsea_results, showCategory=10, split=".sign") + 
 theme(
   axis.text=element_text(size=12), 
@@ -1466,7 +1229,7 @@ theme(
   panel.ontop = FALSE)+
   facet_grid(.~.sign)
 
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/21_Res5_Dotplot.png", Res2_Dotplot, width = 9.26, height = 7.77)
+#ggsave("/Results/21_Res5_Dotplot.png", Res2_Dotplot, width = 9.26, height = 7.77)
 
 ```
 
@@ -1484,7 +1247,7 @@ p2 <- cnetplot(gsea_results, categorySize="pvalue", foldChange=lfc_vector)
 p3 <- cnetplot(gsea_results, foldChange=lfc_vector, circular = TRUE, colorEdge = TRUE) 
 #Res2_cneplot <- cowplot::plot_grid(p1, p2, p3, ncol=3, labels=LETTERS[1:3], rel_widths=c(.8, .8, 1.2))
 
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/22_Res5_cneplot.png", Res2_cneplot, width = 25.26, height = 7.77)
+#ggsave("/Results/22_Res5_cneplot.png", Res2_cneplot, width = 25.26, height = 7.77)
 
 ```
 
@@ -1501,7 +1264,7 @@ p4 <- cnetplot(gsea_results, node_label="none",
         color_gene='steelblue') 
 #Res2_cneplot2 <- cowplot::plot_grid(p1, p2, p3, p4, ncol=2, labels=LETTERS[1:4])
 
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/23_Res5_cneplot2.png", Res2_cneplot2, width = 18.26, height = 14.77)
+#ggsave("/Results/23_Res5_cneplot2.png", Res2_cneplot2, width = 18.26, height = 14.77)
 #Res2_cneplot2
 
 ```
@@ -1528,7 +1291,7 @@ Res2_ridgeplot <- ridgeplot(gsea_results) +
   panel.ontop = FALSE) +
 labs(x = "enrichment distribution")
 
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/24_Res5_ridgeplot.png", Res2_ridgeplot, width = 9.26, height = 7.77)
+#ggsave("/Results/24_Res5_ridgeplot.png", Res2_ridgeplot, width = 9.26, height = 7.77)
 
 
 ```
@@ -1541,14 +1304,13 @@ Plots the number/proportion of publications trend based on the query result from
 
 ```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 # Use the `Gene Set` param for the index in the title, and as the value for geneSetId
-library("enrichplot")
-library("europepmc")
+
 
 Res2_gseaplot <- gseaplot(gsea_results, by = "all", title = gsea_results$Description[1], geneSetID = 3)
 terms <- gsea_results$Description[1:3]
 terms_Res2 <- pmcplot(terms, 2013:2022, proportion=FALSE)
 
-#ggsave("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/25_terms_Res5.png", terms_Res2, width = 8.04, height = 7.77)
+#ggsave("/Results/25_terms_Res5.png", terms_Res2, width = 8.04, height = 7.77)
 
 ```
 
@@ -1557,690 +1319,6 @@ terms_Res2 <- pmcplot(terms, 2013:2022, proportion=FALSE)
 
 **Summary of the results section**
 
-
-## Shapiro Test
-
-The Shapiro–Wilk test is a test of normality. It tests the null hypothesis that a sample x1, ..., xn came from a normally distributed population. \ 
-
-The null-hypothesis of this test is that the population is normally distributed \ 
-
-**Shapiro-Wilk normality test** \ 
-**W = 0.88612, p-value = 0.1243** \ 
-
->The data is not normalized. \ 
-
-```{r shapiro, warning=FALSE, message=FALSE, echo=FALSE, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/001_Shapiro.png')
-```
-
-## Filtering
-
-We filter out low-count genes before downstream analysis by using at least 10 reads. We kept **14659** genes for downstream analysis. Total genes removed 39873. \ 
-
- 
-
-**Table with 14659 genes,RAW Count**
-
-
-```{r, echo=FALSE, include=FALSE}
-#filtered_count <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/00_filtered_count.tsv", header=T, check.names=T, sep="\t")
-```
-
-
-## Distribution of expression  
-
-The distribution of normalized expression in all samples are shown in the next fig.
-
->The result is good. Samples are well represented.
-
-```{r fig-1, echo = F}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/00_Distribution.png')
-
-```
-
-
-## Sample correlation
-
-There is a good correlation among samples as shown in the next fig. You can see that aged vs control formed separate cluster.
-
-**Heatmap of Euclidean sample distances after vst transformation**
-
-
-```{r correlation2, echo = F, eval = T }
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/01_HeatMap_rlog.png')
-```
-
-In the matrix, dark blue color denotes higher correlation (higher similarity) and light blue denotes lower correlation (lower similarity). pheatmap() also hierarchically clusters rows and columns based on correlation values. The dendrograms show how samples cluster.
-
-## PCA
-
-In the PCA plot each point corresponds to a sample plotted on PC1 and PC2. I can see strong separation by **Condition**, as expected due to the biological differences.
-
->**PCA all**
-
-```{r fig-PCA-organ, echo = F}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/03_PCAPlot.png')
-```
-
-### Detecting outlier
-
->We have yet to detect outliers that could affect the downstream analysis. 
-
-```{r outlier_1, echo = F, eval = T }
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/02_pca_check.png')
-```
-
->Plot with Genes and Samples: Biplot
-
-```{r outlier_3, echo = F, eval = T }
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/04_p_fviz_pca_biplot.png')
-```
-
-## Diferential Expression
-
-We tested different groups to answer all questions of the projet. \ 
-
-
-<div class="boxy boxy-lightbulb">
-
-### The effect of treatment in Young (Condition vs Control).
-
-</div>
-
-
-
-```{r, echo=FALSE, include=FALSE}
-#res_1 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/01_R1.tsv", header=T, check.names=T, sep="\t", fill = TRUE)
-```
-
-#### All Genes
-
-Here, it is possible to filter using the column "Sig"
-
-**I'm considering significant following the table bellow:** \
-**Pvalue = 0.01 and  lfcThreshold = 1**
-
->**P** = P-value \
-
->**FC** = Only Fold Change \
-
->**FC_P** = Fold Change and P-value \
-
->**NS** = Non significant \
-
-
-You can go back to [DE Analysis Function](###DE Analysis Function) and change the parameters.
-
-
-#### Only DEG genes
-
-Here, you can find only the DEG genes that passed the filter: **Sig = FC_P**
-
-**5982 genes**
-
-```{r, echo=FALSE, include=FALSE}
-#res_1b <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/01_R1_resSig.tsv", header=T, check.names=T, sep="\t", fill = TRUE)
-```
-
-
-
-
-
-#### Bar Plot showing the Top1 gene
-
-```{r, res1_barplot, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/14_Res1_Top1.png')
-```
-
-##### Bar Plot showing the Top1 gene (gene name)
-
-```{r, res1_barplot2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/14_Res1_Top1_GeneName.png')
-```
-
-
-#### Bar Plot showing the **Treament** effect **Young**
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/26_Young_allRes1.png')
-```
-
-#### Volcano Plot
-
-```{r, res1_volcano, echo=FALSE, fig.width = 14.5, fig.height = 9.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/05_resultsSigTab_Volc_allENS_R1.png')
-```
-
-##### Volcano Plot (gene name)
-
-```{r, res1_volcano2, echo=FALSE, fig.width = 14.5, fig.height = 9.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/05_resultsSigTab_Volc_all_R1.png')
-```
-
-##### Heatmap showing the Top20 genes 
-
-```{r, res1_heatmap, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/EN_pheatmap_plotsNEWgenes_res1.png')
-```
-
-##### Heatmap showing the Top20 genes (gene name)
-
-
-```{r, res1_heatmap2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/pheatmap_plotsNEWgenes_res1.png')
-```
-
-
->GSEA Visualization 
-
-GSEA, are designed to analyze ranked lists of **all available genes** 
-
-
-#### Most Positive
-
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/19_Res1_most_positive_nes_plot.png')
-```
-
-#### Most Negative
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/20_Res1_most_negative_nes_plot.png')
-```
-
-#### DotPlot Showing 10 Categories
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/21_Res1_Dotplot.png')
-```
-
-#### Category Netplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/22_Res1_cneplot.png')
-```
-
-#### Category Netplot 2
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/23_Res1_cneplot2.png')
-```
-
-#### Ridgeplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/24_Res1_ridgeplot.png')
-```
-
-#### PubMed trend of enriched terms **2013-2022**
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/25_terms_Res1.png')
-```
-
-#### Pathways
-
-```{r, echo=FALSE, include=FALSE}
-#gsea1 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/06_Res1_SRP123625_gsea_results.tsv", header=T, check.names=T, sep="\t")
-```
-
-
-<div class="boxy boxy-lightbulb">
-
-### The effect of treatment in Aged
-
-</div>
-
-**This is, by definition, the main effect plus the interaction term (the extra condition effect in Age Aged compared to Age Young).**
-
-#### All Genes
-
-Here, it is possible to filter using the column "Sig"
-
-**I'm considering significant following the table bellow:** \
-**Pvalue = 0.01 and  lfcThreshold = 1**
-
->**P** = P-value \
-
->**FC** = Only Fold Change \
-
->**FC_P** = Fold Change and P-value \
-
->**NS** = Non significant \
-
-
-You can go back to [DE Analysis Function](###DE Analysis Function) and change the parameters.
-
-
-```{r, echo=FALSE, include=FALSE}
-#res2b <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/02_R2.tsv", header=T, check.names=T, sep="\t", fill = TRUE)
-```
-
-
-
-#### Only DEG genes
-
-Here, you can find only the DEG genes that passed the filter: **Sig = FC_P**
-
-```{r, echo=FALSE, include=FALSE}
-#res2 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/02_R2_resSig.tsv", header=T, check.names=T, sep="\t")
-```
-
-
-
-#### Bar Plot showing the Top1 gene
-
-```{r, res2_barplot, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/15_Res2_Top1.png')
-```
-
-##### Bar Plot showing the Top1 gene (gene name)
-
-
-```{r, res2_barplot2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/15_Res2_Top1_GeneName.png')
-```
-
-#### Bar Plot the **treatment** effect in **Aged**
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/26_Aged_allRes2.png')
-```
-
-#### Volcano Plot
-
-```{r, res2_volcano, echo=FALSE, fig.width = 14.5, fig.height = 9.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/06_resultsSigTab_Volc_all_ENS_Res2.png')
-```
-
-##### Volcano Plot (gene name)
-
-```{r, res2_volcano2, echo=FALSE, fig.width = 14.5, fig.height = 9.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/06_resultsSigTab_Volc_all_Res2.png')
-```
-
-
-#### Heatmap showing the Top20 genes
-
-```{r, res2_heatmap, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/EN_pheatmap_plotsNEWgenes_res2.png')
-```
-
-##### Heatmap showing the Top20 genes (gene name)
-
-```{r, res2_heatmap2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/pheatmap_plotsNEWgenes_res2.png')
-```
-
->GSEA Visualization 
-
-GSEA, are designed to analyze ranked lists of **all available genes** 
-
-#### Most positive
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/19_Res2_most_positive_nes_plot.png')
-```
-
-#### Most Negative
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/20_Res2_most_negative_nes_plot.png')
-```
-
-#### DotPlot Showing 10 Categories
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/21_Res2_Dotplot.png')
-```
-
-#### Category Netplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/22_Res2_cneplot.png')
-```
-
-#### Category Netplot 2
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/23_Res2_cneplot2.png')
-```
-
-#### Ridgeplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/24_Res2_ridgeplot.png')
-```
-
-#### PubMed trend of enriched terms **2013-2022**
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/25_terms_Res2.png')
-```
-
-#### Pathways
-
-```{r, echo=FALSE, include=FALSE}
-#gsea2 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/06_Res2_SRP123625_gsea_results.tsv", header=T, check.names=T, sep="\t")
-```
-
-
-<div class="boxy boxy-lightbulb">
-
-### What is the difference between Aged and Young-type without treatment (Control)?
-
-**As Ctrl is the reference level, we can just retrieve the “Age_aged_vs_young”.**
-
-</div>
-
-
-#### All Genes
-
-Here, it is possible to filter using the column "Sig"
-
-**I'm considering significant following the table bellow:** \
-**Pvalue = 0.01 and  lfcThreshold = 1**
-
->**P** = P-value \
-
->**FC** = Only Fold Change \
-
->**FC_P** = Fold Change and P-value \
-
->**NS** = Non significant \
-
-
-```{r, echo=FALSE, include=FALSE}
-#res3b <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/03_R3.tsv", header=T, check.names=T, sep="\t", fill = TRUE)
-```
-
-
-You can go back to [DE Analysis Function](###DE Analysis Function) and change the parameters.
-
-
-
-#### Only DEG genes
-
-Here, you can find only the DEG genes that passed the filter: **Sig = FC_P**
-
-```{r, echo=FALSE, include=FALSE}
-#res3 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/03_R3_resSig.tsv", header=T, check.names=T, sep="\t")
-```
-
-
-#### Bar Plot showing the Top1 gene
-
-
-```{r, res3_barplot, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/16_Res3_Top1.png')
-```
-
-##### Bar Plot showing the Top1 gene (gene name)
-
-```{r, res3_barplot2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/16_Res3_Top1_GeneName.png')
-```
-
-#### Volcano Plot
-
-```{r, res3_volcano, echo=FALSE, fig.width = 10.5, fig.height = 6.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/06_resultsSigTab_Volc_all_Res3Es.png')
-```
-
-##### Volcano Plot (gene name)
-
-```{r, res3_volcano2, echo=FALSE, fig.width = 10.5, fig.height = 6.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/06_resultsSigTab_Volc_all_Res3.png')
-```
-
-#### Heatmap showing the Top20 genes
-
-
-```{r, res3_heatmap, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/EN_pheatmap_plotsNEWgenes_res3.png')
-```
-
-##### Heatmap showing the Top20 genes (gene name)
-
-```{r, res3_heatmap2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/pheatmap_plotsNEWgenes_res3.png')
-```
-
-#### Bar Plot comparing the control between **Young** and **Aged**
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/26_Control_allRes3.png')
-```
-
->GSEA Visualization 
-GSEA, are designed to analyze ranked lists of **all available genes** 
-
-#### Most positive
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/19_Res3_most_positive_nes_plot.png')
-```
-
-#### Most Negative
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/20_Res3_most_negative_nes_plot.png')
-```
-
-#### DotPlot Showing 10 Categories
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/21_Res3_Dotplot.png')
-```
-
-#### Category Netplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/22_Res3_cneplot.png')
-```
-
-#### Category Netplot 2
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/23_Res3_cneplot2.png')
-```
-
-#### Ridgeplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/24_Res3_ridgeplot.png')
-```
-
-#### PubMed trend of enriched terms **2013-2022**
-
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/25_terms_Res3.png')
-```
-
-#### Pathways
-
-
-```{r, echo=FALSE, include=FALSE}
-#gsea3 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/06_Res3_SRP123625_gsea_results.tsv", header=T, check.names=T, sep="\t")
-```
-
-
-
-<div class="boxy boxy-lightbulb">
-
-### With treatment, what is the difference between Aged and Young?
-
-</div>
-
-#### All Genes
-
-Here, it is possible to filter using the column "Sig"
-
-**I'm considering significant following the table bellow:** \
-**Pvalue = 0.01 and  lfcThreshold = 1**
-
->**P** = P-value \
-
->**FC** = Only Fold Change \
-
->**FC_P** = Fold Change and P-value \
-
->**NS** = Non significant \
-
-```{r, echo=FALSE, include=FALSE}
-#res4b <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/04_R4.tsv", header=T, check.names=T, sep="\t", fill = TRUE)
-```
-
-
-
-You can go back to [DE Analysis Function](###DE Analysis Function) and change the parameters.
-
-
-#### Only DEG genes
-
-Here, you can find only the DEG genes that passed the filter: **Sig = FC_P**
-
-```{r, echo=FALSE, include=FALSE}
-#res4 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/04_R4_resSig.tsv", header=T, check.names=T, sep="\t")
-```
-
-
-#### Bar Plot showing the Top1 gene
-
-
-```{r, res4_barplot, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/17_Res4_Top1.png')
-```
-
-
-<div class="boxy boxy-lightbulb">
-
-### The different response in Ages (interaction term)
-**Is the effect of treatment different across Ages? This is the interaction term.**
-
-</div>
-
-#### All Genes
-
-Here, it is possible to filter using the column "Sig"
-
-**I'm considering significant following the table bellow:** \
-**Pvalue = 0.01 and  lfcThreshold = 1**
-
->**P** = P-value \
-
->**FC** = Only Fold Change \
-
->**FC_P** = Fold Change and P-value \
-
->**NS** = Non significant \
-
-
-You can go back to [DE Analysis Function](###DE Analysis Function) and change the parameters.
-
-
-#### Only DEG genes
-
-Here, you can find only the DEG genes that passed the filter: **Sig = FC_P**
-
-
-#### Bar Plot showing the Top1 gene
-
-```{r, res5_barplot, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/18_Res5_Top1.png')
-```
-
-##### Bar Plot showing the Top1 gene (gene name)
-
-```{r, res5_barplot2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/18_Res5_Top1_GeneName.png')
-```
-
-
-#### Volcano Plot
-
-
-```{r, res5_volcano, echo=FALSE, fig.width = 10.5, fig.height = 6.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/08_resultsSigTab_Volc_all_Res5Es.png')
-```
-
-##### Volcano Plot (gene name)
-
-
-```{r, res5_volcano2, echo=FALSE, fig.width = 10.5, fig.height = 6.58}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/08_resultsSigTab_Volc_all_Res5.png')
-```
-
-#### Heatmap showing the Top20 genes
-
-```{r, res5_heatmap, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/EN_pheatmap_plotsNEWgenes_res5.png')
-```
-
-##### Heatmap showing the Top20 genes (gene name)
-
-```{r, res5_heatmap2, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/pheatmap_plotsNEW/pheatmap_plotsNEWgenes_res5.png')
-```
-
-#### Bar Plot showing he different response in **Ages**
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/26_Control_allRes5.png')
-```
-
->GSEA Visualization 
-GSEA, are designed to analyze ranked lists of **all available genes** 
-
-#### Most positive
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/19_Res5_most_positive_nes_plot.png')
-```
-
-#### Most Negative
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/20_Res5_most_negative_nes_plot.png')
-```
-
-#### DotPlot Showing 10 Categories
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/21_Res5_Dotplot.png')
-```
-
-#### Category Netplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/22_Res5_cneplot.png')
-```
-
-#### Category Netplot 2
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/23_Res5_cneplot2.png')
-```
-
-#### Ridgeplot
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/24_Res5_ridgeplot.png')
-```
-
-#### PubMed trend of enriched terms **2013-2022**
-
-```{r, echo=FALSE}
-#knitr::include_graphics('/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/25_terms_Res5.png')
-```
-
-#### Pathways
-
-```{r, echo=FALSE, include=FALSE}
-#gsea5 <- read.table("/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/06_Res5_SRP123625_gsea_results.tsv", header=T, check.names=T, sep="\t")
-```
 
 
 
