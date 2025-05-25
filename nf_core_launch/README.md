@@ -11,4 +11,4 @@ Inspect the content of this directory by using the command `ls -l` in the termin
 Start the nf-core/rnaseq pipeline run using the command `bash nf_command_test.sh`in the terminal. This executes the nextflow command in the bash (.sh) script.
 
 ### Comments
-Note that the nextflow command in bash script `nf_command_example.sh`is only for exemplary purpose. Ii can't be executed.
+Note that the nextflow command in bash script `nf_command_example.sh`is only an example command and can not be executed.
