@@ -3,7 +3,9 @@
 {
     "name": "Ubuntu",
     // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-    "image": "mcr.microsoft.com/devcontainers/base:noble",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
     "features": {
       "ghcr.io/devcontainers/features/docker-in-docker:2": {
         "moby": true,
