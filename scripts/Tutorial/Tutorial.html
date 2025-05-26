@@ -3761,42 +3761,53 @@ Mus musculus GRC39</p></li>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co"># CRAN packages</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>cran_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="st">&quot;tidyverse&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;ggpubr&quot;</span>, <span class="st">&quot;RColorBrewer&quot;</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="st">&quot;pheatmap&quot;</span>, <span class="st">&quot;factoextra&quot;</span>, <span class="st">&quot;knitr&quot;</span>, <span class="st">&quot;kableExtra&quot;</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="st">&quot;EnhancedVolcano&quot;</span>, <span class="st">&quot;enrichplot&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="st">&quot;pheatmap&quot;</span>, <span class="st">&quot;factoextra&quot;</span>, <span class="st">&quot;knitr&quot;</span>, <span class="st">&quot;kableExtra&quot;</span>, <span class="st">&quot;plotly&quot;</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>)</span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co"># Bioconductor packages</span></span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>bioc_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  <span class="st">&quot;DESeq2&quot;</span>, <span class="st">&quot;AnnotationDbi&quot;</span>, <span class="st">&quot;org.Mm.eg.db&quot;</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="st">&quot;msigdbr&quot;</span>, <span class="st">&quot;fgsea&quot;</span>, <span class="st">&quot;clusterProfiler&quot;</span>, <span class="st">&quot;DOSE&quot;</span>, <span class="st">&quot;europepmc&quot;</span></span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>)</span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co"># Install CRAN packages if missing</span></span>
-<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>install_if_missing <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg) {</span>
-<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg)</span>
-<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>  }</span>
-<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>}</span>
-<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(cran_packages, install_if_missing))</span>
-<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co"># Install BiocManager if not present</span></span>
-<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
-<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>}</span>
-<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="co"># Install Bioconductor packages if missing</span></span>
-<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a>install_bioc_if_missing <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg) {</span>
-<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a>    BiocManager<span class="sc">::</span><span class="fu">install</span>(pkg)</span>
-<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a>  }</span>
-<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a>}</span>
-<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(bioc_packages, install_bioc_if_missing))</span>
-<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
-<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a><span class="co"># ✅ Done! You&#39;re ready to go.</span></span>
-<span id="cb1-43"><a href="#cb1-43" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span></code></pre></div>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="st">&quot;msigdbr&quot;</span>, <span class="st">&quot;fgsea&quot;</span>, <span class="st">&quot;clusterProfiler&quot;</span>, <span class="st">&quot;DOSE&quot;</span>, <span class="st">&quot;europepmc&quot;</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  <span class="st">&quot;enrichplot&quot;</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>)</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co"># Install CRAN packages if missing</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>install_if_missing <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg) {</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg)</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>  }</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>}</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(cran_packages, install_if_missing))</span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co"># Install BiocManager if not present</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>}</span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a><span class="co"># Install Bioconductor packages if missing</span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a>install_bioc_if_missing <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg) {</span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a>    BiocManager<span class="sc">::</span><span class="fu">install</span>(pkg)</span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a>  }</span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a>}</span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(bioc_packages, install_bioc_if_missing))</span>
+<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a><span class="co"># extra</span></span>
+<span id="cb1-43"><a href="#cb1-43" tabindex="-1"></a><span class="co">#if (!require(&quot;BiocManager&quot;, quietly = TRUE))</span></span>
+<span id="cb1-44"><a href="#cb1-44" tabindex="-1"></a><span class="co">#    install.packages(&quot;BiocManager&quot;)</span></span>
+<span id="cb1-45"><a href="#cb1-45" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-46"><a href="#cb1-46" tabindex="-1"></a><span class="co">#BiocManager::install(version = &quot;3.20&quot;)  # Ensure you&#39;re using the right Bioconductor version</span></span>
+<span id="cb1-47"><a href="#cb1-47" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" tabindex="-1"></a><span class="co"># Now install EnhancedVolcano</span></span>
+<span id="cb1-49"><a href="#cb1-49" tabindex="-1"></a><span class="co">#BiocManager::install(&quot;EnhancedVolcano&quot;)</span></span>
+<span id="cb1-50"><a href="#cb1-50" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
+<span id="cb1-53"><a href="#cb1-53" tabindex="-1"></a><span class="co"># ✅ Done! You&#39;re ready to go.</span></span>
+<span id="cb1-54"><a href="#cb1-54" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span></code></pre></div>
 <div class="remember">
 <p><strong>📌 Remember:</strong> Load all the libraries before starting the tutorial.</p>
 </div>
@@ -3818,30 +3829,31 @@ Mus musculus GRC39</p></li>
 <span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer) <span class="co"># Color palettes for maps and heatmaps</span></span>
 <span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="fu">library</span>(pheatmap)     <span class="co"># Pretty heatmaps</span></span>
 <span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="fu">library</span>(factoextra)   <span class="co"># Visualization tools for multivariate data (e.g., PCA)</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="fu">library</span>(EnhancedVolcano) <span class="co"># Easy and elegant volcano plots</span></span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="fu">library</span>(enrichplot)   <span class="co"># Visualization of enrichment results</span></span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co"># 📊 Tables &amp; Reporting</span></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="fu">library</span>(knitr)        <span class="co"># Dynamic report generation</span></span>
-<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="fu">library</span>(kableExtra)   <span class="co"># Beautiful tables with kable()</span></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
-<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co"># 🔍 Annotation &amp; Enrichment Analysis</span></span>
-<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
-<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="fu">library</span>(AnnotationDbi)    <span class="co"># Interface to Bioconductor annotation databases</span></span>
-<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="fu">library</span>(org.Mm.eg.db)     <span class="co"># Annotation database for *Mus musculus* (mouse)</span></span>
-<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="fu">library</span>(msigdbr)          <span class="co"># MSigDB gene sets in tidy format</span></span>
-<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="fu">library</span>(fgsea)            <span class="co"># Fast implementation of Gene Set Enrichment Analysis (GSEA)</span></span>
-<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler)  <span class="co"># Universal enrichment tool</span></span>
-<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="fu">library</span>(DOSE)             <span class="co"># Disease Ontology enrichment analysis</span></span>
-<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="fu">library</span>(europepmc)        <span class="co"># Query Europe PMC database (for literature mining)</span></span>
-<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
-<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co"># ✅ Notes</span></span>
-<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co"># - Remember to install missing packages via BiocManager or install.packages().</span></span>
-<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span></code></pre></div>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#library(EnhancedVolcano) # Easy and elegant volcano plots</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;plotly&quot;</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="fu">library</span>(enrichplot)   <span class="co"># Visualization of enrichment results</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co"># 📊 Tables &amp; Reporting</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="fu">library</span>(knitr)        <span class="co"># Dynamic report generation</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="fu">library</span>(kableExtra)   <span class="co"># Beautiful tables with kable()</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co"># 🔍 Annotation &amp; Enrichment Analysis</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="fu">library</span>(AnnotationDbi)    <span class="co"># Interface to Bioconductor annotation databases</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="fu">library</span>(org.Mm.eg.db)     <span class="co"># Annotation database for *Mus musculus* (mouse)</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="fu">library</span>(msigdbr)          <span class="co"># MSigDB gene sets in tidy format</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="fu">library</span>(fgsea)            <span class="co"># Fast implementation of Gene Set Enrichment Analysis (GSEA)</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler)  <span class="co"># Universal enrichment tool</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="fu">library</span>(DOSE)             <span class="co"># Disease Ontology enrichment analysis</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="fu">library</span>(europepmc)        <span class="co"># Query Europe PMC database (for literature mining)</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co"># ✅ Notes</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co"># - Remember to install missing packages via BiocManager or install.packages().</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────</span></span></code></pre></div>
 </div>
 <div id="getting-the-metadata" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Getting the Metadata</h2>
@@ -3895,8 +3907,8 @@ Mus musculus GRC39</p></li>
 <div class="tip">
 <p><strong>💡 Tip:</strong> Bonus: How to check which columns are numeric, you can try the code below.</p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">sapply</span>(count_x, is.numeric)</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#This returns a logical vector, showing you which columns are numeric.</span></span></code></pre></div>
+<p>This returns a logical vector, showing you which columns are numeric.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">sapply</span>(count_x, is.numeric)</span></code></pre></div>
 <p><strong>Plotting</strong></p>
 <p>Only select the columns that are actually numeric</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">as.numeric</span>(count_x[<span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>]), <span class="at">main =</span> <span class="st">&quot;Histogram of Gene 1 Expression&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Expression&quot;</span>)</span></code></pre></div>
@@ -4404,74 +4416,91 @@ This process is automatic and happens during model fitting (DESeq() step).</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>dds2 <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds2)</span></code></pre></div>
 <div id="exploring-the-results" class="section level3" number="4.2.1">
 <h3><span class="header-section-number">4.2.1</span> Exploring the results</h3>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">resultsNames</span>(dds2)</span>
-<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">plotCounts</span>(dds2, <span class="at">gene=</span><span class="fu">which.min</span>(res<span class="sc">$</span>padj), <span class="at">intgroup=</span><span class="st">&quot;Condition&quot;</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="fu">mcols</span>(res)<span class="sc">$</span>description</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">resultsNames</span>(dds2)</span></code></pre></div>
+<p><strong>🧪 Getting the DESeq2 Results</strong></p>
+<div class="note">
+<p><strong>📘 Note:</strong> This step is for teaching purposes. We will define specific contrasts later to make meaningful biological comparisons.</p>
+</div>
+<p>In this example, we:</p>
+<ul>
+<li><p>Extract differential expression results from the model</p></li>
+<li><p>Sort genes by statistical significance (e.g., p-value or adjusted p-value)</p></li>
+<li><p>Visualize the top results for quick interpretation</p></li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2)</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>resOrdered <span class="ot">&lt;-</span> res[<span class="fu">order</span>(res<span class="sc">$</span>pvalue),]</span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a><span class="fu">summary</span>(res)</span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a><span class="fu">sum</span>(res<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.1</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a><span class="fu">plotCounts</span>(dds2, <span class="at">gene=</span><span class="fu">which.min</span>(res<span class="sc">$</span>padj), <span class="at">intgroup=</span><span class="st">&quot;Condition&quot;</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a><span class="fu">mcols</span>(res)<span class="sc">$</span>description</span></code></pre></div>
+<p>The results function contains a number of arguments to customize the results table which is generated. You can read about these arguments by looking up <code>?results</code>.</p>
+<p>Note that the results function automatically performs independent filtering based on the mean of normalized counts for each gene, optimizing the number of genes which will have an adjusted p value below a given FDR cutoff, alpha.</p>
+<p>Independent filtering is further discussed later. By default the argument alpha is set to 0.1. If the adjusted p value cutoff will be a value other than 0.1, alpha should be set to that value:</p>
 </div>
 <div id="sorting-and-filtering" class="section level3" number="4.2.2">
 <h3><span class="header-section-number">4.2.2</span> Sorting and filtering</h3>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>resOrdered <span class="ot">&lt;-</span> res[<span class="fu">order</span>(res<span class="sc">$</span>pvalue),]</span>
-<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a><span class="fu">summary</span>(res)</span>
-<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a><span class="fu">sum</span>(res<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.1</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
-<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a></span>
-<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a></span>
-<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>res05 <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">alpha=</span><span class="fl">0.05</span>)</span>
-<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a><span class="fu">summary</span>(res05)</span>
-<span id="cb32-8"><a href="#cb32-8" tabindex="-1"></a><span class="fu">sum</span>(res05<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>res05 <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2, <span class="at">alpha=</span><span class="fl">0.05</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">summary</span>(res05)</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a><span class="fu">sum</span>(res05<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="the-effect-of-treatment-in-young-the-main-effect" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> The effect of treatment in Young (the main effect)</h2>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">resultsNames</span>(dds2)</span>
-<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="co"># Define the contrast</span></span>
-<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>contrast_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Condition&quot;</span>, <span class="st">&quot;control&quot;</span>, <span class="st">&quot;cae5H&quot;</span>)</span>
-<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a></span>
-<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="co"># 1. Get results for the contrast</span></span>
-<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>res_1 <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2, <span class="at">contrast =</span> contrast_1)</span>
-<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a>res_1_Ordered <span class="ot">&lt;-</span> res_1[<span class="fu">order</span>(res_1<span class="sc">$</span>pvalue),]</span>
-<span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a><span class="fu">summary</span>(res_1_Ordered)</span></code></pre></div>
+<p>Now we move beyond general results and define a specific contrast to answer our biological question:</p>
+<blockquote>
+<p>“What is the effect of treatment (cae5H) compared to control in young samples?”</p>
+</blockquote>
+<p>This is where <strong>contrasts</strong> come in, they allow us to make meaningful, hypothesis-driven comparisons using the DESeq2 model.</p>
+<p>We first check the available model terms with <code>resultsNames()</code>, then define the contrast accordingly.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">resultsNames</span>(dds2)</span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>contrast_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Condition&quot;</span>, <span class="st">&quot;control&quot;</span>, <span class="st">&quot;cae5H&quot;</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>res_1 <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2, <span class="at">contrast =</span> contrast_1)</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>res_1_Ordered <span class="ot">&lt;-</span> res_1[<span class="fu">order</span>(res_1<span class="sc">$</span>pvalue),]</span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a><span class="fu">summary</span>(res_1_Ordered)</span></code></pre></div>
+<p>We can make questions:</p>
 <div id="how-many-adjusted-p-values-were-less-than-0.1" class="section level3" number="4.3.1">
 <h3><span class="header-section-number">4.3.1</span> How many adjusted p-values were less than 0.1?</h3>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">sum</span>(res_1_Ordered<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.1</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
-<p>The results function contains a number of arguments to customize the results table which is generated. You can read about these arguments by looking up <code>?results</code>.</p>
-<p>Note that the results function automatically performs independent filtering based on the mean of normalized counts for each gene, optimizing the number of genes which will have an adjusted p value below a given FDR cutoff, alpha.</p>
-<p>Independent filtering is further discussed later. By default the argument alpha is set to 0.1. If the adjusted p value cutoff will be a value other than 0.1, alpha should be set to that value:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>res05 <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2, <span class="at">contrast =</span> contrast_1, <span class="at">alpha=</span><span class="fl">0.05</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="fu">summary</span>(res05)</span>
-<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a><span class="fu">sum</span>(res05<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">sum</span>(res_1_Ordered<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.1</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p>And apply the filter we learned before:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>res05 <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2, <span class="at">contrast =</span> contrast_1, <span class="at">alpha=</span><span class="fl">0.05</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a><span class="fu">summary</span>(res05)</span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a><span class="fu">sum</span>(res05<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <p><strong>Plot counts</strong></p>
 <p>It can also be useful to examine the counts of reads for a single gene across the groups. A simple function for making this plot is <strong>plotCounts</strong>, which normalizes counts by the estimated size factors and adds a pseudocount of 1/2 to allow for log scale plotting. The counts are grouped by the variables in intgroup, where more than one variable can be specified.</p>
 <p>Here we specify the gene which had the smallest p value from the results. You can select the gene to plot by rowname or by numeric index.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">plotCounts</span>(dds2, <span class="at">gene=</span><span class="fu">which.min</span>(res05<span class="sc">$</span>padj), <span class="at">intgroup=</span><span class="st">&quot;Condition&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">plotCounts</span>(dds2, <span class="at">gene=</span><span class="fu">which.min</span>(res05<span class="sc">$</span>padj), <span class="at">intgroup=</span><span class="st">&quot;Condition&quot;</span>)</span></code></pre></div>
 <div class="tip">
 <p><strong>💡 Tip:</strong> Use <code>summary()</code> For customized plotting, an argument returnData specifies that the function should only return a data.frame for plotting with ggplot.</p>
 </div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">plotCounts</span>(dds2, <span class="at">gene=</span><span class="fu">which.min</span>(res05<span class="sc">$</span>padj), <span class="at">intgroup=</span><span class="st">&quot;Condition&quot;</span>, </span>
-<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>                <span class="at">returnData=</span><span class="cn">TRUE</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(<span class="at">x=</span>Condition, <span class="at">y=</span>count)) <span class="sc">+</span> </span>
-<span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position=</span><span class="fu">position_jitter</span>(<span class="at">w=</span><span class="fl">0.1</span>,<span class="at">h=</span><span class="dv">0</span>)) <span class="sc">+</span> </span>
-<span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">100</span>,<span class="dv">400</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">plotCounts</span>(dds2, <span class="at">gene=</span><span class="fu">which.min</span>(res05<span class="sc">$</span>padj), <span class="at">intgroup=</span><span class="st">&quot;Condition&quot;</span>, </span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>                <span class="at">returnData=</span><span class="cn">TRUE</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(<span class="at">x=</span>Condition, <span class="at">y=</span>count)) <span class="sc">+</span> </span>
+<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position=</span><span class="fu">position_jitter</span>(<span class="at">w=</span><span class="fl">0.1</span>,<span class="at">h=</span><span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">100</span>,<span class="dv">400</span>))</span></code></pre></div>
 <div class="remember">
 <p><strong>📌 Remember:</strong> Always inspect your DDs contrast.</p>
 </div>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">mcols</span>(res05)<span class="sc">$</span>description</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">mcols</span>(res05)<span class="sc">$</span>description</span></code></pre></div>
 </div>
 <div id="subset-your-results" class="section level3" number="4.3.2">
 <h3><span class="header-section-number">4.3.2</span> Subset your results</h3>
 <p>Subset to keep only the genes with padj &lt; 0.05</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>resSig <span class="ot">&lt;-</span> <span class="fu">subset</span>(resOrdered, padj <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a>resSig</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>resSig <span class="ot">&lt;-</span> <span class="fu">subset</span>(resOrdered, padj <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>resSig</span></code></pre></div>
 </div>
 <div id="extra-plots-for-exploration" class="section level3" number="4.3.3">
 <h3><span class="header-section-number">4.3.3</span> Extra plots for exploration</h3>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#Print top 5 genes (excluding columns 3 and 4)</span></span>
-<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">kable</span>(res_1[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="sc">-</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)]))</span>
-<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#Plot barplot for the most significant gene</span></span>
-<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a>ix_1 <span class="ot">&lt;-</span> <span class="fu">which.min</span>(res_1<span class="sc">$</span>padj)</span>
-<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">assay</span>(dds)[ix_1, ], <span class="at">las =</span> <span class="fl">1.5</span>, <span class="at">main =</span> <span class="fu">rownames</span>(dds)[ix_1])</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co">#Print top 5 genes (excluding columns 3 and 4)</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">kable</span>(res_1[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="sc">-</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)]))</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a><span class="co">#Plot barplot for the most significant gene</span></span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>ix_1 <span class="ot">&lt;-</span> <span class="fu">which.min</span>(res_1<span class="sc">$</span>padj)</span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">assay</span>(dds)[ix_1, ], <span class="at">las =</span> <span class="fl">1.5</span>, <span class="at">main =</span> <span class="fu">rownames</span>(dds)[ix_1])</span></code></pre></div>
 <div class="boxy">
 <p><strong>Understanding p-values and Adjusted p-values (padj) in DESeq2</strong></p>
 <p>When analyzing gene expression data with DESeq2, you often test thousands of genes to see if they are differentially expressed between conditions. For each gene, DESeq2 calculates a p-value to measure how likely it is that the observed change happened by random chance.</p>
@@ -4492,76 +4521,76 @@ For example, a threshold of padj &lt; 0.05 means you accept a maximum of 5% fals
 <p><strong>Using coef</strong></p>
 <p>What is the difference between Aged and Young-type without treatment (Control)?</p>
 <p>As Ctrl is the reference level, we can just retrieve the “Age_aged_vs_young”.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">resultsNames</span>(dds2)</span>
-<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2, <span class="at">name=</span><span class="st">&quot;Age_aged_vs_young&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">resultsNames</span>(dds2)</span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds2, <span class="at">name=</span><span class="st">&quot;Age_aged_vs_young&quot;</span>)</span></code></pre></div>
 <div id="de-analysis-function" class="section level3" number="4.4.1">
 <h3><span class="header-section-number">4.4.1</span> DE Analysis Function</h3>
 <p>The function works in way to optimize the time of the analysis, it is just a loop. It can also provide a Bar Plot of the top gene.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a>analyze_contrast <span class="ot">&lt;-</span> <span class="cf">function</span>(dds, contrast, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">lfcThreshold =</span> <span class="dv">1</span>) {</span>
-<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>  <span class="co"># Run DESeq2 results with consistent alpha threshold</span></span>
-<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> contrast, <span class="at">alpha =</span> alpha)</span>
-<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a>  </span>
-<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a>  <span class="co"># Find the gene with the smallest padj</span></span>
-<span id="cb42-6"><a href="#cb42-6" tabindex="-1"></a>  ix <span class="ot">&lt;-</span> <span class="fu">which.min</span>(res<span class="sc">$</span>padj)</span>
-<span id="cb42-7"><a href="#cb42-7" tabindex="-1"></a>  </span>
-<span id="cb42-8"><a href="#cb42-8" tabindex="-1"></a>  <span class="co"># Order the results by padj</span></span>
-<span id="cb42-9"><a href="#cb42-9" tabindex="-1"></a>  res <span class="ot">&lt;-</span> res[<span class="fu">order</span>(res<span class="sc">$</span>padj),]</span>
-<span id="cb42-10"><a href="#cb42-10" tabindex="-1"></a>  </span>
-<span id="cb42-11"><a href="#cb42-11" tabindex="-1"></a>  <span class="co"># Print top 5 genes (excluding baseMean and lfcSE)</span></span>
-<span id="cb42-12"><a href="#cb42-12" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">kable</span>(res[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="sc">-</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)]))</span>
-<span id="cb42-13"><a href="#cb42-13" tabindex="-1"></a>  </span>
-<span id="cb42-14"><a href="#cb42-14" tabindex="-1"></a>  <span class="co"># Make a barplot for the most significant gene</span></span>
-<span id="cb42-15"><a href="#cb42-15" tabindex="-1"></a>  bar_res <span class="ot">&lt;-</span> <span class="fu">barplot</span>(<span class="fu">assay</span>(dds)[ix,], <span class="at">las =</span> <span class="fl">1.5</span>, <span class="at">main =</span> <span class="fu">rownames</span>(dds)[ix])</span>
-<span id="cb42-16"><a href="#cb42-16" tabindex="-1"></a>  </span>
-<span id="cb42-17"><a href="#cb42-17" tabindex="-1"></a>  <span class="co"># Filter significant results based on adjusted p-value</span></span>
-<span id="cb42-18"><a href="#cb42-18" tabindex="-1"></a>  resSig <span class="ot">&lt;-</span> <span class="fu">subset</span>(res, padj <span class="sc">&lt;</span> alpha)</span>
-<span id="cb42-19"><a href="#cb42-19" tabindex="-1"></a>  </span>
-<span id="cb42-20"><a href="#cb42-20" tabindex="-1"></a>  <span class="co"># Print a summary of the significant results using the same alpha</span></span>
-<span id="cb42-21"><a href="#cb42-21" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">summary</span>(res, <span class="at">alpha =</span> alpha, <span class="at">na.last =</span> <span class="cn">NA</span>))</span>
-<span id="cb42-22"><a href="#cb42-22" tabindex="-1"></a>  </span>
-<span id="cb42-23"><a href="#cb42-23" tabindex="-1"></a>  <span class="co"># Merge results with filter_count for later use</span></span>
-<span id="cb42-24"><a href="#cb42-24" tabindex="-1"></a>  merged_df <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(res), filter_count, <span class="at">by =</span> <span class="dv">0</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb42-25"><a href="#cb42-25" tabindex="-1"></a>  </span>
-<span id="cb42-26"><a href="#cb42-26" tabindex="-1"></a>  <span class="co"># Also create a table using a log fold change threshold for plotting</span></span>
-<span id="cb42-27"><a href="#cb42-27" tabindex="-1"></a>  df_res_for_plot <span class="ot">&lt;-</span> <span class="fu">merge</span>(</span>
-<span id="cb42-28"><a href="#cb42-28" tabindex="-1"></a>    <span class="fu">as.data.frame</span>(<span class="fu">results</span>(dds, <span class="at">contrast =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">lfcThreshold =</span> lfcThreshold)),</span>
-<span id="cb42-29"><a href="#cb42-29" tabindex="-1"></a>    filter_count,</span>
-<span id="cb42-30"><a href="#cb42-30" tabindex="-1"></a>    <span class="at">by =</span> <span class="dv">0</span>,</span>
-<span id="cb42-31"><a href="#cb42-31" tabindex="-1"></a>    <span class="at">all.x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb42-32"><a href="#cb42-32" tabindex="-1"></a>    <span class="at">row.names =</span> <span class="cn">TRUE</span></span>
-<span id="cb42-33"><a href="#cb42-33" tabindex="-1"></a>  )</span>
-<span id="cb42-34"><a href="#cb42-34" tabindex="-1"></a>  </span>
-<span id="cb42-35"><a href="#cb42-35" tabindex="-1"></a>  <span class="co"># Return everything in a list</span></span>
-<span id="cb42-36"><a href="#cb42-36" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
-<span id="cb42-37"><a href="#cb42-37" tabindex="-1"></a>    <span class="at">res =</span> res, </span>
-<span id="cb42-38"><a href="#cb42-38" tabindex="-1"></a>    <span class="at">bar_res =</span> bar_res, </span>
-<span id="cb42-39"><a href="#cb42-39" tabindex="-1"></a>    <span class="at">merged_df =</span> merged_df, </span>
-<span id="cb42-40"><a href="#cb42-40" tabindex="-1"></a>    <span class="at">df_res_for_plot =</span> df_res_for_plot,</span>
-<span id="cb42-41"><a href="#cb42-41" tabindex="-1"></a>    <span class="at">resSig =</span> resSig</span>
-<span id="cb42-42"><a href="#cb42-42" tabindex="-1"></a>  ))</span>
-<span id="cb42-43"><a href="#cb42-43" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>analyze_contrast <span class="ot">&lt;-</span> <span class="cf">function</span>(dds, contrast, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">lfcThreshold =</span> <span class="dv">1</span>) {</span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>  <span class="co"># Run DESeq2 results with consistent alpha threshold</span></span>
+<span id="cb43-3"><a href="#cb43-3" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> contrast, <span class="at">alpha =</span> alpha)</span>
+<span id="cb43-4"><a href="#cb43-4" tabindex="-1"></a>  </span>
+<span id="cb43-5"><a href="#cb43-5" tabindex="-1"></a>  <span class="co"># Find the gene with the smallest padj</span></span>
+<span id="cb43-6"><a href="#cb43-6" tabindex="-1"></a>  ix <span class="ot">&lt;-</span> <span class="fu">which.min</span>(res<span class="sc">$</span>padj)</span>
+<span id="cb43-7"><a href="#cb43-7" tabindex="-1"></a>  </span>
+<span id="cb43-8"><a href="#cb43-8" tabindex="-1"></a>  <span class="co"># Order the results by padj</span></span>
+<span id="cb43-9"><a href="#cb43-9" tabindex="-1"></a>  res <span class="ot">&lt;-</span> res[<span class="fu">order</span>(res<span class="sc">$</span>padj),]</span>
+<span id="cb43-10"><a href="#cb43-10" tabindex="-1"></a>  </span>
+<span id="cb43-11"><a href="#cb43-11" tabindex="-1"></a>  <span class="co"># Print top 5 genes (excluding baseMean and lfcSE)</span></span>
+<span id="cb43-12"><a href="#cb43-12" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">kable</span>(res[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="sc">-</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)]))</span>
+<span id="cb43-13"><a href="#cb43-13" tabindex="-1"></a>  </span>
+<span id="cb43-14"><a href="#cb43-14" tabindex="-1"></a>  <span class="co"># Make a barplot for the most significant gene</span></span>
+<span id="cb43-15"><a href="#cb43-15" tabindex="-1"></a>  bar_res <span class="ot">&lt;-</span> <span class="fu">barplot</span>(<span class="fu">assay</span>(dds)[ix,], <span class="at">las =</span> <span class="fl">1.5</span>, <span class="at">main =</span> <span class="fu">rownames</span>(dds)[ix])</span>
+<span id="cb43-16"><a href="#cb43-16" tabindex="-1"></a>  </span>
+<span id="cb43-17"><a href="#cb43-17" tabindex="-1"></a>  <span class="co"># Filter significant results based on adjusted p-value</span></span>
+<span id="cb43-18"><a href="#cb43-18" tabindex="-1"></a>  resSig <span class="ot">&lt;-</span> <span class="fu">subset</span>(res, padj <span class="sc">&lt;</span> alpha)</span>
+<span id="cb43-19"><a href="#cb43-19" tabindex="-1"></a>  </span>
+<span id="cb43-20"><a href="#cb43-20" tabindex="-1"></a>  <span class="co"># Print a summary of the significant results using the same alpha</span></span>
+<span id="cb43-21"><a href="#cb43-21" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">summary</span>(res, <span class="at">alpha =</span> alpha, <span class="at">na.last =</span> <span class="cn">NA</span>))</span>
+<span id="cb43-22"><a href="#cb43-22" tabindex="-1"></a>  </span>
+<span id="cb43-23"><a href="#cb43-23" tabindex="-1"></a>  <span class="co"># Merge results with filter_count for later use</span></span>
+<span id="cb43-24"><a href="#cb43-24" tabindex="-1"></a>  merged_df <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(res), filter_count, <span class="at">by =</span> <span class="dv">0</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb43-25"><a href="#cb43-25" tabindex="-1"></a>  </span>
+<span id="cb43-26"><a href="#cb43-26" tabindex="-1"></a>  <span class="co"># Also create a table using a log fold change threshold for plotting</span></span>
+<span id="cb43-27"><a href="#cb43-27" tabindex="-1"></a>  df_res_for_plot <span class="ot">&lt;-</span> <span class="fu">merge</span>(</span>
+<span id="cb43-28"><a href="#cb43-28" tabindex="-1"></a>    <span class="fu">as.data.frame</span>(<span class="fu">results</span>(dds, <span class="at">contrast =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">lfcThreshold =</span> lfcThreshold)),</span>
+<span id="cb43-29"><a href="#cb43-29" tabindex="-1"></a>    filter_count,</span>
+<span id="cb43-30"><a href="#cb43-30" tabindex="-1"></a>    <span class="at">by =</span> <span class="dv">0</span>,</span>
+<span id="cb43-31"><a href="#cb43-31" tabindex="-1"></a>    <span class="at">all.x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb43-32"><a href="#cb43-32" tabindex="-1"></a>    <span class="at">row.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb43-33"><a href="#cb43-33" tabindex="-1"></a>  )</span>
+<span id="cb43-34"><a href="#cb43-34" tabindex="-1"></a>  </span>
+<span id="cb43-35"><a href="#cb43-35" tabindex="-1"></a>  <span class="co"># Return everything in a list</span></span>
+<span id="cb43-36"><a href="#cb43-36" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb43-37"><a href="#cb43-37" tabindex="-1"></a>    <span class="at">res =</span> res, </span>
+<span id="cb43-38"><a href="#cb43-38" tabindex="-1"></a>    <span class="at">bar_res =</span> bar_res, </span>
+<span id="cb43-39"><a href="#cb43-39" tabindex="-1"></a>    <span class="at">merged_df =</span> merged_df, </span>
+<span id="cb43-40"><a href="#cb43-40" tabindex="-1"></a>    <span class="at">df_res_for_plot =</span> df_res_for_plot,</span>
+<span id="cb43-41"><a href="#cb43-41" tabindex="-1"></a>    <span class="at">resSig =</span> resSig</span>
+<span id="cb43-42"><a href="#cb43-42" tabindex="-1"></a>  ))</span>
+<span id="cb43-43"><a href="#cb43-43" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 </div>
 <div id="the-effect-of-treatment-in-young-the-main-effect-1" class="section level2" number="4.5">
 <h2><span class="header-section-number">4.5</span> The effect of treatment in Young (the main effect)</h2>
 <p><strong>Res1</strong> The effect of treatment in Young (the main effect)<br />
 </p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>contrast_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Condition&quot;</span>, <span class="st">&quot;control&quot;</span>, <span class="st">&quot;cae5H&quot;</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>result_1 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_1)</span>
-<span id="cb43-3"><a href="#cb43-3" tabindex="-1"></a>merged_df_1 <span class="ot">&lt;-</span> result_1<span class="sc">$</span>merged_df</span>
-<span id="cb43-4"><a href="#cb43-4" tabindex="-1"></a>df_res_for_plot_1 <span class="ot">&lt;-</span> result_1<span class="sc">$</span>df_res_for_plot</span>
-<span id="cb43-5"><a href="#cb43-5" tabindex="-1"></a>resSig_1 <span class="ot">&lt;-</span> result_1<span class="sc">$</span>resSig</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>contrast_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Condition&quot;</span>, <span class="st">&quot;control&quot;</span>, <span class="st">&quot;cae5H&quot;</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>result_1 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_1)</span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>merged_df_1 <span class="ot">&lt;-</span> result_1<span class="sc">$</span>merged_df</span>
+<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a>df_res_for_plot_1 <span class="ot">&lt;-</span> result_1<span class="sc">$</span>df_res_for_plot</span>
+<span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a>resSig_1 <span class="ot">&lt;-</span> result_1<span class="sc">$</span>resSig</span></code></pre></div>
 </div>
 <div id="the-effect-of-treatment-in-aged" class="section level2" number="4.6">
 <h2><span class="header-section-number">4.6</span> The effect of treatment in Aged</h2>
 <p><strong>Res2</strong> The effect of treatment in Aged<br />
 </p>
 <p>This is, by definition, the main effect plus the interaction term (the extra condition effect in Age Aged compared to Age Control).</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>contrast_2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Condition_cae5H_vs_control&quot;</span>, <span class="st">&quot;Ageaged.Conditioncae5H&quot;</span>))</span>
-<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>result_2 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_2)</span>
-<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>merged_df_2 <span class="ot">&lt;-</span> result_2<span class="sc">$</span>merged_df</span>
-<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a>df_res_for_plot_2 <span class="ot">&lt;-</span> result_2<span class="sc">$</span>df_res_for_plot</span>
-<span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a>resSig_2 <span class="ot">&lt;-</span> result_2<span class="sc">$</span>resSig</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>contrast_2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Condition_cae5H_vs_control&quot;</span>, <span class="st">&quot;Ageaged.Conditioncae5H&quot;</span>))</span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>result_2 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_2)</span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>merged_df_2 <span class="ot">&lt;-</span> result_2<span class="sc">$</span>merged_df</span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>df_res_for_plot_2 <span class="ot">&lt;-</span> result_2<span class="sc">$</span>df_res_for_plot</span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>resSig_2 <span class="ot">&lt;-</span> result_2<span class="sc">$</span>resSig</span></code></pre></div>
 </div>
 <div id="aged-and-young-type" class="section level2" number="4.7">
 <h2><span class="header-section-number">4.7</span> Aged and Young-type</h2>
@@ -4569,88 +4598,122 @@ For example, a threshold of padj &lt; 0.05 means you accept a maximum of 5% fals
 </p>
 <p>What is the difference between Aged and Young-type without treatment (Control)?</p>
 <p>As Ctrl is the reference level, we can just retrieve the “Age_aged_vs_young”.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>contrast_3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Age&quot;</span>, <span class="st">&quot;young&quot;</span>, <span class="st">&quot;aged&quot;</span>)</span>
-<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>result_3 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_3)</span>
-<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>merged_df_3 <span class="ot">&lt;-</span> result_3<span class="sc">$</span>merged_df</span>
-<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>df_res_for_plot_3 <span class="ot">&lt;-</span> result_3<span class="sc">$</span>df_res_for_plot</span>
-<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>resSig_3 <span class="ot">&lt;-</span> result_3<span class="sc">$</span>resSig</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>contrast_3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Age&quot;</span>, <span class="st">&quot;young&quot;</span>, <span class="st">&quot;aged&quot;</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>result_3 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_3)</span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a>merged_df_3 <span class="ot">&lt;-</span> result_3<span class="sc">$</span>merged_df</span>
+<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>df_res_for_plot_3 <span class="ot">&lt;-</span> result_3<span class="sc">$</span>df_res_for_plot</span>
+<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a>resSig_3 <span class="ot">&lt;-</span> result_3<span class="sc">$</span>resSig</span></code></pre></div>
 </div>
 <div id="with-treatment-what-is-the-difference-between-aged-and-young" class="section level2" number="4.8">
 <h2><span class="header-section-number">4.8</span> With treatment, what is the difference between Aged and Young?</h2>
 <p><strong>Res4</strong> With treatment, what is the difference between Aged and Young?<br />
 </p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>contrast_4 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Age_aged_vs_young&quot;</span>, <span class="st">&quot;Ageaged.Conditioncae5H&quot;</span>))</span>
-<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>result_4 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_4)</span>
-<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a>merged_df_4 <span class="ot">&lt;-</span> result_4<span class="sc">$</span>merged_df</span>
-<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>df_res_for_plot_4 <span class="ot">&lt;-</span> result_4<span class="sc">$</span>df_res_for_plot</span>
-<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a>resSig_4 <span class="ot">&lt;-</span> result_4<span class="sc">$</span>resSig</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>contrast_4 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Age_aged_vs_young&quot;</span>, <span class="st">&quot;Ageaged.Conditioncae5H&quot;</span>))</span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>result_4 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_4)</span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>merged_df_4 <span class="ot">&lt;-</span> result_4<span class="sc">$</span>merged_df</span>
+<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a>df_res_for_plot_4 <span class="ot">&lt;-</span> result_4<span class="sc">$</span>df_res_for_plot</span>
+<span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>resSig_4 <span class="ot">&lt;-</span> result_4<span class="sc">$</span>resSig</span></code></pre></div>
 </div>
 <div id="the-different-response-in-ages-interaction-term" class="section level2" number="4.9">
 <h2><span class="header-section-number">4.9</span> The different response in Ages (interaction term)</h2>
 <p><strong>Res5</strong> Is the effect of treatment different across Ages?<br />
 </p>
 <p>Is the effect of treatment different across Ages? This is the interaction term.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>contrast_5 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Ageaged.Conditioncae5H&quot;</span>))</span>
-<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>result_5 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_5, <span class="at">alpha =</span> <span class="fl">0.01</span>, <span class="at">lfcThreshold =</span> <span class="dv">1</span>)</span>
-<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>merged_df_5 <span class="ot">&lt;-</span> result_5<span class="sc">$</span>merged_df</span>
-<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a>df_res_for_plot_5 <span class="ot">&lt;-</span> result_5<span class="sc">$</span>df_res_for_plot</span>
-<span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>resSig_5 <span class="ot">&lt;-</span> result_5<span class="sc">$</span>resSig</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>contrast_5 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Ageaged.Conditioncae5H&quot;</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>result_5 <span class="ot">&lt;-</span> <span class="fu">analyze_contrast</span>(dds2, contrast_5, <span class="at">alpha =</span> <span class="fl">0.01</span>, <span class="at">lfcThreshold =</span> <span class="dv">1</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>merged_df_5 <span class="ot">&lt;-</span> result_5<span class="sc">$</span>merged_df</span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>df_res_for_plot_5 <span class="ot">&lt;-</span> result_5<span class="sc">$</span>df_res_for_plot</span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>resSig_5 <span class="ot">&lt;-</span> result_5<span class="sc">$</span>resSig</span></code></pre></div>
 <div id="volcano-plot" class="section level3" number="4.9.1">
 <h3><span class="header-section-number">4.9.1</span> Volcano Plot</h3>
 <p><strong>Volcano Plot highlighting the top 5 genes</strong><br />
 </p>
 <p><strong>x = log2FoldChange 2 and y = padj 0.001</strong></p>
 <p>df_res_for_plot_1 was built using the function <strong>analyze_contrast</strong></p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="co"># Automatically get the top 5 significant genes</span></span>
-<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>top5_genes <span class="ot">&lt;-</span> <span class="fu">head</span>(df_res_for_plot_1[<span class="fu">order</span>(df_res_for_plot_1<span class="sc">$</span>padj), <span class="st">&quot;Row.names&quot;</span>], <span class="dv">5</span>)</span>
-<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a><span class="co"># Print them for reference</span></span>
-<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a><span class="fu">print</span>(top5_genes)</span>
-<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a></span>
-<span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a><span class="co"># Volcano plot using EnhancedVolcano</span></span>
-<span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a>volc_res1 <span class="ot">&lt;-</span> <span class="fu">EnhancedVolcano</span>(</span>
-<span id="cb48-9"><a href="#cb48-9" tabindex="-1"></a>  df_res_for_plot_1,</span>
-<span id="cb48-10"><a href="#cb48-10" tabindex="-1"></a>  <span class="at">lab =</span> df_res_for_plot_1<span class="sc">$</span>Row.names,</span>
-<span id="cb48-11"><a href="#cb48-11" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">&#39;log2FoldChange&#39;</span>,</span>
-<span id="cb48-12"><a href="#cb48-12" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">&#39;padj&#39;</span>,</span>
-<span id="cb48-13"><a href="#cb48-13" tabindex="-1"></a>  <span class="at">selectLab =</span> top5_genes,  <span class="co"># auto-selected genes</span></span>
-<span id="cb48-14"><a href="#cb48-14" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">bquote</span>(<span class="sc">~</span>Log[<span class="dv">2</span>]<span class="sc">~</span> <span class="st">&#39;fold change&#39;</span>),</span>
-<span id="cb48-15"><a href="#cb48-15" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="fu">bquote</span>(<span class="sc">~-</span>Log[<span class="dv">10</span>]<span class="sc">~</span>adjusted<span class="sc">~</span><span class="fu">italic</span>(p)),  <span class="co"># clearer Y-axis label</span></span>
-<span id="cb48-16"><a href="#cb48-16" tabindex="-1"></a>  <span class="at">pCutoff =</span> <span class="fl">0.001</span>,</span>
-<span id="cb48-17"><a href="#cb48-17" tabindex="-1"></a>  <span class="at">FCcutoff =</span> <span class="dv">4</span>,</span>
-<span id="cb48-18"><a href="#cb48-18" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&#39;Effect of treatment in Young&#39;</span>,</span>
-<span id="cb48-19"><a href="#cb48-19" tabindex="-1"></a>  <span class="at">subtitle =</span> <span class="st">&#39;Control vs cae5H&#39;</span>,</span>
-<span id="cb48-20"><a href="#cb48-20" tabindex="-1"></a>  <span class="at">pointSize =</span> <span class="fl">3.0</span>,</span>
-<span id="cb48-21"><a href="#cb48-21" tabindex="-1"></a>  <span class="at">labSize =</span> <span class="fl">4.0</span>,</span>
-<span id="cb48-22"><a href="#cb48-22" tabindex="-1"></a>  <span class="at">labCol =</span> <span class="st">&#39;black&#39;</span>,</span>
-<span id="cb48-23"><a href="#cb48-23" tabindex="-1"></a>  <span class="at">labFace =</span> <span class="st">&#39;bold&#39;</span>,</span>
-<span id="cb48-24"><a href="#cb48-24" tabindex="-1"></a>  <span class="at">boxedLabels =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb48-25"><a href="#cb48-25" tabindex="-1"></a>  <span class="at">drawConnectors =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb48-26"><a href="#cb48-26" tabindex="-1"></a>  <span class="at">widthConnectors =</span> <span class="fl">1.0</span>,</span>
-<span id="cb48-27"><a href="#cb48-27" tabindex="-1"></a>  <span class="at">colConnectors =</span> <span class="st">&#39;gray&#39;</span>,</span>
-<span id="cb48-28"><a href="#cb48-28" tabindex="-1"></a>  <span class="at">colAlpha =</span> <span class="fl">0.8</span>,</span>
-<span id="cb48-29"><a href="#cb48-29" tabindex="-1"></a>  <span class="at">legendPosition =</span> <span class="st">&#39;right&#39;</span>,</span>
-<span id="cb48-30"><a href="#cb48-30" tabindex="-1"></a>  <span class="at">legendLabSize =</span> <span class="dv">14</span>,</span>
-<span id="cb48-31"><a href="#cb48-31" tabindex="-1"></a>  <span class="at">legendIconSize =</span> <span class="fl">4.0</span>,</span>
-<span id="cb48-32"><a href="#cb48-32" tabindex="-1"></a>  <span class="at">gridlines.major =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb48-33"><a href="#cb48-33" tabindex="-1"></a>  <span class="at">gridlines.minor =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb48-34"><a href="#cb48-34" tabindex="-1"></a>  <span class="at">border =</span> <span class="st">&#39;partial&#39;</span>,</span>
-<span id="cb48-35"><a href="#cb48-35" tabindex="-1"></a>  <span class="at">borderWidth =</span> <span class="fl">0.5</span></span>
-<span id="cb48-36"><a href="#cb48-36" tabindex="-1"></a>)</span>
-<span id="cb48-37"><a href="#cb48-37" tabindex="-1"></a></span>
-<span id="cb48-38"><a href="#cb48-38" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/05_resultsSigTab_Volc_allENS_R1.png&quot;, volc_res1, width = 12.5, height = 14.6)</span></span>
-<span id="cb48-39"><a href="#cb48-39" tabindex="-1"></a></span>
-<span id="cb48-40"><a href="#cb48-40" tabindex="-1"></a></span>
-<span id="cb48-41"><a href="#cb48-41" tabindex="-1"></a><span class="co">#Export File</span></span>
-<span id="cb48-42"><a href="#cb48-42" tabindex="-1"></a>file1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(volc_res1<span class="sc">$</span>data)</span>
-<span id="cb48-43"><a href="#cb48-43" tabindex="-1"></a>file2 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(volc_res1<span class="sc">$</span>data<span class="sc">$</span>Sig)</span>
-<span id="cb48-44"><a href="#cb48-44" tabindex="-1"></a>sig_column <span class="ot">&lt;-</span> file2[, <span class="dv">1</span>]</span>
-<span id="cb48-45"><a href="#cb48-45" tabindex="-1"></a>file1<span class="sc">$</span>Sig <span class="ot">&lt;-</span> sig_column</span>
-<span id="cb48-46"><a href="#cb48-46" tabindex="-1"></a><span class="co">#write.table(file1,file=&#39;/Results/DFs/01_R1.tsv&#39;,quote=FALSE,sep=&quot;\t&quot;)</span></span>
-<span id="cb48-47"><a href="#cb48-47" tabindex="-1"></a><span class="do">############################</span><span class="re">END</span><span class="do">#################################</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="co"># Automatically get the top 5 significant genes</span></span>
+<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a>top5_genes <span class="ot">&lt;-</span> <span class="fu">head</span>(df_res_for_plot_1[<span class="fu">order</span>(df_res_for_plot_1<span class="sc">$</span>padj), <span class="st">&quot;Row.names&quot;</span>], <span class="dv">5</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a><span class="co"># Print them for reference</span></span>
+<span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a><span class="fu">print</span>(top5_genes)</span>
+<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a><span class="co"># Volcano plot using EnhancedVolcano</span></span>
+<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>volc_res1 <span class="ot">&lt;-</span> <span class="fu">EnhancedVolcano</span>(</span>
+<span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a>  df_res_for_plot_1,</span>
+<span id="cb49-10"><a href="#cb49-10" tabindex="-1"></a>  <span class="at">lab =</span> df_res_for_plot_1<span class="sc">$</span>Row.names,</span>
+<span id="cb49-11"><a href="#cb49-11" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">&#39;log2FoldChange&#39;</span>,</span>
+<span id="cb49-12"><a href="#cb49-12" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">&#39;padj&#39;</span>,</span>
+<span id="cb49-13"><a href="#cb49-13" tabindex="-1"></a>  <span class="at">selectLab =</span> top5_genes,  <span class="co"># auto-selected genes</span></span>
+<span id="cb49-14"><a href="#cb49-14" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">bquote</span>(<span class="sc">~</span>Log[<span class="dv">2</span>]<span class="sc">~</span> <span class="st">&#39;fold change&#39;</span>),</span>
+<span id="cb49-15"><a href="#cb49-15" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="fu">bquote</span>(<span class="sc">~-</span>Log[<span class="dv">10</span>]<span class="sc">~</span>adjusted<span class="sc">~</span><span class="fu">italic</span>(p)),  <span class="co"># clearer Y-axis label</span></span>
+<span id="cb49-16"><a href="#cb49-16" tabindex="-1"></a>  <span class="at">pCutoff =</span> <span class="fl">0.001</span>,</span>
+<span id="cb49-17"><a href="#cb49-17" tabindex="-1"></a>  <span class="at">FCcutoff =</span> <span class="dv">4</span>,</span>
+<span id="cb49-18"><a href="#cb49-18" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&#39;Effect of treatment in Young&#39;</span>,</span>
+<span id="cb49-19"><a href="#cb49-19" tabindex="-1"></a>  <span class="at">subtitle =</span> <span class="st">&#39;Control vs cae5H&#39;</span>,</span>
+<span id="cb49-20"><a href="#cb49-20" tabindex="-1"></a>  <span class="at">pointSize =</span> <span class="fl">3.0</span>,</span>
+<span id="cb49-21"><a href="#cb49-21" tabindex="-1"></a>  <span class="at">labSize =</span> <span class="fl">4.0</span>,</span>
+<span id="cb49-22"><a href="#cb49-22" tabindex="-1"></a>  <span class="at">labCol =</span> <span class="st">&#39;black&#39;</span>,</span>
+<span id="cb49-23"><a href="#cb49-23" tabindex="-1"></a>  <span class="at">labFace =</span> <span class="st">&#39;bold&#39;</span>,</span>
+<span id="cb49-24"><a href="#cb49-24" tabindex="-1"></a>  <span class="at">boxedLabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb49-25"><a href="#cb49-25" tabindex="-1"></a>  <span class="at">drawConnectors =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb49-26"><a href="#cb49-26" tabindex="-1"></a>  <span class="at">widthConnectors =</span> <span class="fl">1.0</span>,</span>
+<span id="cb49-27"><a href="#cb49-27" tabindex="-1"></a>  <span class="at">colConnectors =</span> <span class="st">&#39;gray&#39;</span>,</span>
+<span id="cb49-28"><a href="#cb49-28" tabindex="-1"></a>  <span class="at">colAlpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb49-29"><a href="#cb49-29" tabindex="-1"></a>  <span class="at">legendPosition =</span> <span class="st">&#39;right&#39;</span>,</span>
+<span id="cb49-30"><a href="#cb49-30" tabindex="-1"></a>  <span class="at">legendLabSize =</span> <span class="dv">14</span>,</span>
+<span id="cb49-31"><a href="#cb49-31" tabindex="-1"></a>  <span class="at">legendIconSize =</span> <span class="fl">4.0</span>,</span>
+<span id="cb49-32"><a href="#cb49-32" tabindex="-1"></a>  <span class="at">gridlines.major =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb49-33"><a href="#cb49-33" tabindex="-1"></a>  <span class="at">gridlines.minor =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb49-34"><a href="#cb49-34" tabindex="-1"></a>  <span class="at">border =</span> <span class="st">&#39;partial&#39;</span>,</span>
+<span id="cb49-35"><a href="#cb49-35" tabindex="-1"></a>  <span class="at">borderWidth =</span> <span class="fl">0.5</span></span>
+<span id="cb49-36"><a href="#cb49-36" tabindex="-1"></a>)</span>
+<span id="cb49-37"><a href="#cb49-37" tabindex="-1"></a></span>
+<span id="cb49-38"><a href="#cb49-38" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/05_resultsSigTab_Volc_allENS_R1.png&quot;, volc_res1, width = 12.5, height = 14.6)</span></span>
+<span id="cb49-39"><a href="#cb49-39" tabindex="-1"></a></span>
+<span id="cb49-40"><a href="#cb49-40" tabindex="-1"></a></span>
+<span id="cb49-41"><a href="#cb49-41" tabindex="-1"></a><span class="co">#Export File</span></span>
+<span id="cb49-42"><a href="#cb49-42" tabindex="-1"></a>file1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(volc_res1<span class="sc">$</span>data)</span>
+<span id="cb49-43"><a href="#cb49-43" tabindex="-1"></a>file2 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(volc_res1<span class="sc">$</span>data<span class="sc">$</span>Sig)</span>
+<span id="cb49-44"><a href="#cb49-44" tabindex="-1"></a>sig_column <span class="ot">&lt;-</span> file2[, <span class="dv">1</span>]</span>
+<span id="cb49-45"><a href="#cb49-45" tabindex="-1"></a>file1<span class="sc">$</span>Sig <span class="ot">&lt;-</span> sig_column</span>
+<span id="cb49-46"><a href="#cb49-46" tabindex="-1"></a><span class="co">#write.table(file1,file=&#39;/Results/DFs/01_R1.tsv&#39;,quote=FALSE,sep=&quot;\t&quot;)</span></span>
+<span id="cb49-47"><a href="#cb49-47" tabindex="-1"></a><span class="do">############################</span><span class="re">END</span><span class="do">#################################</span></span></code></pre></div>
 </div>
-<div id="heatmap-fc_p" class="section level3" number="4.9.2">
-<h3><span class="header-section-number">4.9.2</span> HeatMap FC_P</h3>
+<div id="volcano-plot-planb" class="section level3" number="4.9.2">
+<h3><span class="header-section-number">4.9.2</span> Volcano Plot: PlanB</h3>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a><span class="co"># Cleaned data for Plotly</span></span>
+<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a>df_res_for_plot_1<span class="sc">$</span>log10padj <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(df_res_for_plot_1<span class="sc">$</span>padj)</span>
+<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>df_res_for_plot_1<span class="sc">$</span>hovertext <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a>  <span class="st">&quot;Gene: &quot;</span>, df_res_for_plot_1<span class="sc">$</span>Row.names, <span class="st">&quot;&lt;br&gt;&quot;</span>,</span>
+<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>  <span class="st">&quot;log2FC: &quot;</span>, <span class="fu">round</span>(df_res_for_plot_1<span class="sc">$</span>log2FoldChange, <span class="dv">2</span>), <span class="st">&quot;&lt;br&gt;&quot;</span>,</span>
+<span id="cb50-8"><a href="#cb50-8" tabindex="-1"></a>  <span class="st">&quot;-log10(padj): &quot;</span>, <span class="fu">round</span>(df_res_for_plot_1<span class="sc">$</span>log10padj, <span class="dv">2</span>)</span>
+<span id="cb50-9"><a href="#cb50-9" tabindex="-1"></a>)</span>
+<span id="cb50-10"><a href="#cb50-10" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="#cb50-11" tabindex="-1"></a>plotly_volcano <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(</span>
+<span id="cb50-12"><a href="#cb50-12" tabindex="-1"></a>  <span class="at">data =</span> df_res_for_plot_1,</span>
+<span id="cb50-13"><a href="#cb50-13" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>log2FoldChange,</span>
+<span id="cb50-14"><a href="#cb50-14" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>log10padj,</span>
+<span id="cb50-15"><a href="#cb50-15" tabindex="-1"></a>  <span class="at">text =</span> <span class="sc">~</span>hovertext,</span>
+<span id="cb50-16"><a href="#cb50-16" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;scatter&quot;</span>,</span>
+<span id="cb50-17"><a href="#cb50-17" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">&quot;markers&quot;</span>,</span>
+<span id="cb50-18"><a href="#cb50-18" tabindex="-1"></a>  <span class="at">marker =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="fu">ifelse</span>(df_res_for_plot_1<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.001</span> <span class="sc">&amp;</span> <span class="fu">abs</span>(df_res_for_plot_1<span class="sc">$</span>log2FoldChange) <span class="sc">&gt;</span> <span class="dv">4</span>, <span class="st">&quot;#CA0020&quot;</span>, <span class="st">&quot;gray&quot;</span>), <span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb50-19"><a href="#cb50-19" tabindex="-1"></a>  <span class="at">hoverinfo =</span> <span class="st">&quot;text&quot;</span></span>
+<span id="cb50-20"><a href="#cb50-20" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-21"><a href="#cb50-21" tabindex="-1"></a>  <span class="fu">layout</span>(</span>
+<span id="cb50-22"><a href="#cb50-22" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Effect of treatment in Young&lt;br&gt;&lt;sub&gt;Control vs cae5H&lt;/sub&gt;&quot;</span>,</span>
+<span id="cb50-23"><a href="#cb50-23" tabindex="-1"></a>    <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">&quot;Log2 fold change&quot;</span>),</span>
+<span id="cb50-24"><a href="#cb50-24" tabindex="-1"></a>    <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">&quot;-Log10 adjusted p-value&quot;</span>)</span>
+<span id="cb50-25"><a href="#cb50-25" tabindex="-1"></a>  )</span>
+<span id="cb50-26"><a href="#cb50-26" tabindex="-1"></a></span>
+<span id="cb50-27"><a href="#cb50-27" tabindex="-1"></a>plotly_volcano</span>
+<span id="cb50-28"><a href="#cb50-28" tabindex="-1"></a></span>
+<span id="cb50-29"><a href="#cb50-29" tabindex="-1"></a></span>
+<span id="cb50-30"><a href="#cb50-30" tabindex="-1"></a>df_res_for_plot_1<span class="sc">$</span>Sig <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df_res_for_plot_1<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.001</span> <span class="sc">&amp;</span> <span class="fu">abs</span>(df_res_for_plot_1<span class="sc">$</span>log2FoldChange) <span class="sc">&gt;</span> <span class="dv">4</span>, <span class="st">&quot;Significant&quot;</span>, <span class="st">&quot;Not Sig&quot;</span>)</span>
+<span id="cb50-31"><a href="#cb50-31" tabindex="-1"></a><span class="co">#write.table(df_res_for_plot_1, file = &quot;Results/DFs/01_R1.tsv&quot;, sep = &quot;\t&quot;, quote = FALSE)</span></span></code></pre></div>
+</div>
+<div id="heatmap-fc_p" class="section level3" number="4.9.3">
+<h3><span class="header-section-number">4.9.3</span> HeatMap FC_P</h3>
 <p><strong>HeatMap of the top 20 genes, ranked bylog2 FoldChange: using only FC_P.</strong><br />
 </p>
 <p><strong>Foldchange = 2 </strong><br />
@@ -4659,88 +4722,88 @@ For example, a threshold of padj &lt; 0.05 means you accept a maximum of 5% fals
 </p>
 <p>Euclidean sample distances after vst transformation<br />
 </p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a>vst_res_2 <span class="ot">=</span> <span class="fu">vst</span>(dds2)</span>
-<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a></span>
-<span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a>dfH <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(dds2)[,<span class="fu">c</span>(<span class="st">&quot;Age&quot;</span>,<span class="st">&quot;Condition&quot;</span>)])</span>
-<span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a>dfH<span class="sc">$</span>Age <span class="ot">=</span> <span class="fu">factor</span>(dfH<span class="sc">$</span>Age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;young&quot;</span>, <span class="st">&quot;aged&quot;</span>))</span>
-<span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a>metaR_age <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#C0C0C0&quot;</span>,<span class="st">&quot;#BC8F8F&quot;</span>) </span>
-<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a><span class="fu">names</span>(metaR_age) <span class="ot">&lt;-</span> <span class="fu">levels</span>(dfH<span class="sc">$</span>Age)</span>
-<span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a></span>
-<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>dfH<span class="sc">$</span>Condition <span class="ot">=</span> <span class="fu">factor</span>(dfH<span class="sc">$</span>Condition, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;control&quot;</span>,<span class="st">&quot;cae5H&quot;</span>)) </span>
-<span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a>metaR_condition <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#264D59&quot;</span>, <span class="st">&quot;#77A515&quot;</span>) </span>
-<span id="cb49-10"><a href="#cb49-10" tabindex="-1"></a><span class="fu">names</span>(metaR_condition) <span class="ot">&lt;-</span> <span class="fu">levels</span>(dfH<span class="sc">$</span>Condition)</span>
-<span id="cb49-11"><a href="#cb49-11" tabindex="-1"></a></span>
-<span id="cb49-12"><a href="#cb49-12" tabindex="-1"></a>metaR_AnnColour <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb49-13"><a href="#cb49-13" tabindex="-1"></a>  <span class="at">Age =</span> metaR_age)</span>
-<span id="cb49-14"><a href="#cb49-14" tabindex="-1"></a>metaR_AnnColour2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb49-15"><a href="#cb49-15" tabindex="-1"></a>  <span class="at">Condition =</span> metaR_condition)</span>
-<span id="cb49-16"><a href="#cb49-16" tabindex="-1"></a>metaR_AnnColourx <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb49-17"><a href="#cb49-17" tabindex="-1"></a>  <span class="at">Condition =</span> metaR_condition,</span>
-<span id="cb49-18"><a href="#cb49-18" tabindex="-1"></a>  <span class="at">Age =</span> metaR_age)</span>
-<span id="cb49-19"><a href="#cb49-19" tabindex="-1"></a></span>
-<span id="cb49-20"><a href="#cb49-20" tabindex="-1"></a><span class="co"># Check the output</span></span>
-<span id="cb49-21"><a href="#cb49-21" tabindex="-1"></a>metaR_AnnColourx</span>
-<span id="cb49-22"><a href="#cb49-22" tabindex="-1"></a>SampleOrder <span class="ot">=</span> <span class="fu">order</span>(dfH<span class="sc">$</span>Age, dfH<span class="sc">$</span>Condition)</span>
-<span id="cb49-23"><a href="#cb49-23" tabindex="-1"></a>meta.factors <span class="ot">&lt;-</span> dfH[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb49-24"><a href="#cb49-24" tabindex="-1"></a>colsHeat<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#F7F7F7&quot;</span>, <span class="st">&quot;#92C5DE&quot;</span>, <span class="st">&quot;#0571B0&quot;</span>, <span class="st">&quot;#F4A582&quot;</span>, <span class="st">&quot;#CA0020&quot;</span>)</span>
-<span id="cb49-25"><a href="#cb49-25" tabindex="-1"></a></span>
-<span id="cb49-26"><a href="#cb49-26" tabindex="-1"></a><span class="do">###################################################################</span></span>
-<span id="cb49-27"><a href="#cb49-27" tabindex="-1"></a><span class="co"># List of result objects</span></span>
-<span id="cb49-28"><a href="#cb49-28" tabindex="-1"></a></span>
-<span id="cb49-29"><a href="#cb49-29" tabindex="-1"></a>resSig_1DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_1)</span>
-<span id="cb49-30"><a href="#cb49-30" tabindex="-1"></a>resSig_2DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_2)</span>
-<span id="cb49-31"><a href="#cb49-31" tabindex="-1"></a>resSig_3DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_3)</span>
-<span id="cb49-32"><a href="#cb49-32" tabindex="-1"></a>resSig_4DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_4)</span>
-<span id="cb49-33"><a href="#cb49-33" tabindex="-1"></a>resSig_5DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_5)</span>
-<span id="cb49-34"><a href="#cb49-34" tabindex="-1"></a></span>
-<span id="cb49-35"><a href="#cb49-35" tabindex="-1"></a><span class="co">#df_res_for_plot_2</span></span>
-<span id="cb49-36"><a href="#cb49-36" tabindex="-1"></a>result_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb49-37"><a href="#cb49-37" tabindex="-1"></a>  resSig_1DF,</span>
-<span id="cb49-38"><a href="#cb49-38" tabindex="-1"></a>  resSig_2DF,</span>
-<span id="cb49-39"><a href="#cb49-39" tabindex="-1"></a>  resSig_3DF,</span>
-<span id="cb49-40"><a href="#cb49-40" tabindex="-1"></a>  resSig_4DF,</span>
-<span id="cb49-41"><a href="#cb49-41" tabindex="-1"></a>  resSig_5DF</span>
-<span id="cb49-42"><a href="#cb49-42" tabindex="-1"></a>)</span>
-<span id="cb49-43"><a href="#cb49-43" tabindex="-1"></a></span>
-<span id="cb49-44"><a href="#cb49-44" tabindex="-1"></a></span>
-<span id="cb49-45"><a href="#cb49-45" tabindex="-1"></a><span class="co"># Define an empty list to store genes for each result</span></span>
-<span id="cb49-46"><a href="#cb49-46" tabindex="-1"></a>genes_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb49-47"><a href="#cb49-47" tabindex="-1"></a></span>
-<span id="cb49-48"><a href="#cb49-48" tabindex="-1"></a><span class="co"># Loop over the result objects and extract genes</span></span>
-<span id="cb49-49"><a href="#cb49-49" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(result_list)) {</span>
-<span id="cb49-50"><a href="#cb49-50" tabindex="-1"></a>  genes_list[[<span class="fu">paste0</span>(<span class="st">&quot;genes_res&quot;</span>, i)]] <span class="ot">&lt;-</span> </span>
-<span id="cb49-51"><a href="#cb49-51" tabindex="-1"></a>    <span class="fu">order</span>(result_list[[i]]<span class="sc">$</span>log2FoldChange, <span class="at">decreasing=</span><span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>]</span>
-<span id="cb49-52"><a href="#cb49-52" tabindex="-1"></a>}</span>
-<span id="cb49-53"><a href="#cb49-53" tabindex="-1"></a></span>
-<span id="cb49-54"><a href="#cb49-54" tabindex="-1"></a><span class="co"># Define a list to store the pheatmap plots</span></span>
-<span id="cb49-55"><a href="#cb49-55" tabindex="-1"></a>pheatmap_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb49-56"><a href="#cb49-56" tabindex="-1"></a></span>
-<span id="cb49-57"><a href="#cb49-57" tabindex="-1"></a><span class="co"># Loop over the genes and generate the pheatmap plots</span></span>
-<span id="cb49-58"><a href="#cb49-58" tabindex="-1"></a><span class="co"># Create a directory to save the plots (if it doesn&#39;t already exist)</span></span>
-<span id="cb49-59"><a href="#cb49-59" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">&quot;pheatmap_plotsNEW&quot;</span>)) {</span>
-<span id="cb49-60"><a href="#cb49-60" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="st">&quot;pheatmap_plotsNEW&quot;</span>)</span>
-<span id="cb49-61"><a href="#cb49-61" tabindex="-1"></a>}</span>
-<span id="cb49-62"><a href="#cb49-62" tabindex="-1"></a></span>
-<span id="cb49-63"><a href="#cb49-63" tabindex="-1"></a><span class="co"># Loop over the genes and generate the pheatmap plots</span></span>
-<span id="cb49-64"><a href="#cb49-64" tabindex="-1"></a><span class="cf">for</span> (gene_set <span class="cf">in</span> <span class="fu">names</span>(genes_list)) {</span>
-<span id="cb49-65"><a href="#cb49-65" tabindex="-1"></a>  pheatmap_res <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
-<span id="cb49-66"><a href="#cb49-66" tabindex="-1"></a>    <span class="fu">assay</span>(vst_res_2)[genes_list[[gene_set]], SampleOrder],</span>
-<span id="cb49-67"><a href="#cb49-67" tabindex="-1"></a>    <span class="at">scale =</span> <span class="st">&quot;row&quot;</span>,</span>
-<span id="cb49-68"><a href="#cb49-68" tabindex="-1"></a>    <span class="at">show_rownames =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb49-69"><a href="#cb49-69" tabindex="-1"></a>    <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb49-70"><a href="#cb49-70" tabindex="-1"></a>    <span class="at">cluster_cols =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb49-71"><a href="#cb49-71" tabindex="-1"></a>    <span class="at">cluster_rows =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb49-72"><a href="#cb49-72" tabindex="-1"></a>    <span class="at">annotation_colors =</span> metaR_AnnColourx,</span>
-<span id="cb49-73"><a href="#cb49-73" tabindex="-1"></a>    <span class="at">annotation_col =</span> meta.factors,</span>
-<span id="cb49-74"><a href="#cb49-74" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(colsHeat))(<span class="dv">255</span>),</span>
-<span id="cb49-75"><a href="#cb49-75" tabindex="-1"></a>    <span class="at">display_numbers =</span> <span class="cn">FALSE</span></span>
-<span id="cb49-76"><a href="#cb49-76" tabindex="-1"></a>  )</span>
-<span id="cb49-77"><a href="#cb49-77" tabindex="-1"></a>  pheatmap_list[[gene_set]] <span class="ot">&lt;-</span> pheatmap_res</span>
-<span id="cb49-78"><a href="#cb49-78" tabindex="-1"></a>  </span>
-<span id="cb49-79"><a href="#cb49-79" tabindex="-1"></a><span class="co"># Save the plot</span></span>
-<span id="cb49-80"><a href="#cb49-80" tabindex="-1"></a><span class="co"># ggsave(paste0(&quot;pheatmap_plotsNEW/EN_pheatmap_plotsNEW&quot;, gene_set, &quot;.png&quot;), pheatmap_res)</span></span>
-<span id="cb49-81"><a href="#cb49-81" tabindex="-1"></a>}</span>
-<span id="cb49-82"><a href="#cb49-82" tabindex="-1"></a><span class="co"># Access each pheatmap using pheatmap_list$genes, pheatmap_list$genes_res2, etc.</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a>vst_res_2 <span class="ot">=</span> <span class="fu">vst</span>(dds2)</span>
+<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" tabindex="-1"></a>dfH <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(dds2)[,<span class="fu">c</span>(<span class="st">&quot;Age&quot;</span>,<span class="st">&quot;Condition&quot;</span>)])</span>
+<span id="cb51-4"><a href="#cb51-4" tabindex="-1"></a>dfH<span class="sc">$</span>Age <span class="ot">=</span> <span class="fu">factor</span>(dfH<span class="sc">$</span>Age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;young&quot;</span>, <span class="st">&quot;aged&quot;</span>))</span>
+<span id="cb51-5"><a href="#cb51-5" tabindex="-1"></a>metaR_age <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#C0C0C0&quot;</span>,<span class="st">&quot;#BC8F8F&quot;</span>) </span>
+<span id="cb51-6"><a href="#cb51-6" tabindex="-1"></a><span class="fu">names</span>(metaR_age) <span class="ot">&lt;-</span> <span class="fu">levels</span>(dfH<span class="sc">$</span>Age)</span>
+<span id="cb51-7"><a href="#cb51-7" tabindex="-1"></a></span>
+<span id="cb51-8"><a href="#cb51-8" tabindex="-1"></a>dfH<span class="sc">$</span>Condition <span class="ot">=</span> <span class="fu">factor</span>(dfH<span class="sc">$</span>Condition, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;control&quot;</span>,<span class="st">&quot;cae5H&quot;</span>)) </span>
+<span id="cb51-9"><a href="#cb51-9" tabindex="-1"></a>metaR_condition <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#264D59&quot;</span>, <span class="st">&quot;#77A515&quot;</span>) </span>
+<span id="cb51-10"><a href="#cb51-10" tabindex="-1"></a><span class="fu">names</span>(metaR_condition) <span class="ot">&lt;-</span> <span class="fu">levels</span>(dfH<span class="sc">$</span>Condition)</span>
+<span id="cb51-11"><a href="#cb51-11" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="#cb51-12" tabindex="-1"></a>metaR_AnnColour <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb51-13"><a href="#cb51-13" tabindex="-1"></a>  <span class="at">Age =</span> metaR_age)</span>
+<span id="cb51-14"><a href="#cb51-14" tabindex="-1"></a>metaR_AnnColour2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb51-15"><a href="#cb51-15" tabindex="-1"></a>  <span class="at">Condition =</span> metaR_condition)</span>
+<span id="cb51-16"><a href="#cb51-16" tabindex="-1"></a>metaR_AnnColourx <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb51-17"><a href="#cb51-17" tabindex="-1"></a>  <span class="at">Condition =</span> metaR_condition,</span>
+<span id="cb51-18"><a href="#cb51-18" tabindex="-1"></a>  <span class="at">Age =</span> metaR_age)</span>
+<span id="cb51-19"><a href="#cb51-19" tabindex="-1"></a></span>
+<span id="cb51-20"><a href="#cb51-20" tabindex="-1"></a><span class="co"># Check the output</span></span>
+<span id="cb51-21"><a href="#cb51-21" tabindex="-1"></a>metaR_AnnColourx</span>
+<span id="cb51-22"><a href="#cb51-22" tabindex="-1"></a>SampleOrder <span class="ot">=</span> <span class="fu">order</span>(dfH<span class="sc">$</span>Age, dfH<span class="sc">$</span>Condition)</span>
+<span id="cb51-23"><a href="#cb51-23" tabindex="-1"></a>meta.factors <span class="ot">&lt;-</span> dfH[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb51-24"><a href="#cb51-24" tabindex="-1"></a>colsHeat<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#F7F7F7&quot;</span>, <span class="st">&quot;#92C5DE&quot;</span>, <span class="st">&quot;#0571B0&quot;</span>, <span class="st">&quot;#F4A582&quot;</span>, <span class="st">&quot;#CA0020&quot;</span>)</span>
+<span id="cb51-25"><a href="#cb51-25" tabindex="-1"></a></span>
+<span id="cb51-26"><a href="#cb51-26" tabindex="-1"></a><span class="do">###################################################################</span></span>
+<span id="cb51-27"><a href="#cb51-27" tabindex="-1"></a><span class="co"># List of result objects</span></span>
+<span id="cb51-28"><a href="#cb51-28" tabindex="-1"></a></span>
+<span id="cb51-29"><a href="#cb51-29" tabindex="-1"></a>resSig_1DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_1)</span>
+<span id="cb51-30"><a href="#cb51-30" tabindex="-1"></a>resSig_2DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_2)</span>
+<span id="cb51-31"><a href="#cb51-31" tabindex="-1"></a>resSig_3DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_3)</span>
+<span id="cb51-32"><a href="#cb51-32" tabindex="-1"></a>resSig_4DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_4)</span>
+<span id="cb51-33"><a href="#cb51-33" tabindex="-1"></a>resSig_5DF <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(resSig_5)</span>
+<span id="cb51-34"><a href="#cb51-34" tabindex="-1"></a></span>
+<span id="cb51-35"><a href="#cb51-35" tabindex="-1"></a><span class="co">#df_res_for_plot_2</span></span>
+<span id="cb51-36"><a href="#cb51-36" tabindex="-1"></a>result_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb51-37"><a href="#cb51-37" tabindex="-1"></a>  resSig_1DF,</span>
+<span id="cb51-38"><a href="#cb51-38" tabindex="-1"></a>  resSig_2DF,</span>
+<span id="cb51-39"><a href="#cb51-39" tabindex="-1"></a>  resSig_3DF,</span>
+<span id="cb51-40"><a href="#cb51-40" tabindex="-1"></a>  resSig_4DF,</span>
+<span id="cb51-41"><a href="#cb51-41" tabindex="-1"></a>  resSig_5DF</span>
+<span id="cb51-42"><a href="#cb51-42" tabindex="-1"></a>)</span>
+<span id="cb51-43"><a href="#cb51-43" tabindex="-1"></a></span>
+<span id="cb51-44"><a href="#cb51-44" tabindex="-1"></a></span>
+<span id="cb51-45"><a href="#cb51-45" tabindex="-1"></a><span class="co"># Define an empty list to store genes for each result</span></span>
+<span id="cb51-46"><a href="#cb51-46" tabindex="-1"></a>genes_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb51-47"><a href="#cb51-47" tabindex="-1"></a></span>
+<span id="cb51-48"><a href="#cb51-48" tabindex="-1"></a><span class="co"># Loop over the result objects and extract genes</span></span>
+<span id="cb51-49"><a href="#cb51-49" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(result_list)) {</span>
+<span id="cb51-50"><a href="#cb51-50" tabindex="-1"></a>  genes_list[[<span class="fu">paste0</span>(<span class="st">&quot;genes_res&quot;</span>, i)]] <span class="ot">&lt;-</span> </span>
+<span id="cb51-51"><a href="#cb51-51" tabindex="-1"></a>    <span class="fu">order</span>(result_list[[i]]<span class="sc">$</span>log2FoldChange, <span class="at">decreasing=</span><span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>]</span>
+<span id="cb51-52"><a href="#cb51-52" tabindex="-1"></a>}</span>
+<span id="cb51-53"><a href="#cb51-53" tabindex="-1"></a></span>
+<span id="cb51-54"><a href="#cb51-54" tabindex="-1"></a><span class="co"># Define a list to store the pheatmap plots</span></span>
+<span id="cb51-55"><a href="#cb51-55" tabindex="-1"></a>pheatmap_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb51-56"><a href="#cb51-56" tabindex="-1"></a></span>
+<span id="cb51-57"><a href="#cb51-57" tabindex="-1"></a><span class="co"># Loop over the genes and generate the pheatmap plots</span></span>
+<span id="cb51-58"><a href="#cb51-58" tabindex="-1"></a><span class="co"># Create a directory to save the plots (if it doesn&#39;t already exist)</span></span>
+<span id="cb51-59"><a href="#cb51-59" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">&quot;pheatmap_plotsNEW&quot;</span>)) {</span>
+<span id="cb51-60"><a href="#cb51-60" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="st">&quot;pheatmap_plotsNEW&quot;</span>)</span>
+<span id="cb51-61"><a href="#cb51-61" tabindex="-1"></a>}</span>
+<span id="cb51-62"><a href="#cb51-62" tabindex="-1"></a></span>
+<span id="cb51-63"><a href="#cb51-63" tabindex="-1"></a><span class="co"># Loop over the genes and generate the pheatmap plots</span></span>
+<span id="cb51-64"><a href="#cb51-64" tabindex="-1"></a><span class="cf">for</span> (gene_set <span class="cf">in</span> <span class="fu">names</span>(genes_list)) {</span>
+<span id="cb51-65"><a href="#cb51-65" tabindex="-1"></a>  pheatmap_res <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
+<span id="cb51-66"><a href="#cb51-66" tabindex="-1"></a>    <span class="fu">assay</span>(vst_res_2)[genes_list[[gene_set]], SampleOrder],</span>
+<span id="cb51-67"><a href="#cb51-67" tabindex="-1"></a>    <span class="at">scale =</span> <span class="st">&quot;row&quot;</span>,</span>
+<span id="cb51-68"><a href="#cb51-68" tabindex="-1"></a>    <span class="at">show_rownames =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb51-69"><a href="#cb51-69" tabindex="-1"></a>    <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb51-70"><a href="#cb51-70" tabindex="-1"></a>    <span class="at">cluster_cols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb51-71"><a href="#cb51-71" tabindex="-1"></a>    <span class="at">cluster_rows =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb51-72"><a href="#cb51-72" tabindex="-1"></a>    <span class="at">annotation_colors =</span> metaR_AnnColourx,</span>
+<span id="cb51-73"><a href="#cb51-73" tabindex="-1"></a>    <span class="at">annotation_col =</span> meta.factors,</span>
+<span id="cb51-74"><a href="#cb51-74" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(colsHeat))(<span class="dv">255</span>),</span>
+<span id="cb51-75"><a href="#cb51-75" tabindex="-1"></a>    <span class="at">display_numbers =</span> <span class="cn">FALSE</span></span>
+<span id="cb51-76"><a href="#cb51-76" tabindex="-1"></a>  )</span>
+<span id="cb51-77"><a href="#cb51-77" tabindex="-1"></a>  pheatmap_list[[gene_set]] <span class="ot">&lt;-</span> pheatmap_res</span>
+<span id="cb51-78"><a href="#cb51-78" tabindex="-1"></a>  </span>
+<span id="cb51-79"><a href="#cb51-79" tabindex="-1"></a><span class="co"># Save the plot</span></span>
+<span id="cb51-80"><a href="#cb51-80" tabindex="-1"></a><span class="co"># ggsave(paste0(&quot;pheatmap_plotsNEW/EN_pheatmap_plotsNEW&quot;, gene_set, &quot;.png&quot;), pheatmap_res)</span></span>
+<span id="cb51-81"><a href="#cb51-81" tabindex="-1"></a>}</span>
+<span id="cb51-82"><a href="#cb51-82" tabindex="-1"></a><span class="co"># Access each pheatmap using pheatmap_list$genes, pheatmap_list$genes_res2, etc.</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -4749,94 +4812,94 @@ For example, a threshold of padj &lt; 0.05 means you accept a maximum of 5% fals
 <p>fgsea is an R-package for fast preranked gene set enrichment analysis (GSEA). This package allows to quickly and accurately calculate arbitrarily low GSEA P-values for a collection of gene sets. P-value estimation is based on an adaptive multi-level split Monte-Carlo scheme.</p>
 <p>GSEA assumes you use as input all genes in your data set, that are ranked on e.g. signed log p-value, and the algorithm then identifies which gene sets are enriched at the top (and bottom) of your ranked list.</p>
 <p><strong>You may interpret this as gene sets being activated and suppressed, respectively, by your treatment compared to the reference.</strong></p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> df_res_for_plot_1 </span>
-<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>res2<span class="sc">$</span>Row.names <span class="ot">&lt;-</span> res2<span class="sc">$</span>Row.names</span>
-<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a>dge_df <span class="ot">&lt;-</span> res2</span>
-<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a></span>
-<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a><span class="co"># First let&#39;s create a mapped data frame we can join to the differential</span></span>
-<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a><span class="co"># expression stats</span></span>
-<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>dge_mapped_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb50-8"><a href="#cb50-8" tabindex="-1"></a>  <span class="at">gene_symbol =</span> <span class="fu">mapIds</span>(</span>
-<span id="cb50-9"><a href="#cb50-9" tabindex="-1"></a>    <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb50-10"><a href="#cb50-10" tabindex="-1"></a>    org.Mm.eg.db,</span>
-<span id="cb50-11"><a href="#cb50-11" tabindex="-1"></a>    <span class="at">keys =</span> dge_df<span class="sc">$</span>Row.names,</span>
-<span id="cb50-12"><a href="#cb50-12" tabindex="-1"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb50-13"><a href="#cb50-13" tabindex="-1"></a>    <span class="at">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
-<span id="cb50-14"><a href="#cb50-14" tabindex="-1"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb50-15"><a href="#cb50-15" tabindex="-1"></a>    <span class="at">column =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
-<span id="cb50-16"><a href="#cb50-16" tabindex="-1"></a>    <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
-<span id="cb50-17"><a href="#cb50-17" tabindex="-1"></a>    <span class="at">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
-<span id="cb50-18"><a href="#cb50-18" tabindex="-1"></a>  )</span>
-<span id="cb50-19"><a href="#cb50-19" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb50-20"><a href="#cb50-20" tabindex="-1"></a>  <span class="co"># If an Ensembl gene identifier doesn&#39;t map to a gene symbol, drop that</span></span>
-<span id="cb50-21"><a href="#cb50-21" tabindex="-1"></a>  <span class="co"># from the data frame</span></span>
-<span id="cb50-22"><a href="#cb50-22" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol)) <span class="sc">%&gt;%</span></span>
-<span id="cb50-23"><a href="#cb50-23" tabindex="-1"></a>  <span class="co"># Make an `Ensembl` column to store the rownames</span></span>
-<span id="cb50-24"><a href="#cb50-24" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb50-25"><a href="#cb50-25" tabindex="-1"></a>  <span class="co"># Now let&#39;s join the rest of the expression data</span></span>
-<span id="cb50-26"><a href="#cb50-26" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">inner_join</span>(dge_df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Ensembl&quot;</span> <span class="ot">=</span> <span class="st">&quot;Row.names&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> df_res_for_plot_1 </span>
+<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a>res2<span class="sc">$</span>Row.names <span class="ot">&lt;-</span> res2<span class="sc">$</span>Row.names</span>
+<span id="cb52-3"><a href="#cb52-3" tabindex="-1"></a>dge_df <span class="ot">&lt;-</span> res2</span>
+<span id="cb52-4"><a href="#cb52-4" tabindex="-1"></a></span>
+<span id="cb52-5"><a href="#cb52-5" tabindex="-1"></a><span class="co"># First let&#39;s create a mapped data frame we can join to the differential</span></span>
+<span id="cb52-6"><a href="#cb52-6" tabindex="-1"></a><span class="co"># expression stats</span></span>
+<span id="cb52-7"><a href="#cb52-7" tabindex="-1"></a>dge_mapped_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb52-8"><a href="#cb52-8" tabindex="-1"></a>  <span class="at">gene_symbol =</span> <span class="fu">mapIds</span>(</span>
+<span id="cb52-9"><a href="#cb52-9" tabindex="-1"></a>    <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb52-10"><a href="#cb52-10" tabindex="-1"></a>    org.Mm.eg.db,</span>
+<span id="cb52-11"><a href="#cb52-11" tabindex="-1"></a>    <span class="at">keys =</span> dge_df<span class="sc">$</span>Row.names,</span>
+<span id="cb52-12"><a href="#cb52-12" tabindex="-1"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb52-13"><a href="#cb52-13" tabindex="-1"></a>    <span class="at">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
+<span id="cb52-14"><a href="#cb52-14" tabindex="-1"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb52-15"><a href="#cb52-15" tabindex="-1"></a>    <span class="at">column =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
+<span id="cb52-16"><a href="#cb52-16" tabindex="-1"></a>    <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
+<span id="cb52-17"><a href="#cb52-17" tabindex="-1"></a>    <span class="at">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
+<span id="cb52-18"><a href="#cb52-18" tabindex="-1"></a>  )</span>
+<span id="cb52-19"><a href="#cb52-19" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb52-20"><a href="#cb52-20" tabindex="-1"></a>  <span class="co"># If an Ensembl gene identifier doesn&#39;t map to a gene symbol, drop that</span></span>
+<span id="cb52-21"><a href="#cb52-21" tabindex="-1"></a>  <span class="co"># from the data frame</span></span>
+<span id="cb52-22"><a href="#cb52-22" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol)) <span class="sc">%&gt;%</span></span>
+<span id="cb52-23"><a href="#cb52-23" tabindex="-1"></a>  <span class="co"># Make an `Ensembl` column to store the rownames</span></span>
+<span id="cb52-24"><a href="#cb52-24" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb52-25"><a href="#cb52-25" tabindex="-1"></a>  <span class="co"># Now let&#39;s join the rest of the expression data</span></span>
+<span id="cb52-26"><a href="#cb52-26" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">inner_join</span>(dge_df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Ensembl&quot;</span> <span class="ot">=</span> <span class="st">&quot;Row.names&quot;</span>))</span></code></pre></div>
 <div id="load-hallmark" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Load Hallmark</h2>
 <p><strong>Mus musculus H</strong><br />
 </p>
 <p>Hallmark patway: <strong>mh.all.v2023.2.Mm.symbols.gmt</strong><br />
 </p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="co">#  msigdbr_species()</span></span>
-<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a></span>
-<span id="cb51-3"><a href="#cb51-3" tabindex="-1"></a>mm_hallmark_sets <span class="ot">&lt;-</span> <span class="fu">msigdbr</span>(</span>
-<span id="cb51-4"><a href="#cb51-4" tabindex="-1"></a>  <span class="at">species =</span> <span class="st">&quot;Mus musculus&quot;</span>, <span class="co">#</span></span>
-<span id="cb51-5"><a href="#cb51-5" tabindex="-1"></a>  <span class="at">category =</span> <span class="st">&quot;H&quot;</span></span>
-<span id="cb51-6"><a href="#cb51-6" tabindex="-1"></a>)</span>
-<span id="cb51-7"><a href="#cb51-7" tabindex="-1"></a></span>
-<span id="cb51-8"><a href="#cb51-8" tabindex="-1"></a><span class="fu">head</span>(mm_hallmark_sets)</span>
-<span id="cb51-9"><a href="#cb51-9" tabindex="-1"></a></span>
-<span id="cb51-10"><a href="#cb51-10" tabindex="-1"></a><span class="do">########</span></span>
-<span id="cb51-11"><a href="#cb51-11" tabindex="-1"></a><span class="co"># Load the pathway (gene set) into a named list</span></span>
-<span id="cb51-12"><a href="#cb51-12" tabindex="-1"></a><span class="co"># downloaded mysigdb were located in my &quot;~&quot; directory:</span></span>
-<span id="cb51-13"><a href="#cb51-13" tabindex="-1"></a>pathways.hallmark <span class="ot">&lt;-</span> <span class="fu">gmtPathways</span>(<span class="st">&quot;https://github.com/biosustain/dsp_transcriptomics_training/blob/main/data/databases/mh.all.v2023.2.Mm.symbols.gmt&quot;</span>)</span>
-<span id="cb51-14"><a href="#cb51-14" tabindex="-1"></a><span class="co"># show a few lines from the pathways file</span></span>
-<span id="cb51-15"><a href="#cb51-15" tabindex="-1"></a><span class="co">#head(pathways.hallmark)</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="co">#  msigdbr_species()</span></span>
+<span id="cb53-2"><a href="#cb53-2" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" tabindex="-1"></a>mm_hallmark_sets <span class="ot">&lt;-</span> <span class="fu">msigdbr</span>(</span>
+<span id="cb53-4"><a href="#cb53-4" tabindex="-1"></a>  <span class="at">species =</span> <span class="st">&quot;Mus musculus&quot;</span>, <span class="co">#</span></span>
+<span id="cb53-5"><a href="#cb53-5" tabindex="-1"></a>  <span class="at">category =</span> <span class="st">&quot;H&quot;</span></span>
+<span id="cb53-6"><a href="#cb53-6" tabindex="-1"></a>)</span>
+<span id="cb53-7"><a href="#cb53-7" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" tabindex="-1"></a><span class="fu">head</span>(mm_hallmark_sets)</span>
+<span id="cb53-9"><a href="#cb53-9" tabindex="-1"></a></span>
+<span id="cb53-10"><a href="#cb53-10" tabindex="-1"></a><span class="do">########</span></span>
+<span id="cb53-11"><a href="#cb53-11" tabindex="-1"></a><span class="co"># Load the pathway (gene set) into a named list</span></span>
+<span id="cb53-12"><a href="#cb53-12" tabindex="-1"></a><span class="co"># downloaded mysigdb were located in my &quot;~&quot; directory:</span></span>
+<span id="cb53-13"><a href="#cb53-13" tabindex="-1"></a>pathways.hallmark <span class="ot">&lt;-</span> <span class="fu">gmtPathways</span>(<span class="st">&quot;https://github.com/biosustain/dsp_transcriptomics_training/blob/main/data/databases/mh.all.v2023.2.Mm.symbols.gmt&quot;</span>)</span>
+<span id="cb53-14"><a href="#cb53-14" tabindex="-1"></a><span class="co"># show a few lines from the pathways file</span></span>
+<span id="cb53-15"><a href="#cb53-15" tabindex="-1"></a><span class="co">#head(pathways.hallmark)</span></span></code></pre></div>
 <div id="removing-duplicated-ids" class="section level3" number="5.1.1">
 <h3><span class="header-section-number">5.1.1</span> Removing Duplicated IDs</h3>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(dge_mapped_df<span class="sc">$</span>gene_symbol))</span>
-<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a></span>
-<span id="cb52-3"><a href="#cb52-3" tabindex="-1"></a>dup_gene_symbols <span class="ot">&lt;-</span> dge_mapped_df <span class="sc">%&gt;%</span></span>
-<span id="cb52-4"><a href="#cb52-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">duplicated</span>(gene_symbol)) <span class="sc">%&gt;%</span></span>
-<span id="cb52-5"><a href="#cb52-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(gene_symbol)</span>
-<span id="cb52-6"><a href="#cb52-6" tabindex="-1"></a></span>
-<span id="cb52-7"><a href="#cb52-7" tabindex="-1"></a></span>
-<span id="cb52-8"><a href="#cb52-8" tabindex="-1"></a>dge_mapped_df <span class="sc">%&gt;%</span></span>
-<span id="cb52-9"><a href="#cb52-9" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(gene_symbol <span class="sc">%in%</span> dup_gene_symbols) <span class="sc">%&gt;%</span></span>
-<span id="cb52-10"><a href="#cb52-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(gene_symbol)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(dge_mapped_df<span class="sc">$</span>gene_symbol))</span>
+<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a>dup_gene_symbols <span class="ot">&lt;-</span> dge_mapped_df <span class="sc">%&gt;%</span></span>
+<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">duplicated</span>(gene_symbol)) <span class="sc">%&gt;%</span></span>
+<span id="cb54-5"><a href="#cb54-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(gene_symbol)</span>
+<span id="cb54-6"><a href="#cb54-6" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" tabindex="-1"></a></span>
+<span id="cb54-8"><a href="#cb54-8" tabindex="-1"></a>dge_mapped_df <span class="sc">%&gt;%</span></span>
+<span id="cb54-9"><a href="#cb54-9" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(gene_symbol <span class="sc">%in%</span> dup_gene_symbols) <span class="sc">%&gt;%</span></span>
+<span id="cb54-10"><a href="#cb54-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(gene_symbol)</span></code></pre></div>
 </div>
 </div>
 <div id="ranking-signed-log-and-p-value" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Ranking signed log and p-value</h2>
 <p>Sort so that the highest absolute values of the log2 fold change are at the top.<br />
 </p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a>filtered_dge_mapped_df <span class="ot">&lt;-</span> dge_mapped_df <span class="sc">%&gt;%</span></span>
-<span id="cb53-2"><a href="#cb53-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(dplyr<span class="sc">::</span><span class="fu">desc</span>(<span class="fu">abs</span>(log2FoldChange))) <span class="sc">%&gt;%</span></span>
-<span id="cb53-3"><a href="#cb53-3" tabindex="-1"></a>  <span class="co"># Filter out the duplicated rows using `dplyr::distinct()`</span></span>
-<span id="cb53-4"><a href="#cb53-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>(gene_symbol, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb53-5"><a href="#cb53-5" tabindex="-1"></a></span>
-<span id="cb53-6"><a href="#cb53-6" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(filtered_dge_mapped_df<span class="sc">$</span>gene_symbol))</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a>filtered_dge_mapped_df <span class="ot">&lt;-</span> dge_mapped_df <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(dplyr<span class="sc">::</span><span class="fu">desc</span>(<span class="fu">abs</span>(log2FoldChange))) <span class="sc">%&gt;%</span></span>
+<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>  <span class="co"># Filter out the duplicated rows using `dplyr::distinct()`</span></span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>(gene_symbol, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(filtered_dge_mapped_df<span class="sc">$</span>gene_symbol))</span></code></pre></div>
 <div id="making-the-vector-list" class="section level3" number="5.2.1">
 <h3><span class="header-section-number">5.2.1</span> Making the vector list</h3>
 <p>Let’s create a named vector ranked based on the log2 fold change values</p>
 <p>We need to sort the log2 fold change values in descending order here</p>
 <p>Look at first entries of the ranked log2 fold change vector</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a>lfc_vector <span class="ot">&lt;-</span> filtered_dge_mapped_df<span class="sc">$</span>log2FoldChange</span>
-<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a><span class="fu">names</span>(lfc_vector) <span class="ot">&lt;-</span> filtered_dge_mapped_df<span class="sc">$</span>gene_symbol</span>
-<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a>lfc_vector <span class="ot">&lt;-</span> <span class="fu">sort</span>(lfc_vector, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb54-5"><a href="#cb54-5" tabindex="-1"></a></span>
-<span id="cb54-6"><a href="#cb54-6" tabindex="-1"></a><span class="fu">head</span>(lfc_vector)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a>lfc_vector <span class="ot">&lt;-</span> filtered_dge_mapped_df<span class="sc">$</span>log2FoldChange</span>
+<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a><span class="fu">names</span>(lfc_vector) <span class="ot">&lt;-</span> filtered_dge_mapped_df<span class="sc">$</span>gene_symbol</span>
+<span id="cb56-3"><a href="#cb56-3" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="#cb56-4" tabindex="-1"></a>lfc_vector <span class="ot">&lt;-</span> <span class="fu">sort</span>(lfc_vector, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb56-5"><a href="#cb56-5" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="#cb56-6" tabindex="-1"></a><span class="fu">head</span>(lfc_vector)</span></code></pre></div>
 </div>
 </div>
 <div id="running-gsea-function" class="section level2" number="5.3">
 <h2><span class="header-section-number">5.3</span> Running GSEA function</h2>
 <p><strong>Set the seed so our results are reproducible</strong></p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2020</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2020</span>)</span></code></pre></div>
 <p><strong>GSEA function</strong></p>
 <p>Here, we can change the parameters.<br />
 </p>
@@ -4853,147 +4916,147 @@ p-value cutoff 0.001 0.05
 Boundary for calculating the p value
 Set seed to make results reproducible
 Benjamini-Hochberg correction</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a>gsea_results <span class="ot">&lt;-</span> <span class="fu">GSEA</span>(</span>
-<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a>  <span class="at">geneList =</span> lfc_vector, </span>
-<span id="cb56-3"><a href="#cb56-3" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">10</span>, </span>
-<span id="cb56-4"><a href="#cb56-4" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>, </span>
-<span id="cb56-5"><a href="#cb56-5" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.001</span>, </span>
-<span id="cb56-6"><a href="#cb56-6" tabindex="-1"></a>  <span class="at">eps =</span> <span class="dv">0</span>, </span>
-<span id="cb56-7"><a href="#cb56-7" tabindex="-1"></a>  <span class="at">seed =</span> <span class="cn">TRUE</span>, <span class="co"># </span></span>
-<span id="cb56-8"><a href="#cb56-8" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, </span>
-<span id="cb56-9"><a href="#cb56-9" tabindex="-1"></a>  <span class="at">TERM2GENE =</span> dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
-<span id="cb56-10"><a href="#cb56-10" tabindex="-1"></a>    mm_hallmark_sets,</span>
-<span id="cb56-11"><a href="#cb56-11" tabindex="-1"></a>    gs_name,</span>
-<span id="cb56-12"><a href="#cb56-12" tabindex="-1"></a>    gene_symbol</span>
-<span id="cb56-13"><a href="#cb56-13" tabindex="-1"></a>  )</span>
-<span id="cb56-14"><a href="#cb56-14" tabindex="-1"></a>)</span>
-<span id="cb56-15"><a href="#cb56-15" tabindex="-1"></a></span>
-<span id="cb56-16"><a href="#cb56-16" tabindex="-1"></a><span class="co"># We can access the results from our `gsea_results` object using `@result`</span></span>
-<span id="cb56-17"><a href="#cb56-17" tabindex="-1"></a><span class="fu">head</span>(gsea_results<span class="sc">@</span>result)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a>gsea_results <span class="ot">&lt;-</span> <span class="fu">GSEA</span>(</span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a>  <span class="at">geneList =</span> lfc_vector, </span>
+<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">10</span>, </span>
+<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>, </span>
+<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.001</span>, </span>
+<span id="cb58-6"><a href="#cb58-6" tabindex="-1"></a>  <span class="at">eps =</span> <span class="dv">0</span>, </span>
+<span id="cb58-7"><a href="#cb58-7" tabindex="-1"></a>  <span class="at">seed =</span> <span class="cn">TRUE</span>, <span class="co"># </span></span>
+<span id="cb58-8"><a href="#cb58-8" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, </span>
+<span id="cb58-9"><a href="#cb58-9" tabindex="-1"></a>  <span class="at">TERM2GENE =</span> dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb58-10"><a href="#cb58-10" tabindex="-1"></a>    mm_hallmark_sets,</span>
+<span id="cb58-11"><a href="#cb58-11" tabindex="-1"></a>    gs_name,</span>
+<span id="cb58-12"><a href="#cb58-12" tabindex="-1"></a>    gene_symbol</span>
+<span id="cb58-13"><a href="#cb58-13" tabindex="-1"></a>  )</span>
+<span id="cb58-14"><a href="#cb58-14" tabindex="-1"></a>)</span>
+<span id="cb58-15"><a href="#cb58-15" tabindex="-1"></a></span>
+<span id="cb58-16"><a href="#cb58-16" tabindex="-1"></a><span class="co"># We can access the results from our `gsea_results` object using `@result`</span></span>
+<span id="cb58-17"><a href="#cb58-17" tabindex="-1"></a><span class="fu">head</span>(gsea_results<span class="sc">@</span>result)</span></code></pre></div>
 <div id="making-a-dataframe-of-the-results" class="section level3" number="5.3.1">
 <h3><span class="header-section-number">5.3.1</span> Making a dataframe of the results</h3>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a>gsea_result_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(gsea_results<span class="sc">@</span>result)</span></code></pre></div>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="co">#4.8 Write results to file</span></span>
-<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="co">#readr::write_tsv(</span></span>
-<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a><span class="co">#  gsea_result_df,</span></span>
-<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a><span class="co">#    &quot;/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/06_Res5_SRP123625_gsea_results.tsv&quot;</span></span>
-<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a><span class="co">#)</span></span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a>gsea_result_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(gsea_results<span class="sc">@</span>result)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="co">#4.8 Write results to file</span></span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="co">#readr::write_tsv(</span></span>
+<span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a><span class="co">#  gsea_result_df,</span></span>
+<span id="cb60-4"><a href="#cb60-4" tabindex="-1"></a><span class="co">#    &quot;/Users/flb202/Documents/KU/BRIC/Projects/Arnes_Kristina/Results/DFs/06_Res5_SRP123625_gsea_results.tsv&quot;</span></span>
+<span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a><span class="co">#)</span></span></code></pre></div>
 </div>
 <div id="visualizing-results" class="section level3" number="5.3.2">
 <h3><span class="header-section-number">5.3.2</span> Visualizing results</h3>
 <p>This returns the 3 rows with the largest NES values</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a>gsea_result_df <span class="sc">%&gt;%</span></span>
-<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_max</span>(NES, <span class="at">n =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a>gsea_result_df <span class="sc">%&gt;%</span></span>
+<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_max</span>(NES, <span class="at">n =</span> <span class="dv">3</span>)</span></code></pre></div>
 </div>
 <div id="most-positive" class="section level3" number="5.3.3">
 <h3><span class="header-section-number">5.3.3</span> Most positive</h3>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a>most_positive_nes_plotdf3 <span class="ot">&lt;-</span> enrichplot<span class="sc">::</span><span class="fu">gseaplot</span>(</span>
-<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a>  gsea_results,</span>
-<span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a>  <span class="at">geneSetID =</span> <span class="st">&quot;HALLMARK_PANCREAS_BETA_CELLS&quot;</span>,</span>
-<span id="cb60-4"><a href="#cb60-4" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;PANCREAS BETA_CELLS&quot;</span>,</span>
-<span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a>  <span class="at">color.line =</span> <span class="st">&quot;#0d76ff&quot;</span></span>
-<span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>)</span>
-<span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a>most_positive_nes_plotdf3</span>
-<span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a></span>
-<span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/19_Res5_most_positive_nes_plot.png&quot;, most_positive_nes_plotdf3, width = 6.74, height = 5.47)</span></span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>most_positive_nes_plotdf3 <span class="ot">&lt;-</span> enrichplot<span class="sc">::</span><span class="fu">gseaplot</span>(</span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a>  gsea_results,</span>
+<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a>  <span class="at">geneSetID =</span> <span class="st">&quot;HALLMARK_PANCREAS_BETA_CELLS&quot;</span>,</span>
+<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;PANCREAS BETA_CELLS&quot;</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a>  <span class="at">color.line =</span> <span class="st">&quot;#0d76ff&quot;</span></span>
+<span id="cb62-6"><a href="#cb62-6" tabindex="-1"></a>)</span>
+<span id="cb62-7"><a href="#cb62-7" tabindex="-1"></a>most_positive_nes_plotdf3</span>
+<span id="cb62-8"><a href="#cb62-8" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="#cb62-9" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/19_Res5_most_positive_nes_plot.png&quot;, most_positive_nes_plotdf3, width = 6.74, height = 5.47)</span></span></code></pre></div>
 </div>
 <div id="most-negative" class="section level3" number="5.3.4">
 <h3><span class="header-section-number">5.3.4</span> Most Negative</h3>
 <p>Return the 3 rows with the smallest (most negative) NES values</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a>gsea_result_df <span class="sc">%&gt;%</span></span>
-<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_min</span>(NES, <span class="at">n =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a>gsea_result_df <span class="sc">%&gt;%</span></span>
+<span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_min</span>(NES, <span class="at">n =</span> <span class="dv">3</span>)</span></code></pre></div>
 </div>
 <div id="most-negative-1" class="section level3" number="5.3.5">
 <h3><span class="header-section-number">5.3.5</span> Most Negative</h3>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>most_negative_nes_plot3 <span class="ot">&lt;-</span> enrichplot<span class="sc">::</span><span class="fu">gseaplot</span>(</span>
-<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a>  gsea_results,</span>
-<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a>  <span class="at">geneSetID =</span> <span class="st">&quot;HALLMARK_KRAS_SIGNALING_UP&quot;</span>,</span>
-<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;KRAS SIGNALING UP&quot;</span>,</span>
-<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a>  <span class="at">color.line =</span> <span class="st">&quot;#0d76ff&quot;</span></span>
-<span id="cb62-6"><a href="#cb62-6" tabindex="-1"></a>)</span>
-<span id="cb62-7"><a href="#cb62-7" tabindex="-1"></a>most_negative_nes_plot3</span>
-<span id="cb62-8"><a href="#cb62-8" tabindex="-1"></a><span class="co">#/Results/20_Res5_most_negative_nes_plot.png&quot;, most_negative_nes_plot3, width = 6.74, height = 5.47)</span></span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a>most_negative_nes_plot3 <span class="ot">&lt;-</span> enrichplot<span class="sc">::</span><span class="fu">gseaplot</span>(</span>
+<span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a>  gsea_results,</span>
+<span id="cb64-3"><a href="#cb64-3" tabindex="-1"></a>  <span class="at">geneSetID =</span> <span class="st">&quot;HALLMARK_KRAS_SIGNALING_UP&quot;</span>,</span>
+<span id="cb64-4"><a href="#cb64-4" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;KRAS SIGNALING UP&quot;</span>,</span>
+<span id="cb64-5"><a href="#cb64-5" tabindex="-1"></a>  <span class="at">color.line =</span> <span class="st">&quot;#0d76ff&quot;</span></span>
+<span id="cb64-6"><a href="#cb64-6" tabindex="-1"></a>)</span>
+<span id="cb64-7"><a href="#cb64-7" tabindex="-1"></a>most_negative_nes_plot3</span>
+<span id="cb64-8"><a href="#cb64-8" tabindex="-1"></a><span class="co">#/Results/20_Res5_most_negative_nes_plot.png&quot;, most_negative_nes_plot3, width = 6.74, height = 5.47)</span></span></code></pre></div>
 </div>
 <div id="dotplot-showing-10-categories" class="section level3" number="5.3.6">
 <h3><span class="header-section-number">5.3.6</span> DotPlot Showing 10 Categories</h3>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a>Res2_Dotplot <span class="ot">&lt;-</span> <span class="fu">dotplot</span>(gsea_results, <span class="at">showCategory=</span><span class="dv">10</span>, <span class="at">split=</span><span class="st">&quot;.sign&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a><span class="fu">theme</span>(</span>
-<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a>  <span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>), </span>
-<span id="cb63-4"><a href="#cb63-4" tabindex="-1"></a>  <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), </span>
-<span id="cb63-5"><a href="#cb63-5" tabindex="-1"></a>  <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb63-6"><a href="#cb63-6" tabindex="-1"></a>  <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
-<span id="cb63-7"><a href="#cb63-7" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>),</span>
-<span id="cb63-8"><a href="#cb63-8" tabindex="-1"></a>  <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>), </span>
-<span id="cb63-9"><a href="#cb63-9" tabindex="-1"></a>  <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb63-10"><a href="#cb63-10" tabindex="-1"></a>  <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>() ,</span>
-<span id="cb63-11"><a href="#cb63-11" tabindex="-1"></a>  <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb63-12"><a href="#cb63-12" tabindex="-1"></a>  <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>( <span class="at">linewidth=</span>.<span class="dv">1</span>, <span class="at">color=</span><span class="st">&quot;gray&quot;</span> ),</span>
-<span id="cb63-13"><a href="#cb63-13" tabindex="-1"></a>  <span class="at">panel.ontop =</span> <span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb63-14"><a href="#cb63-14" tabindex="-1"></a>  <span class="fu">facet_grid</span>(.<span class="sc">~</span>.sign)</span>
-<span id="cb63-15"><a href="#cb63-15" tabindex="-1"></a></span>
-<span id="cb63-16"><a href="#cb63-16" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/21_Res5_Dotplot.png&quot;, Res2_Dotplot, width = 9.26, height = 7.77)</span></span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a>Res2_Dotplot <span class="ot">&lt;-</span> <span class="fu">dotplot</span>(gsea_results, <span class="at">showCategory=</span><span class="dv">10</span>, <span class="at">split=</span><span class="st">&quot;.sign&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb65-2"><a href="#cb65-2" tabindex="-1"></a><span class="fu">theme</span>(</span>
+<span id="cb65-3"><a href="#cb65-3" tabindex="-1"></a>  <span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>), </span>
+<span id="cb65-4"><a href="#cb65-4" tabindex="-1"></a>  <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), </span>
+<span id="cb65-5"><a href="#cb65-5" tabindex="-1"></a>  <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb65-6"><a href="#cb65-6" tabindex="-1"></a>  <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb65-7"><a href="#cb65-7" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>),</span>
+<span id="cb65-8"><a href="#cb65-8" tabindex="-1"></a>  <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>), </span>
+<span id="cb65-9"><a href="#cb65-9" tabindex="-1"></a>  <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb65-10"><a href="#cb65-10" tabindex="-1"></a>  <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>() ,</span>
+<span id="cb65-11"><a href="#cb65-11" tabindex="-1"></a>  <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb65-12"><a href="#cb65-12" tabindex="-1"></a>  <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>( <span class="at">linewidth=</span>.<span class="dv">1</span>, <span class="at">color=</span><span class="st">&quot;gray&quot;</span> ),</span>
+<span id="cb65-13"><a href="#cb65-13" tabindex="-1"></a>  <span class="at">panel.ontop =</span> <span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb65-14"><a href="#cb65-14" tabindex="-1"></a>  <span class="fu">facet_grid</span>(.<span class="sc">~</span>.sign)</span>
+<span id="cb65-15"><a href="#cb65-15" tabindex="-1"></a></span>
+<span id="cb65-16"><a href="#cb65-16" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/21_Res5_Dotplot.png&quot;, Res2_Dotplot, width = 9.26, height = 7.77)</span></span></code></pre></div>
 </div>
 <div id="category-netplot" class="section level3" number="5.3.7">
 <h3><span class="header-section-number">5.3.7</span> Category Netplot</h3>
 <p>The cnetplot depicts the linkages of genes and biological concepts (e.g. GO terms or KEGG pathways) as a network (helpful to see which genes are involved in enriched pathways and genes that may belong to multiple annotation categories).</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a>lfc_vector_top100 <span class="ot">&lt;-</span> lfc_vector[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a>gsea_results_100 <span class="ot">&lt;-</span> gsea_results[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>]</span>
-<span id="cb64-3"><a href="#cb64-3" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">foldChange=</span>lfc_vector)</span>
-<span id="cb64-4"><a href="#cb64-4" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">categorySize=</span><span class="st">&quot;pvalue&quot;</span>, <span class="at">foldChange=</span>lfc_vector)</span>
-<span id="cb64-5"><a href="#cb64-5" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">foldChange=</span>lfc_vector, <span class="at">circular =</span> <span class="cn">TRUE</span>, <span class="at">colorEdge =</span> <span class="cn">TRUE</span>) </span>
-<span id="cb64-6"><a href="#cb64-6" tabindex="-1"></a></span>
-<span id="cb64-7"><a href="#cb64-7" tabindex="-1"></a><span class="co">#Res2_cneplot &lt;- cowplot::plot_grid(p1, p2, p3, ncol=3, labels=LETTERS[1:3], rel_widths=c(.8, .8, 1.2))</span></span>
-<span id="cb64-8"><a href="#cb64-8" tabindex="-1"></a></span>
-<span id="cb64-9"><a href="#cb64-9" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/22_Res5_cneplot.png&quot;, Res2_cneplot, width = 25.26, height = 7.77)</span></span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a>lfc_vector_top100 <span class="ot">&lt;-</span> lfc_vector[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb66-2"><a href="#cb66-2" tabindex="-1"></a>gsea_results_100 <span class="ot">&lt;-</span> gsea_results[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>]</span>
+<span id="cb66-3"><a href="#cb66-3" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">foldChange=</span>lfc_vector)</span>
+<span id="cb66-4"><a href="#cb66-4" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">categorySize=</span><span class="st">&quot;pvalue&quot;</span>, <span class="at">foldChange=</span>lfc_vector)</span>
+<span id="cb66-5"><a href="#cb66-5" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">foldChange=</span>lfc_vector, <span class="at">circular =</span> <span class="cn">TRUE</span>, <span class="at">colorEdge =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb66-6"><a href="#cb66-6" tabindex="-1"></a></span>
+<span id="cb66-7"><a href="#cb66-7" tabindex="-1"></a><span class="co">#Res2_cneplot &lt;- cowplot::plot_grid(p1, p2, p3, ncol=3, labels=LETTERS[1:3], rel_widths=c(.8, .8, 1.2))</span></span>
+<span id="cb66-8"><a href="#cb66-8" tabindex="-1"></a></span>
+<span id="cb66-9"><a href="#cb66-9" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/22_Res5_cneplot.png&quot;, Res2_cneplot, width = 25.26, height = 7.77)</span></span></code></pre></div>
 </div>
 <div id="category-netplot-2" class="section level3" number="5.3.8">
 <h3><span class="header-section-number">5.3.8</span> Category Netplot 2</h3>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;category&quot;</span>, </span>
-<span id="cb65-2"><a href="#cb65-2" tabindex="-1"></a>        <span class="at">cex_label_category =</span> <span class="fl">1.2</span>) </span>
-<span id="cb65-3"><a href="#cb65-3" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;gene&quot;</span>, </span>
-<span id="cb65-4"><a href="#cb65-4" tabindex="-1"></a>        <span class="at">cex_label_gene =</span> <span class="fl">0.8</span>) </span>
-<span id="cb65-5"><a href="#cb65-5" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;all&quot;</span>) </span>
-<span id="cb65-6"><a href="#cb65-6" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;none&quot;</span>, </span>
-<span id="cb65-7"><a href="#cb65-7" tabindex="-1"></a>        <span class="at">color_category=</span><span class="st">&#39;firebrick&#39;</span>, </span>
-<span id="cb65-8"><a href="#cb65-8" tabindex="-1"></a>        <span class="at">color_gene=</span><span class="st">&#39;steelblue&#39;</span>) </span>
-<span id="cb65-9"><a href="#cb65-9" tabindex="-1"></a><span class="co">#Res2_cneplot2 &lt;- cowplot::plot_grid(p1, p2, p3, p4, ncol=2, labels=LETTERS[1:4])</span></span>
-<span id="cb65-10"><a href="#cb65-10" tabindex="-1"></a></span>
-<span id="cb65-11"><a href="#cb65-11" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/23_Res5_cneplot2.png&quot;, Res2_cneplot2, width = 18.26, height = 14.77)</span></span>
-<span id="cb65-12"><a href="#cb65-12" tabindex="-1"></a><span class="co">#Res2_cneplot2</span></span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;category&quot;</span>, </span>
+<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a>        <span class="at">cex_label_category =</span> <span class="fl">1.2</span>) </span>
+<span id="cb67-3"><a href="#cb67-3" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;gene&quot;</span>, </span>
+<span id="cb67-4"><a href="#cb67-4" tabindex="-1"></a>        <span class="at">cex_label_gene =</span> <span class="fl">0.8</span>) </span>
+<span id="cb67-5"><a href="#cb67-5" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;all&quot;</span>) </span>
+<span id="cb67-6"><a href="#cb67-6" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">cnetplot</span>(gsea_results, <span class="at">node_label=</span><span class="st">&quot;none&quot;</span>, </span>
+<span id="cb67-7"><a href="#cb67-7" tabindex="-1"></a>        <span class="at">color_category=</span><span class="st">&#39;firebrick&#39;</span>, </span>
+<span id="cb67-8"><a href="#cb67-8" tabindex="-1"></a>        <span class="at">color_gene=</span><span class="st">&#39;steelblue&#39;</span>) </span>
+<span id="cb67-9"><a href="#cb67-9" tabindex="-1"></a><span class="co">#Res2_cneplot2 &lt;- cowplot::plot_grid(p1, p2, p3, p4, ncol=2, labels=LETTERS[1:4])</span></span>
+<span id="cb67-10"><a href="#cb67-10" tabindex="-1"></a></span>
+<span id="cb67-11"><a href="#cb67-11" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/23_Res5_cneplot2.png&quot;, Res2_cneplot2, width = 18.26, height = 14.77)</span></span>
+<span id="cb67-12"><a href="#cb67-12" tabindex="-1"></a><span class="co">#Res2_cneplot2</span></span></code></pre></div>
 </div>
 <div id="ridgeplot" class="section level3" number="5.3.9">
 <h3><span class="header-section-number">5.3.9</span> Ridgeplot</h3>
 <p>Grouped by gene set, density plots are generated by using the frequency of fold change values per gene within each set. Helpful to interpret up/down-regulated pathways.</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a>Res2_ridgeplot <span class="ot">&lt;-</span> <span class="fu">ridgeplot</span>(gsea_results) <span class="sc">+</span> </span>
-<span id="cb66-2"><a href="#cb66-2" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb66-3"><a href="#cb66-3" tabindex="-1"></a>  <span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">1</span>), </span>
-<span id="cb66-4"><a href="#cb66-4" tabindex="-1"></a>  <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), </span>
-<span id="cb66-5"><a href="#cb66-5" tabindex="-1"></a>  <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">1</span>),</span>
-<span id="cb66-6"><a href="#cb66-6" tabindex="-1"></a>  <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>),</span>
-<span id="cb66-7"><a href="#cb66-7" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
-<span id="cb66-8"><a href="#cb66-8" tabindex="-1"></a>  <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">1</span>), </span>
-<span id="cb66-9"><a href="#cb66-9" tabindex="-1"></a>  <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
-<span id="cb66-10"><a href="#cb66-10" tabindex="-1"></a>  <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb66-11"><a href="#cb66-11" tabindex="-1"></a>  <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;white&quot;</span>),</span>
-<span id="cb66-12"><a href="#cb66-12" tabindex="-1"></a>  <span class="at">panel.grid.minor.y =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;white&quot;</span>),</span>
-<span id="cb66-13"><a href="#cb66-13" tabindex="-1"></a>  <span class="at">panel.grid.minor.x =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;white&quot;</span>),</span>
-<span id="cb66-14"><a href="#cb66-14" tabindex="-1"></a>  <span class="at">panel.ontop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb66-15"><a href="#cb66-15" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;enrichment distribution&quot;</span>)</span>
-<span id="cb66-16"><a href="#cb66-16" tabindex="-1"></a></span>
-<span id="cb66-17"><a href="#cb66-17" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/24_Res5_ridgeplot.png&quot;, Res2_ridgeplot, width = 9.26, height = 7.77)</span></span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a>Res2_ridgeplot <span class="ot">&lt;-</span> <span class="fu">ridgeplot</span>(gsea_results) <span class="sc">+</span> </span>
+<span id="cb68-2"><a href="#cb68-2" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb68-3"><a href="#cb68-3" tabindex="-1"></a>  <span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">1</span>), </span>
+<span id="cb68-4"><a href="#cb68-4" tabindex="-1"></a>  <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>), </span>
+<span id="cb68-5"><a href="#cb68-5" tabindex="-1"></a>  <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">1</span>),</span>
+<span id="cb68-6"><a href="#cb68-6" tabindex="-1"></a>  <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb68-7"><a href="#cb68-7" tabindex="-1"></a>  <span class="at">legend.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb68-8"><a href="#cb68-8" tabindex="-1"></a>  <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">1</span>), </span>
+<span id="cb68-9"><a href="#cb68-9" tabindex="-1"></a>  <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb68-10"><a href="#cb68-10" tabindex="-1"></a>  <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb68-11"><a href="#cb68-11" tabindex="-1"></a>  <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;white&quot;</span>),</span>
+<span id="cb68-12"><a href="#cb68-12" tabindex="-1"></a>  <span class="at">panel.grid.minor.y =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;white&quot;</span>),</span>
+<span id="cb68-13"><a href="#cb68-13" tabindex="-1"></a>  <span class="at">panel.grid.minor.x =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;white&quot;</span>),</span>
+<span id="cb68-14"><a href="#cb68-14" tabindex="-1"></a>  <span class="at">panel.ontop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb68-15"><a href="#cb68-15" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;enrichment distribution&quot;</span>)</span>
+<span id="cb68-16"><a href="#cb68-16" tabindex="-1"></a></span>
+<span id="cb68-17"><a href="#cb68-17" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/24_Res5_ridgeplot.png&quot;, Res2_ridgeplot, width = 9.26, height = 7.77)</span></span></code></pre></div>
 </div>
 <div id="pubmed-trend-of-enriched-terms" class="section level3" number="5.3.10">
 <h3><span class="header-section-number">5.3.10</span> PubMed trend of enriched terms</h3>
 <p>Plots the number/proportion of publications trend based on the query result from PubMed Central</p>
 <p><strong>2013-2022</strong></p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a><span class="co"># Use the `Gene Set` param for the index in the title, and as the value for geneSetId</span></span>
-<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a></span>
-<span id="cb67-3"><a href="#cb67-3" tabindex="-1"></a></span>
-<span id="cb67-4"><a href="#cb67-4" tabindex="-1"></a>Res2_gseaplot <span class="ot">&lt;-</span> <span class="fu">gseaplot</span>(gsea_results, <span class="at">by =</span> <span class="st">&quot;all&quot;</span>, <span class="at">title =</span> gsea_results<span class="sc">$</span>Description[<span class="dv">1</span>], <span class="at">geneSetID =</span> <span class="dv">3</span>)</span>
-<span id="cb67-5"><a href="#cb67-5" tabindex="-1"></a>terms <span class="ot">&lt;-</span> gsea_results<span class="sc">$</span>Description[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
-<span id="cb67-6"><a href="#cb67-6" tabindex="-1"></a>terms_Res2 <span class="ot">&lt;-</span> <span class="fu">pmcplot</span>(terms, <span class="dv">2013</span><span class="sc">:</span><span class="dv">2022</span>, <span class="at">proportion=</span><span class="cn">FALSE</span>)</span>
-<span id="cb67-7"><a href="#cb67-7" tabindex="-1"></a></span>
-<span id="cb67-8"><a href="#cb67-8" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/25_terms_Res5.png&quot;, terms_Res2, width = 8.04, height = 7.77)</span></span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a><span class="co"># Use the `Gene Set` param for the index in the title, and as the value for geneSetId</span></span>
+<span id="cb69-2"><a href="#cb69-2" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="#cb69-3" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" tabindex="-1"></a>Res2_gseaplot <span class="ot">&lt;-</span> <span class="fu">gseaplot</span>(gsea_results, <span class="at">by =</span> <span class="st">&quot;all&quot;</span>, <span class="at">title =</span> gsea_results<span class="sc">$</span>Description[<span class="dv">1</span>], <span class="at">geneSetID =</span> <span class="dv">3</span>)</span>
+<span id="cb69-5"><a href="#cb69-5" tabindex="-1"></a>terms <span class="ot">&lt;-</span> gsea_results<span class="sc">$</span>Description[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb69-6"><a href="#cb69-6" tabindex="-1"></a>terms_Res2 <span class="ot">&lt;-</span> <span class="fu">pmcplot</span>(terms, <span class="dv">2013</span><span class="sc">:</span><span class="dv">2022</span>, <span class="at">proportion=</span><span class="cn">FALSE</span>)</span>
+<span id="cb69-7"><a href="#cb69-7" tabindex="-1"></a></span>
+<span id="cb69-8"><a href="#cb69-8" tabindex="-1"></a><span class="co">#ggsave(&quot;/Results/25_terms_Res5.png&quot;, terms_Res2, width = 8.04, height = 7.77)</span></span></code></pre></div>
 <!-- --------------------- Do not edit this and below ---------------------- -->
 <p></br></p>
 <footer class="footer">

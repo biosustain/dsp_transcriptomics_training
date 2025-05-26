@@ -113,14 +113,15 @@ Install all libraries
 # CRAN packages
 cran_packages <- c(
   "tidyverse", "readr", "ggpubr", "RColorBrewer",
-  "pheatmap", "factoextra", "knitr", "kableExtra",
-  "EnhancedVolcano", "enrichplot"
+  "pheatmap", "factoextra", "knitr", "kableExtra", "plotly"
+
 )
 
 # Bioconductor packages
 bioc_packages <- c(
   "DESeq2", "AnnotationDbi", "org.Mm.eg.db",
-  "msigdbr", "fgsea", "clusterProfiler", "DOSE", "europepmc"
+  "msigdbr", "fgsea", "clusterProfiler", "DOSE", "europepmc",
+  "enrichplot"
 )
 
 # Install CRAN packages if missing
@@ -145,6 +146,16 @@ install_bioc_if_missing <- function(pkg) {
 }
 
 invisible(lapply(bioc_packages, install_bioc_if_missing))
+
+# extra
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#
+#BiocManager::install(version = "3.20")  # Ensure you're using the right Bioconductor version
+
+# Now install EnhancedVolcano
+#BiocManager::install("EnhancedVolcano")
+
 
 # ───────────────────────────────────────────────
 # ✅ Done! You're ready to go.
@@ -177,7 +188,8 @@ library(ggpubr)       # Publication-ready plots built on ggplot2
 library(RColorBrewer) # Color palettes for maps and heatmaps
 library(pheatmap)     # Pretty heatmaps
 library(factoextra)   # Visualization tools for multivariate data (e.g., PCA)
-library(EnhancedVolcano) # Easy and elegant volcano plots
+#library(EnhancedVolcano) # Easy and elegant volcano plots
+library("plotly")
 library(enrichplot)   # Visualization of enrichment results
 
 # ───────────────────────────────────────────────
@@ -286,9 +298,10 @@ If you're using data from a public database or someone else’s work, always che
   <strong>💡 Tip:</strong> Bonus: How to check which columns are numeric, you can try the code below.
 </div>
 
+This returns a logical vector, showing you which columns are numeric.
+
 ```{r numeric, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 sapply(count_x, is.numeric)
-#This returns a logical vector, showing you which columns are numeric.
 ```
 
 **Plotting**
@@ -932,20 +945,43 @@ dds2 <- DESeq(dds2)
 
 ```{r, eval=FALSE, include=TRUE, echo=TRUE}
 resultsNames(dds2)
+```
+
+**🧪 Getting the DESeq2 Results**
+
+<div class="note">
+<strong>📘 Note:</strong>  This step is for teaching purposes. We will define specific contrasts later to make meaningful biological comparisons.
+</div>
+
+In this example, we:
+
+- Extract differential expression results from the model
+
+- Sort genes by statistical significance (e.g., p-value or adjusted p-value)
+
+- Visualize the top results for quick interpretation
+
+
+```{r, eval=FALSE}
+res <- results(dds2)
+resOrdered <- res[order(res$pvalue),]
+summary(res)
+sum(res$padj < 0.1, na.rm=TRUE)
 plotCounts(dds2, gene=which.min(res$padj), intgroup="Condition")
 mcols(res)$description
 ```
 
+The results function contains a number of arguments to customize the results table which is generated. You can read about these arguments by looking up `?results`.
+
+Note that the results function automatically performs independent filtering based on the mean of normalized counts for each gene, optimizing the number of genes which will have an adjusted p value below a given FDR cutoff, alpha. 
+
+Independent filtering is further discussed later. By default the argument alpha is set to 0.1. If the adjusted p value cutoff will be a value other than 0.1, alpha should be set to that value:
 
 ### Sorting and filtering
 
 ```{r, eval=FALSE, echo=TRUE, include=TRUE}
-resOrdered <- res[order(res$pvalue),]
-summary(res)
-sum(res$padj < 0.1, na.rm=TRUE)
 
-
-res05 <- results(dds, alpha=0.05)
+res05 <- results(dds2, alpha=0.05)
 summary(res05)
 sum(res05$padj < 0.05, na.rm=TRUE)
 
@@ -954,33 +990,37 @@ sum(res05$padj < 0.05, na.rm=TRUE)
 
 ## The effect of treatment in Young (the main effect)
 
+Now we move beyond general results and define a specific contrast to answer our biological question:
+
+> "What is the effect of treatment (cae5H) compared to control in young samples?"
+
+This is where **contrasts** come in, they allow us to make meaningful, hypothesis-driven comparisons using the DESeq2 model.
+
+We first check the available model terms with `resultsNames()`, then define the contrast accordingly.
 
 ```{r, eval=FALSE, echo=TRUE, include=TRUE}
 resultsNames(dds2)
-# Define the contrast
+
 contrast_1 <- c("Condition", "control", "cae5H")
 
-# 1. Get results for the contrast
 res_1 <- results(dds2, contrast = contrast_1)
 
 res_1_Ordered <- res_1[order(res_1$pvalue),]
+
 summary(res_1_Ordered)
 ```
 
+We can make questions:
 
 ### How many adjusted p-values were less than 0.1?
 
+
 ```{r, eval=FALSE, echo=TRUE, include=TRUE}
 sum(res_1_Ordered$padj < 0.1, na.rm=TRUE)
-
 ```
 
 
-The results function contains a number of arguments to customize the results table which is generated. You can read about these arguments by looking up `?results`.
-
-Note that the results function automatically performs independent filtering based on the mean of normalized counts for each gene, optimizing the number of genes which will have an adjusted p value below a given FDR cutoff, alpha. 
-
-Independent filtering is further discussed later. By default the argument alpha is set to 0.1. If the adjusted p value cutoff will be a value other than 0.1, alpha should be set to that value:
+And apply the filter we learned before:
 
 ```{r, eval=FALSE, echo=TRUE, include=TRUE}
 
@@ -1229,6 +1269,7 @@ resSig_5 <- result_5$resSig
 
 df_res_for_plot_1 was built using the function **analyze_contrast**
 
+
 ```{r Volcano, eval=FALSE, include=TRUE, echo=TRUE, warning=FALSE}
 
 # Automatically get the top 5 significant genes
@@ -1281,6 +1322,42 @@ file1$Sig <- sig_column
 
 ```
 
+### Volcano Plot: PlanB
+
+```{r, eval=FALSE}
+library(plotly)
+
+# Cleaned data for Plotly
+df_res_for_plot_1$log10padj <- -log10(df_res_for_plot_1$padj)
+df_res_for_plot_1$hovertext <- paste0(
+  "Gene: ", df_res_for_plot_1$Row.names, "<br>",
+  "log2FC: ", round(df_res_for_plot_1$log2FoldChange, 2), "<br>",
+  "-log10(padj): ", round(df_res_for_plot_1$log10padj, 2)
+)
+
+plotly_volcano <- plot_ly(
+  data = df_res_for_plot_1,
+  x = ~log2FoldChange,
+  y = ~log10padj,
+  text = ~hovertext,
+  type = "scatter",
+  mode = "markers",
+  marker = list(color = ifelse(df_res_for_plot_1$padj < 0.001 & abs(df_res_for_plot_1$log2FoldChange) > 4, "#CA0020", "gray"), size = 8),
+  hoverinfo = "text"
+) %>%
+  layout(
+    title = "Effect of treatment in Young<br><sub>Control vs cae5H</sub>",
+    xaxis = list(title = "Log2 fold change"),
+    yaxis = list(title = "-Log10 adjusted p-value")
+  )
+
+plotly_volcano
+
+
+df_res_for_plot_1$Sig <- ifelse(df_res_for_plot_1$padj < 0.001 & abs(df_res_for_plot_1$log2FoldChange) > 4, "Significant", "Not Sig")
+#write.table(df_res_for_plot_1, file = "Results/DFs/01_R1.tsv", sep = "\t", quote = FALSE)
+
+```
 
 
 ### HeatMap FC_P
