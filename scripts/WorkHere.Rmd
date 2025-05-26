@@ -53,29 +53,6 @@ sudo apt install -y libnlopt-dev
 ```
 
 
-```{r}
-#Special case
-dir.create(path = Sys.getenv("R_LIBS_USER"), showWarnings = FALSE, recursive = TRUE)
-.libPaths(Sys.getenv("R_LIBS_USER"))  # Prioritize user library
- 
-```
-
-
-```{bash}
-sudo apt-get update && sudo apt-get install -y \
-    r-base-dev \       # R development headers
-    build-essential \  # GCC, make, etc.
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libxml2-dev
-```
-
-
-
-```{r}
-install.packages("remotes")
-remotes::install_github("ctlab/fgsea", lib = Sys.getenv("R_LIBS_USER"))
-```
 
 ```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 # ───────────────────────────────────────────────
@@ -125,9 +102,33 @@ BiocManager::install("europepmc")
 ```
 
 
-<div class="remember">
-  <strong>📌 Remember:</strong> Load all the libraries before starting the tutorial.
-</div>
+
+```{r}
+#Special case
+dir.create(path = Sys.getenv("R_LIBS_USER"), showWarnings = FALSE, recursive = TRUE)
+.libPaths(Sys.getenv("R_LIBS_USER"))  # Prioritize user library
+ 
+```
+
+
+```{bash}
+sudo apt-get update && sudo apt-get install -y \
+    r-base-dev \       # R development headers
+    build-essential \  # GCC, make, etc.
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev
+```
+
+
+
+```{r}
+install.packages("remotes")
+remotes::install_github("ctlab/fgsea", lib = Sys.getenv("R_LIBS_USER"))
+```
+
+
+# library
 
 ```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 
