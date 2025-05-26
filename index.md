@@ -37,5 +37,6 @@ course_information/Timing
 
 course_contents/Contents
 course_contents/VueGen_report
+course_contents/launching_rnaseq
 ```
 
