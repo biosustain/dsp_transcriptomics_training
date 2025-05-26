@@ -27,6 +27,27 @@ output: html_notebook
 sudo apt-get update
 sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev libxml2-dev
 install.packages(c("Rcpp", "BH"), dependencies=TRUE)
+sudo apt update
+sudo apt install -y libharfbuzz-dev libfribidi-dev libfreetype6-dev pkg-config
+
+ 
+sudo apt update
+sudo apt install -y \
+  libharfbuzz-dev \
+  libfribidi-dev \
+  libfreetype6-dev \
+  libpng-dev \
+  libtiff5-dev \
+  libjpeg-dev \
+  libcairo2-dev \
+  libglib2.0-dev \
+  pkg-config
+ 
+sudo apt update
+sudo apt install -y liblapack-dev libblas-dev gfortran
+ 
+sudo apt update
+sudo apt install -y libnlopt-dev
 
 
 ```
