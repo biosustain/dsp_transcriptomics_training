@@ -5,129 +5,6 @@ output: html_notebook
 
 ## Setup the environment 
 
-
-
-```{bash}
- sudo apt-get update && sudo apt-get install -y \
-   libfreetype6-dev \
-   libpng-dev \
-   libtiff5-dev \
-   libjpeg-dev \
-   libharfbuzz-dev \
-   libfribidi-dev \
-   libglib2.0-dev \
-   libfontconfig1-dev \
-   pkg-config
-   
- sudo apt-get update && sudo apt-get install -y \
-   liblapack-dev \
-   libblas-dev \
-   gfortran
-   
-sudo apt-get update
-sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev libxml2-dev
-install.packages(c("Rcpp", "BH"), dependencies=TRUE)
-sudo apt update
-sudo apt install -y libharfbuzz-dev libfribidi-dev libfreetype6-dev pkg-config
-
- 
-sudo apt update
-sudo apt install -y \
-  libharfbuzz-dev \
-  libfribidi-dev \
-  libfreetype6-dev \
-  libpng-dev \
-  libtiff5-dev \
-  libjpeg-dev \
-  libcairo2-dev \
-  libglib2.0-dev \
-  pkg-config
- 
-sudo apt update
-sudo apt install -y liblapack-dev libblas-dev gfortran
- 
-sudo apt update
-sudo apt install -y libnlopt-dev
-
-
-```
-
-
-
-```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
-# ───────────────────────────────────────────────
-# 📦 Install Required Packages
-# ───────────────────────────────────────────────
-# CRAN packages
-install.packages("httr")
-install.packages("googledrive")
-install.packages("googlesheets4")
-install.packages("httr")
-install.packages("ragg") 
-install.packages("rvest")
-install.packages("tidyverse")
-install.packages("readr")
-install.packages("pheatmap") #done
-install.packages("kableExtra") #done
-install.packages("plotly") # done
-install.packages("rmarkdown") #Done
-
-install.packages("factoextra")
-install.packages("ggpubr")
-
-
-
-
-
-
-# BiocManager
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-  install.packages("BiocManager")
-}
-
-# Bioconductor packages
-BiocManager::install("DESeq2")
-BiocManager::install("AnnotationDbi")
-BiocManager::install("org.Mm.eg.db")
-BiocManager::install("msigdbr")
-#BiocManager::install("clusterProfiler")
-#BiocManager::install("DOSE")
-BiocManager::install("europepmc")
-#BiocManager::install("enrichplot")
-
-# ───────────────────────────────────────────────
-# ✅ Done! You're ready to go.
-# ───────────────────────────────────────────────
-
-```
-
-
-
-```{r}
-#Special case
-dir.create(path = Sys.getenv("R_LIBS_USER"), showWarnings = FALSE, recursive = TRUE)
-.libPaths(Sys.getenv("R_LIBS_USER"))  # Prioritize user library
- 
-```
-
-
-```{bash}
-sudo apt-get update && sudo apt-get install -y \
-    r-base-dev \       # R development headers
-    build-essential \  # GCC, make, etc.
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libxml2-dev
-```
-
-
-
-```{r}
-install.packages("remotes")
-remotes::install_github("ctlab/fgsea", lib = Sys.getenv("R_LIBS_USER"))
-```
-
-
 # library
 
 ```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
@@ -153,7 +30,7 @@ library(pheatmap)     # Pretty heatmaps
 library(factoextra)   # Visualization tools for multivariate data (e.g., PCA)
 #library(EnhancedVolcano) # Easy and elegant volcano plots
 library("plotly")
-library(enrichplot)   # Visualization of enrichment results
+#library(enrichplot)   # Visualization of enrichment results
 
 # ───────────────────────────────────────────────
 # 📊 Tables & Reporting
@@ -167,9 +44,9 @@ library(kableExtra)   # Beautiful tables with kable()
 library(AnnotationDbi)    # Interface to Bioconductor annotation databases
 library(org.Mm.eg.db)     # Annotation database for *Mus musculus* (mouse)
 library(msigdbr)          # MSigDB gene sets in tidy format
-library(fgsea)            # Fast implementation of Gene Set Enrichment Analysis (GSEA)
-library(clusterProfiler)  # Universal enrichment tool
-library(DOSE)             # Disease Ontology enrichment analysis
+#library(fgsea)            # Fast implementation of Gene Set Enrichment Analysis (GSEA)
+#library(clusterProfiler)  # Universal enrichment tool
+#library(DOSE)             # Disease Ontology enrichment analysis
 library(europepmc)        # Query Europe PMC database (for literature mining)
 # ───────────────────────────────────────────────
 ```
