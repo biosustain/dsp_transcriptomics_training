@@ -15,53 +15,32 @@ Install all libraries
 # ───────────────────────────────────────────────
 # 📦 Install Required Packages
 # ───────────────────────────────────────────────
-
 # CRAN packages
-cran_packages <- c(
-  "tidyverse", "readr", "ggpubr", "RColorBrewer",
-  "pheatmap", "factoextra", "knitr", "kableExtra", "plotly"
+install.packages("tidyverse")
+install.packages("readr")
+install.packages("ggpubr")
+install.packages("RColorBrewer")
+install.packages("pheatmap")
+install.packages("factoextra")
+install.packages("knitr")
+install.packages("kableExtra")
+install.packages("plotly")
 
-)
-
-# Bioconductor packages
-bioc_packages <- c(
-  "DESeq2", "AnnotationDbi", "org.Mm.eg.db",
-  "msigdbr", "fgsea", "clusterProfiler", "DOSE", "europepmc",
-  "enrichplot"
-)
-
-# Install CRAN packages if missing
-install_if_missing <- function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    install.packages(pkg)
-  }
-}
-
-invisible(lapply(cran_packages, install_if_missing))
-
-# Install BiocManager if not present
+# BiocManager
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
 }
 
-# Install Bioconductor packages if missing
-install_bioc_if_missing <- function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    BiocManager::install(pkg)
-  }
-}
-
-invisible(lapply(bioc_packages, install_bioc_if_missing))
-
-# extra
-#if (!require("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-#
-#BiocManager::install(version = "3.20")  # Ensure you're using the right Bioconductor version
-
-# Now install EnhancedVolcano
-#BiocManager::install("EnhancedVolcano")
-
+# Bioconductor packages
+BiocManager::install("DESeq2")
+BiocManager::install("AnnotationDbi")
+BiocManager::install("org.Mm.eg.db")
+BiocManager::install("msigdbr")
+BiocManager::install("fgsea")
+BiocManager::install("clusterProfiler")
+BiocManager::install("DOSE")
+BiocManager::install("europepmc")
+BiocManager::install("enrichplot")
 
 # ───────────────────────────────────────────────
 # ✅ Done! You're ready to go.
