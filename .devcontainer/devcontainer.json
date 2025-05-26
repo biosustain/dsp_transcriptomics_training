@@ -3,28 +3,7 @@
 {
     "name": "Ubuntu",
     // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
-    "features": {
-      "ghcr.io/devcontainers/features/docker-in-docker:2": {
-        "moby": true,
-        "azureDnsAutoDetection": true,
-        "installDockerBuildx": true,
-        "installDockerComposeSwitch": true,
-        "version": "latest",
-        "dockerDashComposeVersion": "v2"
-      },
-      "ghcr.io/devcontainers/features/python:1": {
-        "installTools": true,
-        "version": "os-provided"
-      },
-      "ghcr.io/rocker-org/devcontainer-features/rstudio-server:0": {
-      "singleUser": true,
-      "version": "stable"
-      },
-      "ghcr.io/robsyme/features/nextflow:1": {}
-    },
+    "image": "user9484/dsp_transcriptomics_training:wip-3",
     
     "postAttachCommand": {
       "rstudio-start": "rserver"
