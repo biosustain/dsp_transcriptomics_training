@@ -17,7 +17,7 @@ author = "Albert Palleja"
 extensions = [
     "myst_nb",
     # "sphinx_design", # https://sphinx-design.readthedocs.io/en/sbt-theme/
-    # "sphinx_copybutton", # https://sphinx-copybutton.readthedocs.io/
+    "sphinx_copybutton", # https://sphinx-copybutton.readthedocs.io/
     "sphinx_new_tab_link",
 ]
 
@@ -81,8 +81,8 @@ html_theme = "sphinx_book_theme"
 # html_logo = "_static/logo-wide.svg"
 # html_favicon = "_static/logo-square.svg"
 html_theme_options = {
-    "github_url": "https://github.com/enryh/",
-    "repository_url": "https://github.com/enryh/notes_template",
+    "github_url": "https://github.com/biosustain/dsp_transcriptomics_training",
+    "repository_url": "https://github.com/biosustain/dsp_transcriptomics_training",
     # "repository_branch": "main",
     # "home_page_in_toc": True,
     # "path_to_docs": "docs",
