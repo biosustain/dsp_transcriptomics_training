@@ -1,0 +1,121 @@
+---
+title: "Work here"
+output: html_notebook
+---
+
+## Setup the environment 
+
+Install all libraries 
+
+<div class="tip">
+  <strong>💡 Tip:</strong> Execute this step only one time..
+</div>
+
+```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+# ───────────────────────────────────────────────
+# 📦 Install Required Packages
+# ───────────────────────────────────────────────
+
+# CRAN packages
+cran_packages <- c(
+  "tidyverse", "readr", "ggpubr", "RColorBrewer",
+  "pheatmap", "factoextra", "knitr", "kableExtra", "plotly"
+
+)
+
+# Bioconductor packages
+bioc_packages <- c(
+  "DESeq2", "AnnotationDbi", "org.Mm.eg.db",
+  "msigdbr", "fgsea", "clusterProfiler", "DOSE", "europepmc",
+  "enrichplot"
+)
+
+# Install CRAN packages if missing
+install_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+invisible(lapply(cran_packages, install_if_missing))
+
+# Install BiocManager if not present
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
+
+# Install Bioconductor packages if missing
+install_bioc_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    BiocManager::install(pkg)
+  }
+}
+
+invisible(lapply(bioc_packages, install_bioc_if_missing))
+
+# extra
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#
+#BiocManager::install(version = "3.20")  # Ensure you're using the right Bioconductor version
+
+# Now install EnhancedVolcano
+#BiocManager::install("EnhancedVolcano")
+
+
+# ───────────────────────────────────────────────
+# ✅ Done! You're ready to go.
+# ───────────────────────────────────────────────
+
+```
+
+
+<div class="remember">
+  <strong>📌 Remember:</strong> Load all the libraries before starting the tutorial.
+</div>
+
+```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+# ───────────────────────────────────────────────
+# 📦 Data Handling & Wrangling
+# ───────────────────────────────────────────────
+library(tidyverse)    # Collection of R packages for data science (ggplot2, dplyr, etc.)
+library(readr)        # Fast and friendly functions to read rectangular data
+
+# ───────────────────────────────────────────────
+# 🧬 Differential Expression Analysis
+# ───────────────────────────────────────────────
+library(DESeq2)       # Core package for RNA-seq differential analysis
+
+# ───────────────────────────────────────────────
+# 🎨 Plotting & Visualization
+# ───────────────────────────────────────────────
+library(ggpubr)       # Publication-ready plots built on ggplot2
+library(RColorBrewer) # Color palettes for maps and heatmaps
+library(pheatmap)     # Pretty heatmaps
+library(factoextra)   # Visualization tools for multivariate data (e.g., PCA)
+#library(EnhancedVolcano) # Easy and elegant volcano plots
+library("plotly")
+library(enrichplot)   # Visualization of enrichment results
+
+# ───────────────────────────────────────────────
+# 📊 Tables & Reporting
+# ───────────────────────────────────────────────
+library(knitr)        # Dynamic report generation
+library(kableExtra)   # Beautiful tables with kable()
+
+# ───────────────────────────────────────────────
+# 🔍 Annotation & Enrichment Analysis
+# ───────────────────────────────────────────────
+library(AnnotationDbi)    # Interface to Bioconductor annotation databases
+library(org.Mm.eg.db)     # Annotation database for *Mus musculus* (mouse)
+library(msigdbr)          # MSigDB gene sets in tidy format
+library(fgsea)            # Fast implementation of Gene Set Enrichment Analysis (GSEA)
+library(clusterProfiler)  # Universal enrichment tool
+library(DOSE)             # Disease Ontology enrichment analysis
+library(europepmc)        # Query Europe PMC database (for literature mining)
+# ───────────────────────────────────────────────
+```
+
+
+
