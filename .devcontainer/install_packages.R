@@ -6,7 +6,8 @@ install.packages(
     "rmarkdown", "factoextra", "ggpubr", "remotes"
   ),
   dependencies = TRUE,
-  repos = "https://cloud.r-project.org"
+  repos = "https://cloud.r-project.org",
+  Ncpus = parallel::detectCores()
 )
 
 # Install Bioconductor packages
@@ -17,5 +18,6 @@ BiocManager::install(
   c(
     "DESeq2", "AnnotationDbi", "org.Mm.eg.db", "msigdbr",
     "clusterProfiler", "DOSE", "europepmc", "enrichplot", "fgsea"
-  )
+  ),
+  Ncpus = parallel::detectCores()
 )
