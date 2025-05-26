@@ -6,4 +6,4 @@ To follow the hands-on tutorial follow click here (Juliana add your tutorial her
 
 To follow the analysis reporting with [vuegen](https://github.com/Multiomics-Analytics-Group/vuegen) open [VueGen report markdown](https://biosustain.github.io/dsp_transcriptomics_training/course_contents/VueGen_report.html).
 
- The PowerPoint slides of the course can be found [here](https://biosustain.github.io/dsp_transcriptomics_training/course_contents/rnaseq_training_DTU_2025-05-27_v1_github.pdf).
+ The PowerPoint slides of the course can be found [here](https://biosustain.github/dsp_transcriptomics_training/course_contents/rnaseq_training_DTU_2025-05-27_v1_github.pdf).
