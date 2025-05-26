@@ -5,28 +5,81 @@ output: html_notebook
 
 ## Setup the environment 
 
-Install all libraries 
 
-<div class="tip">
-  <strong>💡 Tip:</strong> Execute this step only one time..
-</div>
+
+```{bash}
+ sudo apt-get update && sudo apt-get install -y \
+   libfreetype6-dev \
+   libpng-dev \
+   libtiff5-dev \
+   libjpeg-dev \
+   libharfbuzz-dev \
+   libfribidi-dev \
+   libglib2.0-dev \
+   libfontconfig1-dev \
+   pkg-config
+   
+ sudo apt-get update && sudo apt-get install -y \
+   liblapack-dev \
+   libblas-dev \
+   gfortran
+   
+sudo apt-get update
+sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev libxml2-dev
+install.packages(c("Rcpp", "BH"), dependencies=TRUE)
+
+
+```
+
+
+```{r}
+#Special case
+dir.create(path = Sys.getenv("R_LIBS_USER"), showWarnings = FALSE, recursive = TRUE)
+.libPaths(Sys.getenv("R_LIBS_USER"))  # Prioritize user library
+ 
+```
+
+
+```{bash}
+sudo apt-get update && sudo apt-get install -y \
+    r-base-dev \       # R development headers
+    build-essential \  # GCC, make, etc.
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev
+```
+
+
+
+```{r}
+install.packages("remotes")
+remotes::install_github("ctlab/fgsea", lib = Sys.getenv("R_LIBS_USER"))
+```
 
 ```{r,echo = T, eval = T, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
 # ───────────────────────────────────────────────
 # 📦 Install Required Packages
 # ───────────────────────────────────────────────
 # CRAN packages
+install.packages("httr")
+install.packages("googledrive")
+install.packages("googlesheets4")
+install.packages("httr")
+install.packages("ragg") 
+install.packages("rvest")
 install.packages("tidyverse")
 install.packages("readr")
-install.packages("ggpubr")
-install.packages("RColorBrewer")
-install.packages("pheatmap")
+install.packages("pheatmap") #done
+install.packages("kableExtra") #done
+install.packages("plotly") # done
+install.packages("rmarkdown") #Done
+
 install.packages("factoextra")
-install.packages("knitr")
-install.packages("kableExtra")
-install.packages("plotly")
-install.packages("rmarkdown")
-install.packages("markdown")
+install.packages("ggpubr")
+
+
+
+
 
 
 # BiocManager
@@ -39,11 +92,10 @@ BiocManager::install("DESeq2")
 BiocManager::install("AnnotationDbi")
 BiocManager::install("org.Mm.eg.db")
 BiocManager::install("msigdbr")
-BiocManager::install("fgsea")
-BiocManager::install("clusterProfiler")
-BiocManager::install("DOSE")
+#BiocManager::install("clusterProfiler")
+#BiocManager::install("DOSE")
 BiocManager::install("europepmc")
-BiocManager::install("enrichplot")
+#BiocManager::install("enrichplot")
 
 # ───────────────────────────────────────────────
 # ✅ Done! You're ready to go.
