@@ -25,6 +25,9 @@ install.packages("factoextra")
 install.packages("knitr")
 install.packages("kableExtra")
 install.packages("plotly")
+install.packages("rmarkdown")
+install.packages("markdown")
+
 
 # BiocManager
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
@@ -60,6 +63,7 @@ BiocManager::install("enrichplot")
 # ───────────────────────────────────────────────
 library(tidyverse)    # Collection of R packages for data science (ggplot2, dplyr, etc.)
 library(readr)        # Fast and friendly functions to read rectangular data
+library(rmarkdown)
 
 # ───────────────────────────────────────────────
 # 🧬 Differential Expression Analysis
