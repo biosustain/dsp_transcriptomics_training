@@ -1,6 +1,8 @@
 # Contents
 
-To follow the introduction to transcriptomics you can download this powerpoint. If you prefer it in pdf click in this link.
+To follow the introduction to transcriptomics you can download this powerpoint. If you prefer it in pdf click in this link. (Sebastian add your tutorial here)
 
-To follow the hands-on tutorial click here.
+To follow the hands-on tutorial follow click here (Juliana add your tutorial here)
+
+To follow the analysis reporting with [vuegen](https://github.com/Multiomics-Analytics-Group/vuegen) open [VueGen report markdown](https://biosustain.github.io/dsp_transcriptomics_training/course_contents/VueGen_report.html).
 
