@@ -366,7 +366,9 @@ document.write(`
 <p>With VueGen, users can produce reports by simply specifying a directory containing output files, such as plots, tables, networks, Markdown text, HTML components, and API calls, along with the report format. Supported formats include documents (PDF, HTML, DOCX, ODT), presentations (PPTX, Reveal.js), Jupyter notebooks, and Streamlit web applications.</p>
 <p>In the GitHub workspace, we will use the base conda environment which you can activate
 with the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>base
+<p>Create a new virtual environment called vuegen and activate it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>vuegen
+<span class="nb">source</span><span class="w"> </span>vuegen/bin/activate
 </pre></div>
 </div>
 <section id="install-the-required-packages">
@@ -382,7 +384,7 @@ with the following command:</p>
 <h2>VueGen Report<a class="headerlink" href="#vuegen-report" title="Link to this heading">#</a></h2>
 <p>We saved some of the analyses (plots and tables) from the R markdown to <code class="docutils literal notranslate"><span class="pre">results/report</span></code> folder.</p>
 <p>You can use the following command to generate a VueGen report from them:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vuegen<span class="w"> </span>-dir<span class="w"> </span>results/report
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vuegen<span class="w"> </span>-dir<span class="w"> </span>scripts/Tutorial/results/report
 </pre></div>
 </div>
 <p>This will create a streamlit app in the <code class="docutils literal notranslate"><span class="pre">streamlit_report</span></code> folder. Check the options
@@ -391,7 +393,7 @@ availble for the command line tool vuegen with the following command:</p>
 </pre></div>
 </div>
 <p>Create and start the streamlit app with the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vuegen<span class="w"> </span>-dir<span class="w"> </span>results/report<span class="w"> </span>-st_autorun
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vuegen<span class="w"> </span>-dir<span class="w"> </span>scripts/Tutorial/results/report<span class="w"> </span>-st_autorun
 </pre></div>
 </div>
 </section>

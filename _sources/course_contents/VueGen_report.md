@@ -7,8 +7,10 @@ With VueGen, users can produce reports by simply specifying a directory containi
 In the GitHub workspace, we will use the base conda environment which you can activate
 with the following command:
 
+Create a new virtual environment called vuegen and activate it:
 ```bash
-conda activate base
+python3 -m venv vuegen
+source vuegen/bin/activate
 ```
 
 ## Install the required packages
@@ -26,7 +28,7 @@ We saved some of the analyses (plots and tables) from the R markdown to `results
 You can use the following command to generate a VueGen report from them:
 
 ```bash
-vuegen -dir results/report
+vuegen -dir scripts/Tutorial/results/report
 ```
 
 This will create a streamlit app in the `streamlit_report` folder. Check the options 
@@ -39,7 +41,7 @@ vuegen -h
 Create and start the streamlit app with the following command:
 
 ```bash
-vuegen -dir results/report -st_autorun
+vuegen -dir scripts/Tutorial/results/report -st_autorun
 ```
 
 ## Further information about VueGen
