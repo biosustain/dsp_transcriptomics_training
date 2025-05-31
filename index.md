@@ -1,6 +1,6 @@
 # Transcriptomics course
 
-Are you ready to dive into the world of transcriptomics? Next-generation sequencing (NGS) technologies have revolutionized RNA sequencing (RNAseq), enabling comprehensive global transcriptome analysis. Such RNAseq experiments generate vast amounts of data that require specialized bioinformatic methods and workflows for processing and performing downstream statistical analysis.
+Are you ready to dive into the world of transcriptomics? Next-generation sequencing (NGS) technologies have revolutionized transcriptomics, enabling comprehensive global transcriptome analysis. Such RNA sequencing experiments generate vast amounts of data that require specialized bioinformatic methods and workflows for processing and performing downstream statistical analysis.
 
 ## Objectives
 - Theory on Illumina short-read sequencing technology for transcriptome analysis
