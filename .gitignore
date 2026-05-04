@@ -1,0 +1,2 @@
+data/nf-core_rnaseq/*.tsv
+data/nf-core_rnaseq/salmon.merged.transcript.SummarizedExperiment.rds
