@@ -1,0 +1,35 @@
+---
+title: "&DTUdsp;"
+---
+
+<footer class="footer">
+<div class="footer-container">
+<div class="row">
+
+<hr>
+
+<div class="col-sm-8" style="text-align:left;vertical-align:middle;">
+<p class="small" style="color:#bdbdbd;">
+<b>2024</b> • [Data Science Platform](https://www.biosustain.dtu.dk/technologies/informatics/data-science-platform) • [CFB](https://www.biosustain.dtu.dk/)
+</p>
+</div>
+
+<div class="col-sm-4" style="text-align:right;vertical-align:middle;">
+<p style="color:#bdbdbd;">
+<span>
+<span class="footericon" style="padding-right:4px; padding-left:4px">
+<a href="https://bric.ku.dk/core-facilities/bioinformatics/">`r fontawesome::fa("globe-americas",fill="#bdbdbd")`</a>
+</span>
+<span class="footericon" style="padding-right:4px; padding-left:4px">
+<a href="https://x.com/dtubiosustain">`r fontawesome::fa("twitter",fill="#bdbdbd")`</a>
+</span>
+<span class="footericon" style="padding-left:4px">
+<a href="https://www.linkedin.com/company/dtu-biosustain/">`r fontawesome::fa("linkedin",fill="#bdbdbd")`</a>
+</span>
+</span>
+</p>
+</div>
+
+</div>
+</div>
+</footer>

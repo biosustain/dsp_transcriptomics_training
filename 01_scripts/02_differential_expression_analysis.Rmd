@@ -1,0 +1,563 @@
+
+<!-- ----------------------- Do not edit above this ----------------------- -->
+
+
+
+# Differential expression analysis with DESeq2
+
+
+The final step in the differential expression analysis workflow is fitting the raw counts to the negative binomial (NB) model and performing the statistical test for differential expressed genes. In this step we essentially want to determine whether the mean expression levels of different sample groups are significantly different.
+
+
+::: boxy
+design = ~ treatment + diet + treatment:diet
+::: 
+
+This tells DESeq2 what factors to include in the model:
+
+
+
+This model allows you to test not only the main effects but also whether treatment affects young and aged differently.
+
+::: boxy
+**What does the interaction mean biologically?**
+
+- If the interaction term is significant for a gene, it means that the difference in gene expression between Conditions varies depending on the Age group. For example, a gene might be upregulated by Condition A compared to Condition B only in older samples but not in younger samples.
+
+- If the interaction is not significant, it suggests the effects of Age and Condition are additive and independent — the influence of Condition on gene expression is consistent across Age groups.
+:::
+
+
+## Running DEG analysis
+
+Here, we ask five different questions:
+
+::: boxy
+**Res1** The effect of Diet with treatment (the main effect) \
+
+This is shorthand for ~ diet + treatment + diet:treatment. It gives:
+main effect of diet (averaged across treatments),
+main effect of treatment (averaged across diets),
+interaction (does the treatment effect depend on diet).
+Use this when you care both about main effects and whether treatment behaves differently on LFD vs FFMD
+
+:::
+
+<div class="warning">
+  <strong>⚠️ Warning:</strong>Do not use the normalized data to perfrom DEG, or the code may fail.
+</div>
+
+
+The DESeq2 model internally corrects for library size, so transformed or normalized values such as counts scaled by library size should not be used as input.
+ 
+<div class="note">
+<strong>📘 Note:</strong> In order to benefit from the default settings of the package, you should put the variable of interest at the end of the formula and make sure the control level is the first level..
+</div>
+
+
+<div class="warning">
+<strong>⚠️ Warning:</strong>It is absolutely critical that the columns of the count matrix and the rows of the column data (information about samples) are in the same order. DESeq2 will not make guesses as to which column of the count matrix belongs to which row of the column data, these must be provided to DESeq2 already in consistent order..
+</div>
+
+
+
+**We're making a new DDS file, to make sure that cleaned all the new variables added before.**
+
+#countData(dds_liver)
+
+######### START ###########
+
+```{r}
+#group
+# Subset sample info for tissue == "Liver"
+samples_info_liver <- subset(samples_info, tissue == "Liver")
+counts_liver <- counts(dds_liver)
+                       
+# Make sure sample info rownames match your count matrix
+rownames(samples_info_liver) <- samples_info_liver$sample_name
+
+# Subset counts
+counts_liver <- counts_liver[, rownames(samples_info_liver)]
+
+# Convert 'group' to a factor and set a reference level
+samples_info_liver$group <- factor(samples_info_liver$group)
+samples_info_liver$group <- relevel(samples_info_liver$group, ref = "LI_LFD_ctrl")
+
+# Build DESeq dataset
+dds2 <- DESeqDataSetFromMatrix(
+  countData = counts_liver,
+  colData   = samples_info_liver,
+  design    = ~ group
+)
+
+# Run DESeq2
+dds2 <- DESeq(dds2)
+
+
+
+dds2 <- DESeqDataSetFromMatrix(
+  countData = counts_liver,
+  colData   = samples_info_liver,
+  design    = ~ treatment
+)
+
+# Run DESeq2
+dds2 <- DESeq(dds2)
+```
+
+
+## results DDS2
+
+```{r}
+resultsNames(dds2)
+#[1] "Intercept"                        
+#[2] "group_LI_FFMD_bala_vs_LI_LFD_ctrl"
+#[3] "group_LI_FFMD_ctrl_vs_LI_LFD_ctrl"
+```
+
+
+## extracting results
+
+```{r}
+# FFMD control vs LFD control
+res_diet_effect <- results(dds2, name = "group_LI_FFMD_ctrl_vs_LI_LFD_ctrl")
+
+# FFMD treatment vs LFD control
+res_treatment_total <- results(dds2, name = "group_LI_FFMD_bala_vs_LI_LFD_ctrl")
+
+# FFMD treatment vs FFMD control (treatment effect within diseased diet)
+res_treatment_effect <- results(dds2, contrast = c("group", "LI_FFMD_bala", "LI_FFMD_ctrl"))
+
+
+treatment_treatment_vs_control <- results(dds2, name = "treatment_treatment_vs_control")
+
+```
+
+
+| Contrast                         | Interpretation                                                         |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| `LI_FFMD_ctrl` vs `LI_LFD_ctrl`  | Effect of high-fat (FFMD) diet alone                                   |
+| `LI_FFMD_bala` vs `LI_LFD_ctrl`  | Combined effect of FFMD + engineered strain                            |
+| `LI_FFMD_bala` vs `LI_FFMD_ctrl` | **Effect of treatment within diseased diet (key biological question)** |
+
+
+
+
+
+```{r}
+# 1) FFMD control vs LFD control (diet effect)
+res_diet <- results(dds2, name = "group_LI_FFMD_ctrl_vs_LI_LFD_ctrl")
+
+# 2) FFMD treatment vs LFD control (overall treatment+diet effect)
+res_treat_total <- results(dds2, name = "group_LI_FFMD_bala_vs_LI_LFD_ctrl")
+
+# 3) FFMD treatment vs FFMD control (treatment effect within diseased diet)
+res_treat_within <- results(dds2, contrast = c("group", "LI_FFMD_bala", "LI_FFMD_ctrl"))
+
+
+res_treat_within <- results(dds2, contrast = c("group", "LI_FFMD_bala", "LI_FFMD_ctrl"))
+
+```
+
+
+
+```{r}
+# Function to save and summarize results
+save_deseq_results <- function(res, filename_prefix, alpha=0.05) {
+  # Order by adjusted p-value
+  resOrdered <- res[order(res$padj), ]
+  
+  # Convert to data frame and add gene IDs
+  res_df <- as.data.frame(resOrdered)
+  res_df$gene <- rownames(res_df)
+  
+  # Count significant genes
+  cat(filename_prefix, "significant genes (padj <", alpha, "):", 
+      sum(res_df$padj < alpha, na.rm = TRUE), "\n")
+  
+  # Save as TSV
+  out_file <- paste0(filename_prefix, "_DESeq2_results.tsv")
+  write.table(res_df, file = out_file, sep = "\t", quote = FALSE, row.names = FALSE)
+  
+  return(res_df)
+}
+
+# Save all results
+res_diet_df        <- save_deseq_results(res_diet, "res_LI_FFMD_ctrl_vs_LI_LFD_ctrl")
+res_treat_total_df <- save_deseq_results(res_treat_total, "res_LI_FFMD_bala_vs_LI_LFD_ctrl")
+res_treat_within_df<- save_deseq_results(res_treat_within, "res_LI_FFMD_bala_vs_LI_FFMD_ctrl")
+
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+
+plot_volcano <- function(res_df, title) {
+  ggplot(res_df, aes(x = log2FoldChange, y = -log10(padj))) +
+    geom_point(aes(color = padj < 0.05), alpha = 0.7, size = 1.8) +
+    scale_color_manual(values = c("grey70", "#D46C4E")) +
+    geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "black") +
+    geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black") +
+    labs(
+      title = title,
+      x = "log2(Fold Change)",
+      y = "-log10(adjusted p-value)",
+      color = "Significant (padj < 0.05)"
+    ) +
+    theme_pubr(border = FALSE)
+}
+
+plot_volcano(res_diet_df, "FFMD Control vs LFD Control (Diet Effect)")
+plot_volcano(res_treat_total_df, "FFMD Treatment vs LFD Control (Combined Effect)")
+plot_volcano(res_treat_within_df, "FFMD Treatment vs FFMD Control (Treatment Effect)")
+
+```
+
+
+```{r}
+# List top 10 up- and down-regulated genes for each contrast
+head(res_treat_within_df[order(res_treat_within_df$log2FoldChange, decreasing = TRUE), ], 10)
+head(res_treat_within_df[order(res_treat_within_df$log2FoldChange, decreasing = FALSE), ], 10)
+
+```
+
+
+```{r}
+top_gene <- res_treat_within_df$gene[which.min(res_treat_within_df$padj)]
+plotCounts(dds2, gene = top_gene, intgroup = "group")
+
+```
+
+
+```{r}
+summary(res_treat_within)
+cat("Genes with padj < 0.05:", sum(res_treat_within$padj < 0.05, na.rm = TRUE), "\n")
+
+```
+
+
+### Filter ###
+
+```{r}
+
+
+
+```
+
+######### END ##########
+
+```{r}
+# Subset sample info for tissue == "Liver"
+samples_info_liver <- subset(samples_info, tissue == "Liver")
+counts_liver <- counts(dds_liver)
+
+samples_info_liver$diet <- factor(samples_info_liver$diet, levels = c("LFD", "FFMD"))
+samples_info_liver$treatment <- factor(samples_info_liver$treatment, levels = c("control", "treatment"))
+
+dds2 <- DESeqDataSetFromMatrix(
+  countData = counts_liver,
+  colData   = samples_info_liver,
+  design    = ~ diet * treatment
+)
+
+
+```
+
+```{r lfcShrink, eval=FALSE, include=TRUE, echo=TRUE, warning=FALSE}
+dds2 <- DESeqDataSetFromMatrix(countData = counts_liver, 
+  colData = samples_info_liver, 
+  design = ~ diet +treatment +diet:treatment)
+dds2
+
+########################FILTER THE DDS Object########################
+smallestGroupSize <- 1
+keep <- rowSums(counts(dds2) >= 10) >= smallestGroupSize
+dds2 <- dds2[keep,]
+table(keep)
+########################Factor order##############################
+# Set reference level for Age to "young"
+dds2$Age <- relevel(dds2$Age, ref = "young")
+
+# Set reference level for Condition to "control"
+dds2$Condition <- relevel(dds2$Condition, ref = "control")
+
+###################### Design ###############################
+design(dds2) 
+```
+
+
+## DESeq
+
+The function DESeq runs the following functions in order:
+
+::: boxy
+dds <- estimateSizeFactors(dds)
+
+dds <- estimateDispersions(dds)
+
+dds <- nbinomWaldTest(dds)
+:::
+
+```{r , echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+dds2 <- DESeq(dds2)
+```
+
+### Exploring the results
+
+```{r, eval=FALSE, include=TRUE, echo=TRUE}
+resultsNames(dds2)
+```
+
+**🧪 Getting the DESeq2 Results**
+
+<div class="note">
+<strong>📘 Note:</strong>  This step is for teaching purposes. We will define specific contrasts later to make meaningful biological comparisons.
+</div>
+
+In this example, we:
+
+- Extract differential expression results from the model
+
+- Sort genes by statistical significance (e.g., p-value or adjusted p-value)
+
+- Visualize the top results for quick interpretation
+
+
+```{r, eval=FALSE}
+res <- results(dds2)
+resOrdered <- res[order(res$pvalue),]
+summary(res)
+sum(res$padj < 0.1, na.rm=TRUE)
+plotCounts(dds2, gene=which.min(res$padj), intgroup="Condition")
+mcols(res)$description
+```
+
+The results function contains a number of arguments to customize the results table which is generated. You can read about these arguments by looking up `?results`.
+
+Note that the results function automatically performs independent filtering based on the mean of normalized counts for each gene, optimizing the number of genes which will have an adjusted p value below a given FDR cutoff, alpha. 
+
+Independent filtering is further discussed later. By default the argument alpha is set to 0.1. If the adjusted p value cutoff will be a value other than 0.1, alpha should be set to that value:
+
+### Sorting and filtering
+
+```{r, eval=FALSE, echo=TRUE, include=TRUE}
+
+res05 <- results(dds2, alpha=0.05)
+summary(res05)
+sum(res05$padj < 0.05, na.rm=TRUE)
+
+```
+
+
+
+### Volcano Plot
+
+**Volcano Plot highlighting the top 5 genes** \
+
+**x = log2FoldChange 2 and y = padj 0.001**
+
+df_res_for_plot_1 was built using the function **analyze_contrast**
+
+
+```{r Volcano, eval=FALSE, include=TRUE, echo=TRUE, warning=FALSE}
+
+# Automatically get the top 5 significant genes
+top5_genes <- head(df_res_for_plot_1[order(df_res_for_plot_1$padj), "Row.names"], 5)
+
+# Print them for reference
+print(top5_genes)
+
+# Volcano plot using EnhancedVolcano
+volc_res1 <- EnhancedVolcano(
+  df_res_for_plot_1,
+  lab = df_res_for_plot_1$Row.names,
+  x = 'log2FoldChange',
+  y = 'padj',
+  selectLab = top5_genes,  # auto-selected genes
+  xlab = bquote(~Log[2]~ 'fold change'),
+  ylab = bquote(~-Log[10]~adjusted~italic(p)),  # clearer Y-axis label
+  pCutoff = 0.001,
+  FCcutoff = 4,
+  title = 'Effect of treatment in Young',
+  subtitle = 'Control vs cae5H',
+  pointSize = 3.0,
+  labSize = 4.0,
+  labCol = 'black',
+  labFace = 'bold',
+  boxedLabels = TRUE,
+  drawConnectors = TRUE,
+  widthConnectors = 1.0,
+  colConnectors = 'gray',
+  colAlpha = 0.8,
+  legendPosition = 'right',
+  legendLabSize = 14,
+  legendIconSize = 4.0,
+  gridlines.major = FALSE,
+  gridlines.minor = FALSE,
+  border = 'partial',
+  borderWidth = 0.5
+)
+
+#ggsave("/Results/05_resultsSigTab_Volc_allENS_R1.png", volc_res1, width = 12.5, height = 14.6)
+
+
+#Export File
+file1 <- as.data.frame(volc_res1$data)
+file2 <- as.data.frame(volc_res1$data$Sig)
+sig_column <- file2[, 1]
+file1$Sig <- sig_column
+#write.table(file1,file='/Results/DFs/01_R1.tsv',quote=FALSE,sep="\t")
+############################END#################################
+
+```
+
+### Volcano Plot: PlanB
+
+```{r, eval=FALSE}
+library(plotly)
+
+# Cleaned data for Plotly
+df_res_for_plot_1$log10padj <- -log10(df_res_for_plot_1$padj)
+df_res_for_plot_1$hovertext <- paste0(
+  "Gene: ", df_res_for_plot_1$Row.names, "<br>",
+  "log2FC: ", round(df_res_for_plot_1$log2FoldChange, 2), "<br>",
+  "-log10(padj): ", round(df_res_for_plot_1$log10padj, 2)
+)
+
+plotly_volcano <- plot_ly(
+  data = df_res_for_plot_1,
+  x = ~log2FoldChange,
+  y = ~log10padj,
+  text = ~hovertext,
+  type = "scatter",
+  mode = "markers",
+  marker = list(color = ifelse(df_res_for_plot_1$padj < 0.001 & abs(df_res_for_plot_1$log2FoldChange) > 4, "#CA0020", "gray"), size = 8),
+  hoverinfo = "text"
+) %>%
+  layout(
+    title = "Effect of treatment in Young<br><sub>Control vs cae5H</sub>",
+    xaxis = list(title = "Log2 fold change"),
+    yaxis = list(title = "-Log10 adjusted p-value")
+  )
+
+plotly_volcano
+
+
+df_res_for_plot_1$Sig <- ifelse(df_res_for_plot_1$padj < 0.001 & abs(df_res_for_plot_1$log2FoldChange) > 4, "Significant", "Not Sig")
+#write.table(df_res_for_plot_1, file = "Results/DFs/01_R1.tsv", sep = "\t", quote = FALSE)
+
+```
+
+
+### HeatMap FC_P
+
+**HeatMap of the top 20 genes,  ranked bylog2 FoldChange: using only FC_P.** \
+
+**Foldchange = 2 ** \
+
+**P=0.001** \
+
+Euclidean sample distances after vst transformation \
+
+
+```{r HeatMap, eval=FALSE, include=TRUE, echo=TRUE, warning=FALSE}
+vst_res_2 = vst(dds2)
+
+dfH <- as.data.frame(colData(dds2)[,c("Age","Condition")])
+dfH$Age = factor(dfH$Age, levels = c("young", "aged"))
+metaR_age <- c("#C0C0C0","#BC8F8F") 
+names(metaR_age) <- levels(dfH$Age)
+
+dfH$Condition = factor(dfH$Condition, levels = c("control","cae5H")) 
+metaR_condition <- c("#264D59", "#77A515") 
+names(metaR_condition) <- levels(dfH$Condition)
+
+metaR_AnnColour <- list(
+  Age = metaR_age)
+metaR_AnnColour2 <- list(
+  Condition = metaR_condition)
+metaR_AnnColourx <- list(
+  Condition = metaR_condition,
+  Age = metaR_age)
+
+# Check the output
+metaR_AnnColourx
+SampleOrder = order(dfH$Age, dfH$Condition)
+meta.factors <- dfH[1:2]
+colsHeat<- c("#F7F7F7", "#92C5DE", "#0571B0", "#F4A582", "#CA0020")
+
+###################################################################
+# List of result objects
+
+resSig_1DF <- as.data.frame(resSig_1)
+resSig_2DF <- as.data.frame(resSig_2)
+resSig_3DF <- as.data.frame(resSig_3)
+resSig_4DF <- as.data.frame(resSig_4)
+resSig_5DF <- as.data.frame(resSig_5)
+
+#df_res_for_plot_2
+result_list <- list(
+  resSig_1DF,
+  resSig_2DF,
+  resSig_3DF,
+  resSig_4DF,
+  resSig_5DF
+)
+
+
+# Define an empty list to store genes for each result
+genes_list <- list()
+
+# Loop over the result objects and extract genes
+for (i in 1:length(result_list)) {
+  genes_list[[paste0("genes_res", i)]] <- 
+    order(result_list[[i]]$log2FoldChange, decreasing=TRUE)[1:20]
+}
+
+# Define a list to store the pheatmap plots
+pheatmap_list <- list()
+
+# Loop over the genes and generate the pheatmap plots
+# Create a directory to save the plots (if it doesn't already exist)
+if (!dir.exists("pheatmap_plotsNEW")) {
+  dir.create("pheatmap_plotsNEW")
+}
+
+# Loop over the genes and generate the pheatmap plots
+for (gene_set in names(genes_list)) {
+  pheatmap_res <- pheatmap(
+    assay(vst_res_2)[genes_list[[gene_set]], SampleOrder],
+    scale = "row",
+    show_rownames = TRUE,
+    show_colnames = FALSE,
+    cluster_cols = TRUE,
+    cluster_rows = TRUE,
+    annotation_colors = metaR_AnnColourx,
+    annotation_col = meta.factors,
+    color = colorRampPalette(c(colsHeat))(255),
+    display_numbers = FALSE
+  )
+  pheatmap_list[[gene_set]] <- pheatmap_res
+  
+# Save the plot
+# ggsave(paste0("pheatmap_plotsNEW/EN_pheatmap_plotsNEW", gene_set, ".png"), pheatmap_res)
+}
+# Access each pheatmap using pheatmap_list$genes, pheatmap_list$genes_res2, etc.
+
+```
+
+<!-- --------------------- Do not edit this and below ---------------------- -->
+
+</br>
+
+```{r,child="assets/_footer-lab.Rmd"}
+```
+
+```{r,eval=FALSE,echo=FALSE}
+# manually run this to render this document to HTML
+rmarkdown::render("workshop.Rmd")
+# then run this to convert HTML to PDF (if needed)
+#pagedown::chrome_print("core-report.html",output="core-report.pdf")
+```

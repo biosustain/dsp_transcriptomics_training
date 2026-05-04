@@ -1,0 +1,349 @@
+
+<!-- ----------------------- Do not edit above this ----------------------- -->
+# GSEA
+
+fgsea is an R-package for fast preranked gene set enrichment analysis (GSEA). This package allows to quickly and accurately calculate arbitrarily low GSEA P-values for a collection of gene sets. P-value estimation is based on an adaptive multi-level split Monte-Carlo scheme. 
+
+GSEA assumes you use as input all genes in your data set, that are ranked on e.g. signed log p-value, and the algorithm then identifies which gene sets are enriched at the top (and bottom) of your ranked list. 
+
+**You may interpret this as gene sets being activated and suppressed, respectively, by your treatment compared to the reference.**
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+res2 <- df_res_for_plot_1 
+res2$Row.names <- res2$Row.names
+dge_df <- res2
+
+# First let's create a mapped data frame we can join to the differential
+# expression stats
+dge_mapped_df <- data.frame(
+  gene_symbol = mapIds(
+    # Replace with annotation package for the organism relevant to your data
+    org.Mm.eg.db,
+    keys = dge_df$Row.names,
+    # Replace with the type of gene identifiers in your data
+    keytype = "ENSEMBL",
+    # Replace with the type of gene identifiers you would like to map to
+    column = "SYMBOL",
+    # This will keep only the first mapped value for each Ensembl ID
+    multiVals = "first"
+  )
+) %>%
+  # If an Ensembl gene identifier doesn't map to a gene symbol, drop that
+  # from the data frame
+  dplyr::filter(!is.na(gene_symbol)) %>%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column("Ensembl") %>%
+  # Now let's join the rest of the expression data
+  dplyr::inner_join(dge_df, by = c("Ensembl" = "Row.names"))
+
+
+```
+
+## Load Hallmark
+
+**Mus musculus H** \
+
+Hallmark patway: **mh.all.v2023.2.Mm.symbols.gmt** \
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+#  msigdbr_species()
+
+mm_hallmark_sets <- msigdbr(
+  species = "Mus musculus", #
+  category = "H"
+)
+
+head(mm_hallmark_sets)
+
+########
+# Load the pathway (gene set) into a named list
+# downloaded mysigdb were located in my "~" directory:
+pathways.hallmark <- gmtPathways("https://github.com/biosustain/dsp_transcriptomics_training/blob/main/data/databases/mh.all.v2023.2.Mm.symbols.gmt")
+# show a few lines from the pathways file
+#head(pathways.hallmark)
+```
+
+
+### Removing Duplicated IDs
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+any(duplicated(dge_mapped_df$gene_symbol))
+
+dup_gene_symbols <- dge_mapped_df %>%
+  dplyr::filter(duplicated(gene_symbol)) %>%
+  dplyr::pull(gene_symbol)
+
+
+dge_mapped_df %>%
+  dplyr::filter(gene_symbol %in% dup_gene_symbols) %>%
+  dplyr::arrange(gene_symbol)
+```
+
+
+## Ranking signed log and p-value 
+
+Sort so that the highest absolute values of the log2 fold change are at the top.  \
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+filtered_dge_mapped_df <- dge_mapped_df %>%
+  dplyr::arrange(dplyr::desc(abs(log2FoldChange))) %>%
+  # Filter out the duplicated rows using `dplyr::distinct()`
+  dplyr::distinct(gene_symbol, .keep_all = TRUE)
+
+any(duplicated(filtered_dge_mapped_df$gene_symbol))
+```
+
+### Making the vector list
+
+Let's create a named vector ranked based on the log2 fold change values
+
+We need to sort the log2 fold change values in descending order here
+
+Look at first entries of the ranked log2 fold change vector
+
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+lfc_vector <- filtered_dge_mapped_df$log2FoldChange
+names(lfc_vector) <- filtered_dge_mapped_df$gene_symbol
+
+lfc_vector <- sort(lfc_vector, decreasing = TRUE)
+
+head(lfc_vector)
+```
+
+## Running GSEA function
+
+**Set the seed so our results are reproducible**
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+set.seed(2020)
+```
+
+**GSEA function** 
+
+Here, we can change the parameters.\
+
+I'm using: \
+
+minGSSize = 10 \
+maxGSSize = 500 \
+pvalueCutoff = 0.05 \
+
+Ordered ranked gene list
+Minimum gene set size 10
+Maximum gene set set 800
+p-value cutoff 0.001 0.05
+Boundary for calculating the p value
+Set seed to make results reproducible
+Benjamini-Hochberg correction
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+gsea_results <- GSEA(
+  geneList = lfc_vector, 
+  minGSSize = 10, 
+  maxGSSize = 500, 
+  pvalueCutoff = 0.001, 
+  eps = 0, 
+  seed = TRUE, # 
+  pAdjustMethod = "BH", 
+  TERM2GENE = dplyr::select(
+    mm_hallmark_sets,
+    gs_name,
+    gene_symbol
+  )
+)
+
+# We can access the results from our `gsea_results` object using `@result`
+head(gsea_results@result)
+```
+
+### Making a dataframe of the results
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+gsea_result_df <- data.frame(gsea_results@result)
+
+```
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+#4.8 Write results to file
+#readr::write_tsv(
+#  gsea_result_df,
+#    "06_Res5_SRP123625_gsea_results.tsv"
+#)
+
+```
+
+### Visualizing results
+
+This returns the 3 rows with the largest NES values
+
+
+```{r, echo=TRUE, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+gsea_result_df %>%
+  dplyr::slice_max(NES, n = 3)
+```
+
+
+### Most positive
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+most_positive_nes_plotdf3 <- enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "HALLMARK_PANCREAS_BETA_CELLS",
+  title = "PANCREAS BETA_CELLS",
+  color.line = "#0d76ff"
+)
+most_positive_nes_plotdf3
+
+#ggsave("/02_results/19_Res5_most_positive_nes_plot.png", most_positive_nes_plotdf3, width = 6.74, height = 5.47)
+
+```
+
+### Most Negative
+
+Return the 3 rows with the smallest (most negative) NES values
+
+
+```{r, echo=TRUE, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+gsea_result_df %>%
+  dplyr::slice_min(NES, n = 3)
+```
+
+### Most Negative
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+
+most_negative_nes_plot3 <- enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "HALLMARK_KRAS_SIGNALING_UP",
+  title = "KRAS SIGNALING UP",
+  color.line = "#0d76ff"
+)
+most_negative_nes_plot3
+#/Results/20_Res5_most_negative_nes_plot.png", most_negative_nes_plot3, width = 6.74, height = 5.47)
+
+```
+
+
+### DotPlot Showing 10 Categories
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+Res2_Dotplot <- dotplot(gsea_results, showCategory=10, split=".sign") + 
+theme(
+  axis.text=element_text(size=12), 
+  axis.text.x = element_text(size = 12, hjust = 0.5), 
+  axis.title.y = element_text(size = 12),
+  legend.text=element_text(size=12),
+  legend.title=element_text(size=14),
+  axis.title.x = element_text(size = 14), 
+  strip.text.x = element_text(size = 14, face = "bold"),
+  panel.grid.major.x = element_blank() ,
+  panel.background = element_rect(fill = NA),
+  panel.grid.major.y = element_line( linewidth=.1, color="gray" ),
+  panel.ontop = FALSE)+
+  facet_grid(.~.sign)
+
+#ggsave("/Results/21_Res5_Dotplot.png", Res2_Dotplot, width = 9.26, height = 7.77)
+
+```
+
+### Category Netplot
+
+The cnetplot depicts the linkages of genes and biological concepts (e.g. GO terms or KEGG pathways) as a network (helpful to see which genes are involved in enriched pathways and genes that may belong to multiple annotation categories).
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+lfc_vector_top100 <- lfc_vector[1:10]
+gsea_results_100 <- gsea_results[1:100]
+p1 <- cnetplot(gsea_results, foldChange=lfc_vector)
+p2 <- cnetplot(gsea_results, categorySize="pvalue", foldChange=lfc_vector)
+p3 <- cnetplot(gsea_results, foldChange=lfc_vector, circular = TRUE, colorEdge = TRUE) 
+
+#Res2_cneplot <- cowplot::plot_grid(p1, p2, p3, ncol=3, labels=LETTERS[1:3], rel_widths=c(.8, .8, 1.2))
+
+#ggsave("/Results/22_Res5_cneplot.png", Res2_cneplot, width = 25.26, height = 7.77)
+
+```
+
+### Category Netplot 2
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+p1 <- cnetplot(gsea_results, node_label="category", 
+        cex_label_category = 1.2) 
+p2 <- cnetplot(gsea_results, node_label="gene", 
+        cex_label_gene = 0.8) 
+p3 <- cnetplot(gsea_results, node_label="all") 
+p4 <- cnetplot(gsea_results, node_label="none", 
+        color_category='firebrick', 
+        color_gene='steelblue') 
+#Res2_cneplot2 <- cowplot::plot_grid(p1, p2, p3, p4, ncol=2, labels=LETTERS[1:4])
+
+#ggsave("/Results/23_Res5_cneplot2.png", Res2_cneplot2, width = 18.26, height = 14.77)
+#Res2_cneplot2
+
+```
+
+### Ridgeplot
+
+Grouped by gene set, density plots are generated by using the frequency of fold change values per gene within each set. Helpful to interpret up/down-regulated pathways.
+
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+Res2_ridgeplot <- ridgeplot(gsea_results) + 
+  theme(
+  axis.text=element_text(size=1), 
+  axis.text.x = element_text(size = 10, hjust = 0.5), 
+  axis.title.y = element_text(size = 1),
+  legend.text=element_text(size=10),
+  legend.title=element_text(size=12),
+  axis.title.x = element_text(size = 1), 
+  strip.text.x = element_text(size = 1, face = "bold"),
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "white"),
+  panel.grid.minor.y = element_line(colour = "white"),
+  panel.grid.minor.x = element_line(colour = "white"),
+  panel.ontop = FALSE) +
+labs(x = "enrichment distribution")
+
+#ggsave("/Results/24_Res5_ridgeplot.png", Res2_ridgeplot, width = 9.26, height = 7.77)
+
+
+```
+
+### PubMed trend of enriched terms
+
+Plots the number/proportion of publications trend based on the query result from PubMed Central
+
+**2013-2022**
+
+```{r, echo = T, eval = F, include=TRUE, width = "100%", message=FALSE, warning=FALSE}
+# Use the `Gene Set` param for the index in the title, and as the value for geneSetId
+
+
+Res2_gseaplot <- gseaplot(gsea_results, by = "all", title = gsea_results$Description[1], geneSetID = 3)
+terms <- gsea_results$Description[1:3]
+terms_Res2 <- pmcplot(terms, 2013:2022, proportion=FALSE)
+
+#ggsave("/Results/25_terms_Res5.png", terms_Res2, width = 8.04, height = 7.77)
+
+```
+
+
+<!-- --------------------- Do not edit this and below ---------------------- -->
+
+</br>
+
+```{r,child="assets/_footer-lab.Rmd"}
+```
+
+```{r,eval=FALSE,echo=FALSE}
+# manually run this to render this document to HTML
+rmarkdown::render("workshop.Rmd")
+# then run this to convert HTML to PDF (if needed)
+#pagedown::chrome_print("core-report.html",output="core-report.pdf")
+```
