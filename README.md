@@ -39,6 +39,4 @@ We're looking forward to seeing everyone. If you have questions before the cours
 
 <div align="center">
 
-*Made with ❤️ by the Biosustain DSP team*
-
 </div>
