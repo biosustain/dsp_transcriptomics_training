@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Sanity Checks | Introduction to Transcriptomics</title>
+  <meta name="description" content="5 Sanity Checks | Introduction to Transcriptomics" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Sanity Checks | Introduction to Transcriptomics" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Sanity Checks | Introduction to Transcriptomics" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="creating-the-deseqdataset.html"/>
+<link rel="next" href="are-we-working-with-raw-counts.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.34.0/datatables.js"></script>
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="libs/dt-ext-buttons-1.13.6/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-buttons-1.13.6/js/dataTables.buttons.min.js"></script>
+<script src="libs/dt-ext-buttons-1.13.6/js/buttons.html5.min.js"></script>
+<script src="libs/dt-ext-buttons-1.13.6/js/buttons.colVis.min.js"></script>
+<script src="libs/dt-ext-buttons-1.13.6/js/buttons.print.min.js"></script>
+<link href="libs/dt-ext-scroller-1.13.6/css/scroller.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-scroller-1.13.6/js/dataTables.scroller.min.js"></script>
+<link href="libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script src="libs/plotly-binding-4.12.0/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.25.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="assets/report.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<div class="sidebar-header">
+  <img src="assets/logo.png"
+       style="width:120px; border-radius:50%; margin:10px auto; display:block;">
+  <h2 style="text-align:center;">Introduction to Data Visualization in R</h2>
+</div>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Welcome</a></li>
+<li class="chapter" data-level="2" data-path="instructions.html"><a href="instructions.html"><i class="fa fa-check"></i><b>2</b> Instructions</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
+<li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a></li>
+<li class="chapter" data-level="4" data-path="explanation-of-the-report.html"><a href="explanation-of-the-report.html"><i class="fa fa-check"></i><b>4</b> Explanation of the Report 🧾</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="setup-the-environment.html"><a href="setup-the-environment.html"><i class="fa fa-check"></i><b>4.1</b> Setup the Environment</a></li>
+<li class="chapter" data-level="4.2" data-path="getting-the-metadata.html"><a href="getting-the-metadata.html"><i class="fa fa-check"></i><b>4.2</b> Getting the Metadata</a></li>
+<li class="chapter" data-level="4.3" data-path="loading-count-data.html"><a href="loading-count-data.html"><i class="fa fa-check"></i><b>4.3</b> Loading Count Data</a></li>
+<li class="chapter" data-level="4.4" data-path="preparing-the-data.html"><a href="preparing-the-data.html"><i class="fa fa-check"></i><b>4.4</b> Preparing the Data</a></li>
+<li class="chapter" data-level="4.5" data-path="creating-the-deseqdataset.html"><a href="creating-the-deseqdataset.html"><i class="fa fa-check"></i><b>4.5</b> Creating the DESeqDataSet</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="sanity-checks.html"><a href="sanity-checks.html"><i class="fa fa-check"></i><b>5</b> Sanity Checks</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="are-we-working-with-raw-counts.html"><a href="are-we-working-with-raw-counts.html"><i class="fa fa-check"></i><b>5.1</b> Are We Working with Raw Counts?</a></li>
+<li class="chapter" data-level="5.2" data-path="pre-filtering-low-count-genes.html"><a href="pre-filtering-low-count-genes.html"><i class="fa fa-check"></i><b>5.2</b> Pre-filtering Low-count Genes</a></li>
+<li class="chapter" data-level="5.3" data-path="factor-order-and-reference-level.html"><a href="factor-order-and-reference-level.html"><i class="fa fa-check"></i><b>5.3</b> Factor Order and Reference Level</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>6</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="estimate-size-factors.html"><a href="estimate-size-factors.html"><i class="fa fa-check"></i><b>6.1</b> Estimate Size Factors</a></li>
+<li class="chapter" data-level="6.2" data-path="distribution-of-normalised-counts.html"><a href="distribution-of-normalised-counts.html"><i class="fa fa-check"></i><b>6.2</b> Distribution of Normalised Counts</a></li>
+<li class="chapter" data-level="6.3" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>6.3</b> Sample Correlation Heatmap</a></li>
+<li class="chapter" data-level="6.4" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>6.4</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="6.5" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>6.5</b> Detecting Outliers</a></li>
+<li class="chapter" data-level="6.6" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>6.6</b> Top Variable Genes Heatmap</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>7</b> Summary</a></li>
+<li class="chapter" data-level="8" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>8</b> Differential Expression Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="setup-the-environment-1.html"><a href="setup-the-environment-1.html"><i class="fa fa-check"></i><b>8.1</b> Setup the Environment</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="differential-expression-analysis-1.html"><a href="differential-expression-analysis-1.html"><i class="fa fa-check"></i><b>9</b> Differential Expression Analysis</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="running-deseq2.html"><a href="running-deseq2.html"><i class="fa fa-check"></i><b>9.1</b> Running DESeq2</a></li>
+<li class="chapter" data-level="9.2" data-path="extracting-results.html"><a href="extracting-results.html"><i class="fa fa-check"></i><b>9.2</b> Extracting Results</a></li>
+<li class="chapter" data-level="9.3" data-path="log2-fold-change-shrinkage.html"><a href="log2-fold-change-shrinkage.html"><i class="fa fa-check"></i><b>9.3</b> Log2 Fold Change Shrinkage</a></li>
+<li class="chapter" data-level="9.4" data-path="sorting-and-filtering-significant-genes.html"><a href="sorting-and-filtering-significant-genes.html"><i class="fa fa-check"></i><b>9.4</b> Sorting and Filtering Significant Genes</a></li>
+<li class="chapter" data-level="9.5" data-path="interactive-results-table.html"><a href="interactive-results-table.html"><i class="fa fa-check"></i><b>9.5</b> Interactive Results Table</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="visualisation.html"><a href="visualisation.html"><i class="fa fa-check"></i><b>10</b> Visualisation</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="volcano-plot.html"><a href="volcano-plot.html"><i class="fa fa-check"></i><b>10.1</b> Volcano Plot</a></li>
+<li class="chapter" data-level="10.2" data-path="ma-plot.html"><a href="ma-plot.html"><i class="fa fa-check"></i><b>10.2</b> MA Plot</a></li>
+<li class="chapter" data-level="10.3" data-path="top-gene-count-plot.html"><a href="top-gene-count-plot.html"><i class="fa fa-check"></i><b>10.3</b> Top Gene Count Plot</a></li>
+<li class="chapter" data-level="10.4" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>10.4</b> Heatmap of Significant Genes</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>11</b> Saving Results</a></li>
+<li class="chapter" data-level="12" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>12</b> Summary</a></li>
+<li class="chapter" data-level="13" data-path="gene-functional-enrichment-analysis.html"><a href="gene-functional-enrichment-analysis.html"><i class="fa fa-check"></i><b>13</b> Gene Functional Enrichment Analysis</a></li>
+<li class="chapter" data-level="14" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>14</b> Setup</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="load-libraries.html"><a href="load-libraries.html"><i class="fa fa-check"></i><b>14.1</b> Load Libraries</a></li>
+<li class="chapter" data-level="14.2" data-path="load-results-from-differential-expression-analysis.html"><a href="load-results-from-differential-expression-analysis.html"><i class="fa fa-check"></i><b>14.2</b> Load Results from Differential Expression Analysis</a></li>
+<li class="chapter" data-level="14.3" data-path="build-and-cache-kegg-gmt.html"><a href="build-and-cache-kegg-gmt.html"><i class="fa fa-check"></i><b>14.3</b> Build and Cache KEGG GMT</a></li>
+<li class="chapter" data-level="14.4" data-path="convert-locus-tags-to-gene-symbols.html"><a href="convert-locus-tags-to-gene-symbols.html"><i class="fa fa-check"></i><b>14.4</b> Convert Locus Tags to Gene Symbols</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html"><i class="fa fa-check"></i><b>15</b> Part 1 — Over-Representation Analysis (ORA)</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="what-is-ora.html"><a href="what-is-ora.html"><i class="fa fa-check"></i><b>15.1</b> What is ORA?</a></li>
+<li class="chapter" data-level="15.2" data-path="prepare-input.html"><a href="prepare-input.html"><i class="fa fa-check"></i><b>15.2</b> Prepare Input</a></li>
+<li class="chapter" data-level="15.3" data-path="run-ora.html"><a href="run-ora.html"><i class="fa fa-check"></i><b>15.3</b> Run ORA</a></li>
+<li class="chapter" data-level="15.4" data-path="filter-and-inspect-significant-pathways.html"><a href="filter-and-inspect-significant-pathways.html"><i class="fa fa-check"></i><b>15.4</b> Filter and Inspect Significant Pathways</a></li>
+<li class="chapter" data-level="15.5" data-path="visualise-ora-results.html"><a href="visualise-ora-results.html"><i class="fa fa-check"></i><b>15.5</b> Visualise ORA Results</a>
+<ul>
+<li class="chapter" data-level="15.5.1" data-path="visualise-ora-results.html"><a href="visualise-ora-results.html#bar-plot-enriched-pathways"><i class="fa fa-check"></i><b>15.5.1</b> Bar Plot — Enriched Pathways</a></li>
+<li class="chapter" data-level="15.5.2" data-path="visualise-ora-results.html"><a href="visualise-ora-results.html#lollipop-plot-gene-hits-per-pathway"><i class="fa fa-check"></i><b>15.5.2</b> Lollipop Plot — Gene Hits per Pathway</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html"><i class="fa fa-check"></i><b>16</b> Part 2 — Gene Set Enrichment Analysis (GSEA)</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="what-is-gsea.html"><a href="what-is-gsea.html"><i class="fa fa-check"></i><b>16.1</b> What is GSEA?</a></li>
+<li class="chapter" data-level="16.2" data-path="prepare-the-ranked-gene-list.html"><a href="prepare-the-ranked-gene-list.html"><i class="fa fa-check"></i><b>16.2</b> Prepare the Ranked Gene List</a></li>
+<li class="chapter" data-level="16.3" data-path="convert-gmt-to-fgsea-format.html"><a href="convert-gmt-to-fgsea-format.html"><i class="fa fa-check"></i><b>16.3</b> Convert GMT to fgsea Format</a></li>
+<li class="chapter" data-level="16.4" data-path="run-gsea.html"><a href="run-gsea.html"><i class="fa fa-check"></i><b>16.4</b> Run GSEA</a></li>
+<li class="chapter" data-level="16.5" data-path="filter-and-inspect-significant-pathways-1.html"><a href="filter-and-inspect-significant-pathways-1.html"><i class="fa fa-check"></i><b>16.5</b> Filter and Inspect Significant Pathways</a></li>
+<li class="chapter" data-level="16.6" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html"><i class="fa fa-check"></i><b>16.6</b> Visualise GSEA Results</a>
+<ul>
+<li class="chapter" data-level="16.6.1" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html#nes-bar-plot-activated-and-suppressed-pathways"><i class="fa fa-check"></i><b>16.6.1</b> NES Bar Plot — Activated and Suppressed Pathways</a></li>
+<li class="chapter" data-level="16.6.2" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html#dot-plot-nes-padj-and-gene-set-size"><i class="fa fa-check"></i><b>16.6.2</b> Dot Plot — NES, padj and Gene Set Size</a></li>
+<li class="chapter" data-level="16.6.3" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html#enrichment-plot-top-pathways"><i class="fa fa-check"></i><b>16.6.3</b> Enrichment Plot — Top Pathways</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="part-3-comparing-ora-and-gsea.html"><a href="part-3-comparing-ora-and-gsea.html"><i class="fa fa-check"></i><b>17</b> Part 3 — Comparing ORA and GSEA</a></li>
+<li class="chapter" data-level="18" data-path="saving-results-1.html"><a href="saving-results-1.html"><i class="fa fa-check"></i><b>18</b> Saving Results</a></li>
+<li class="chapter" data-level="19" data-path="summary-2.html"><a href="summary-2.html"><i class="fa fa-check"></i><b>19</b> Summary</a></li>
+<li class="divider"></li>
+<p style="text-align:center; font-size:12px; color:#777;">
+  Created by Juliana Assis — DTU Data Visualization Workshop
+</p>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to Transcriptomics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="sanity-checks" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Sanity Checks<a href="sanity-checks.html#sanity-checks" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="creating-the-deseqdataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="are-we-working-with-raw-counts.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": false,
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["Introduction to Transcriptomics.pdf"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "toc_depth": 3
+  }
+});
+});
+</script>
+
+</body>
+
+</html>
