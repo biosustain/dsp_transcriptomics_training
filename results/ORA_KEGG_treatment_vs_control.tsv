@@ -1,0 +1,122 @@
+ontology_id	ontology_name	nr_common_with_tested_elements	nr_common_with_background_elements	p_value	eFDR
+eco00010	Glycolysis / Gluconeogenesis	7	44	0.669659151978252	1
+eco00020	Citrate cycle (TCA cycle)	7	28	0.205015501409601	0.464647058823529
+eco00030	Pentose phosphate pathway	5	32	0.680708099321328	1
+eco00040	Pentose and glucuronate interconversions	16	38	0.000307893493199596	0.00266666666666667
+eco00051	Fructose and mannose metabolism	14	41	0.00732051011664869	0.0414545454545455
+eco00052	Galactose metabolism	5	32	0.680708099321328	1
+eco00053	Ascorbate and aldarate metabolism	9	18	0.00155583645554624	0.021
+eco00061	Fatty acid biosynthesis	0	13	1	1
+eco00071	Fatty acid degradation	7	14	0.00530644538817038	0.041
+eco00074	Mycolic acid biosynthesis	0	2	1	1
+eco00121	Secondary bile acid biosynthesis	1	1	0.174689021092482	0.404363636363636
+eco00130	Ubiquinone and other terpenoid-quinone biosynthesis	0	23	1	1
+eco00190	Oxidative phosphorylation	14	42	0.00926567712545756	0.0438333333333333
+eco00220	Arginine biosynthesis	1	19	0.974208988569616	1
+eco00230	Purine metabolism	15	78	0.384970422080459	0.726714285714286
+eco00240	Pyrimidine metabolism	9	50	0.519033285583916	0.880115384615385
+eco00250	Alanine, aspartate and glutamate metabolism	10	33	0.0494475655787658	0.131130434782609
+eco00260	Glycine, serine and threonine metabolism	5	38	0.819106357832972	1
+eco00261	Monobactam biosynthesis	2	8	0.420359876414584	0.778558139534884
+eco00270	Cysteine and methionine metabolism	8	37	0.31298034516767	0.613025641025641
+eco00280	Valine, leucine and isoleucine degradation	6	11	0.00579780702422261	0.0435555555555556
+eco00290	Valine, leucine and isoleucine biosynthesis	1	16	0.953986024688359	1
+eco00300	Lysine biosynthesis	0	13	1	1
+eco00310	Lysine degradation	7	18	0.0259676392911281	0.1026875
+eco00330	Arginine and proline metabolism	6	25	0.262796873780666	0.579
+eco00332	Carbapenem biosynthesis	0	2	1	1
+eco00340	Histidine metabolism	0	8	1	1
+eco00350	Tyrosine metabolism	1	10	0.853763597849675	1
+eco00360	Phenylalanine metabolism	11	32	0.0158518030019221	0.0691428571428571
+eco00361	Chlorocyclohexane and chlorobenzene degradation	0	1	1	1
+eco00362	Benzoate degradation	7	13	0.00311745370713179	0.0298333333333333
+eco00364	Fluorobenzoate degradation	0	1	1	1
+eco00380	Tryptophan metabolism	6	10	0.00308754673505685	0.033
+eco00400	Phenylalanine, tyrosine and tryptophan biosynthesis	0	20	1	1
+eco00401	Novobiocin biosynthesis	0	4	1	1
+eco00410	beta-Alanine metabolism	5	14	0.0812335659731117	0.227888888888889
+eco00430	Taurine and hypotaurine metabolism	2	6	0.282611627209378	0.584243243243243
+eco00440	Phosphonate and phosphinate metabolism	0	4	1	1
+eco00450	Selenocompound metabolism	6	17	0.0609674535492241	0.14572
+eco00460	Cyanoamino acid metabolism	2	7	0.352780062560695	0.702512195121951
+eco00470	D-Amino acid metabolism	1	15	0.944198396090624	1
+eco00480	Glutathione metabolism	0	24	1	1
+eco00500	Starch and sucrose metabolism	10	32	0.0405663112724757	0.119142857142857
+eco00511	Other glycan degradation	1	3	0.437945723822167	0.833042553191489
+eco00520	Amino sugar and nucleotide sugar metabolism	12	42	0.050531054419801	0.128333333333333
+eco00521	Streptomycin biosynthesis	2	9	0.484114615245074	0.86196
+eco00523	Polyketide sugar unit biosynthesis	2	6	0.282611627209378	0.584243243243243
+eco00525	Acarbose and validamycin biosynthesis	1	4	0.536210152079509	0.889454545454545
+eco00540	Lipopolysaccharide biosynthesis	4	30	0.795189761377714	1
+eco00541	Biosynthesis of various nucleotide sugars	7	31	0.2904812972065	0.587736842105263
+eco00542	O-Antigen repeat unit biosynthesis	0	3	1	1
+eco00543	Exopolysaccharide biosynthesis	9	15	0.000264010357439171	0.0025
+eco00550	Peptidoglycan biosynthesis	2	26	0.95633886692401	1
+eco00552	Teichoic acid biosynthesis	0	3	1	1
+eco00561	Glycerolipid metabolism	2	14	0.730956434720774	1
+eco00562	Inositol phosphate metabolism	1	3	0.437945723822167	0.833042553191489
+eco00564	Glycerophospholipid metabolism	4	28	0.746866598949828	1
+eco00565	Ether lipid metabolism	0	1	1	1
+eco00566	Sulfoquinovose metabolism	0	7	1	1
+eco00592	alpha-Linolenic acid metabolism	2	3	0.0808109083360544	0.222538461538462
+eco00600	Sphingolipid metabolism	1	4	0.536210152079509	0.889454545454545
+eco00620	Pyruvate metabolism	16	57	0.0308179016134433	0.104611111111111
+eco00621	Dioxin degradation	0	3	1	1
+eco00622	Xylene degradation	0	3	1	1
+eco00623	Toluene degradation	0	1	1	1
+eco00625	Chloroalkane and chloroalkene degradation	1	3	0.437945723822167	0.833042553191489
+eco00626	Naphthalene degradation	1	3	0.437945723822167	0.833042553191489
+eco00627	Aminobenzoate degradation	1	4	0.536210152079509	0.889454545454545
+eco00630	Glyoxylate and dicarboxylate metabolism	10	40	0.146670618487694	0.344129032258065
+eco00633	Nitrotoluene degradation	3	7	0.107190538831086	0.282892857142857
+eco00640	Propanoate metabolism	10	33	0.0494475655787658	0.131130434782609
+eco00650	Butanoate metabolism	12	33	0.00727655626974966	0.0445
+eco00660	C5-Branched dibasic acid metabolism	0	10	1	1
+eco00670	One carbon pool by folate	1	19	0.974208988569616	1
+eco00680	Methane metabolism	3	31	0.9269799647037	1
+eco00710	Carbon fixation by Calvin cycle	4	20	0.472352868500241	0.870775510204082
+eco00720	Other carbon fixation pathways	9	34	0.124786711752354	0.296466666666667
+eco00730	Thiamine metabolism	0	15	1	1
+eco00740	Riboflavin metabolism	3	16	0.548021737544397	0.906517857142857
+eco00750	Vitamin B6 metabolism	1	12	0.900512830845782	1
+eco00760	Nicotinate and nicotinamide metabolism	0	23	1	1
+eco00770	Pantothenate and CoA biosynthesis	0	23	1	1
+eco00780	Biotin metabolism	0	14	1	1
+eco00785	Lipoic acid metabolism	0	11	1	1
+eco00790	Folate biosynthesis	1	25	0.991910036735705	1
+eco00860	Porphyrin metabolism	3	22	0.766479859596371	1
+eco00900	Terpenoid backbone biosynthesis	1	14	0.932332748913054	1
+eco00907	Pinene, camphor and geraniol degradation	6	6	2.78768160338894e-05	0
+eco00910	Nitrogen metabolism	8	23	0.0351041449539296	0.1131
+eco00920	Sulfur metabolism	10	31	0.0328430274379277	0.103052631578947
+eco00930	Caprolactam degradation	3	3	0.00531043111922647	0.0425
+eco00946	Degradation of flavonoids	0	1	1	1
+eco00970	Aminoacyl-tRNA biosynthesis	1	36	0.999039577839176	1
+eco00984	Steroid degradation	2	2	0.030477256858169	0.11
+eco00999	Biosynthesis of various plant secondary metabolites	0	3	1	1
+eco01040	Biosynthesis of unsaturated fatty acids	0	3	1	1
+eco01053	Biosynthesis of siderophore group nonribosomal peptides	0	6	1	1
+eco02010	ABC transporters	30	175	0.57887412044747	0.919052631578947
+eco02020	Two-component system	38	160	0.0240319469746507	0.1048
+eco02024	Quorum sensing	10	64	0.702908312202999	1
+eco02026	Biofilm formation - Escherichia coli	9	49	0.492799202112194	0.852058823529412
+eco02030	Bacterial chemotaxis	1	16	0.953986024688359	1
+eco02040	Flagellar assembly	8	29	0.118816307217006	0.296137931034483
+eco02060	Phosphotransferase system (PTS)	12	35	0.0122296158978574	0.0541538461538461
+eco03008	Ribosome biogenesis in eukaryotes	0	2	1	1
+eco03010	Ribosome	14	75	0.438829254105056	0.818083333333333
+eco03018	RNA degradation	2	16	0.797383967124603	1
+eco03020	RNA polymerase	0	4	1	1
+eco03030	DNA replication	0	17	1	1
+eco03060	Protein export	0	18	1	1
+eco03070	Bacterial secretion system	0	23	1	1
+eco03250	Viral life cycle - HIV-1	1	1	0.174689021092482	0.404363636363636
+eco03258	Virion - Bacteriophage lambda	0	0	1	1
+eco03410	Base excision repair	0	14	1	1
+eco03420	Nucleotide excision repair	0	8	1	1
+eco03430	Mismatch repair	1	22	0.985551566115469	1
+eco03440	Homologous recombination	0	27	1	1
+eco04122	Sulfur relay system	1	19	0.974208988569616	1
+eco04146	Peroxisome	2	7	0.352780062560695	0.702512195121951
+eco04980	Cobalamin transport and metabolism	0	3	1	1
+eco04981	Folate transport and metabolism	0	6	1	1
