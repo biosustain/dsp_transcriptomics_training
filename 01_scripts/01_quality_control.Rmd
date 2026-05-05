@@ -462,7 +462,18 @@ Before proceeding to differential expression analysis, confirm all QC checks pas
 
 If any check fails, investigate the cause before running DESeq2. Proceeding with outlier samples or confounded designs will compromise all downstream results.
 
----
+```{r export-dds, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+# ── Export DDS for downstream analysis ────────────────────────────────────────
+results_dir <- file.path(git_root, "results", "rds")
+dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
+
+dds_path <- file.path(results_dir, "dds_ecoli_MG1655.rds")
+saveRDS(dds, file = dds_path)
+
+cat("✅ DDS saved to:", dds_path, "\n")
+cat("   Dimensions  :", nrow(dds), "genes ×", ncol(dds), "samples\n")
+cat("   Conditions  :", paste(levels(dds$condition), collapse = " vs "), "\n")
+```
 
 <!-- --------------------- Do not edit this and below ---------------------- -->
 
