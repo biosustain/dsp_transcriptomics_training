@@ -2,21 +2,17 @@ FROM mcr.microsoft.com/devcontainers/base:noble
 WORKDIR /home
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        software-properties-common \
-        dirmngr \
-        wget \
-        ca-certificates \
-    && wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc \
-        | tee /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc \
-    && echo "deb https://cloud.r-project.org/bin/linux/ubuntu noble-cran44/" \
-        > /etc/apt/sources.list.d/cran-r44.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends \
-        r-base \
-        r-base-dev \
+    && apt-get install -y \
         openjdk-21-jre \
         python3-venv \
+        r-base \
+        r-base-dev \
+        r-cran-dplyr \
+        r-cran-ggplot2 \
+        r-cran-ggrepel \
+        r-cran-rcolorbrewer \
+        r-cran-rmarkdown \
+        r-cran-tidyr \
         libcurl4-openssl-dev \
         libssl-dev \
         libxml2-dev \

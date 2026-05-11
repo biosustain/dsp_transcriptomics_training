@@ -1,20 +1,14 @@
 install.packages(
   c(
-    "languageserver",  # R language server for VS Code
-    "bookdown",
-    "dplyr",
-    "DT",
-    "ggplot2",
+    "languageserver",
     "ggpubr",
-    "ggrepel",
+    "plotly",
+    "remotes",
+    "bookdown",
+    "DT",
     "here",
     "kableExtra",
-    "pheatmap",
-    "RColorBrewer",
-    "rmarkdown",
-    "tidyr",
-    "plotly",
-    "remotes"
+    "pheatmap"
   ),
   dependencies = TRUE,
   repos = "https://cloud.r-project.org",
@@ -25,6 +19,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager", repos = "https://cloud.r-project.org")
 }
 
+# Install Bioconductor packages — fgsea must come before mulea
 BiocManager::install(
   c(
     "DESeq2",
