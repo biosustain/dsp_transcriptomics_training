@@ -14,6 +14,18 @@ All materials, resources, and a **draft agenda** for the day are available in th
 
 ## 📋 Course Details
 
+| | |
+|---|---|
+| 📍 **Location** | Room 011 / ALC2, Building 208 |
+| 🕘 **Duration** | 9:00 – 16:30 |
+| ☕ **Catering** | Lunch & coffee provided! |
+
+---
+
+## 🗓️ Agenda
+
+A draft agenda is already available in the repository. Check back closer to the date for the final version.
+
 | Time             | Session                                                                         |
 |------------------|---------------------------------------------------------------------------------|
 | ☕ **9:00 – 9:15**   | Welcome, coffee, and setup                                                     |
@@ -29,11 +41,6 @@ All materials, resources, and a **draft agenda** for the day are available in th
 | 🔍 **15:45 – 16:15** | Script 04: *Functional Enrichment Analysis (ORA & GSEA with mulea)*            |
 | 🏁 **16:15 – 16:30** | Wrap-up, Q&A, and closing                                                       |
 
----
-
-## 🗓️ Agenda
-
-A draft agenda is already available in the repository. Check back closer to the date for the final version.
 
 ---
 
