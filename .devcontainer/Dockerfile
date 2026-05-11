@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/devcontainers/base:noble
 WORKDIR /home
 
-RUN apt update \
-    && apt -y install \
+RUN apt-get update \
+    && apt-get install -y \
         openjdk-21-jre \
         python3-venv \
         r-base \
@@ -31,7 +31,8 @@ RUN apt update \
     && curl -L -s -o /usr/local/bin/nextflow \
         https://github.com/nextflow-io/nextflow/releases/download/v25.10.4/nextflow-25.10.4-dist \
     && chmod +x /usr/local/bin/nextflow \
-    && ln -s /usr/bin/python3 /usr/bin/python
+    && ln -s /usr/bin/python3 /usr/bin/python \
+    && chmod -R 777 /usr/local/lib/R/site-library
 
 COPY install_packages.R /tmp/install_packages.R
 RUN Rscript /tmp/install_packages.R && rm /tmp/install_packages.R
