@@ -1,23 +1,22 @@
 FROM mcr.microsoft.com/devcontainers/base:noble
 WORKDIR /home
 
+# Install R 4.4 from CRAN's official Ubuntu repository
 RUN apt-get update \
-    && apt-get install -y \
-        openjdk-21-jre \
-        python3-venv \
+    && apt-get install -y --no-install-recommends \
+        software-properties-common \
+        dirmngr \
+        wget \
+    && wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc \
+        | tee /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc \
+    && add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu noble-cran44/" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
         r-base \
         r-base-dev \
-        r-cran-bookdown \
-        r-cran-dplyr \
-        r-cran-dt \
-        r-cran-ggplot2 \
-        r-cran-ggrepel \
-        r-cran-here \
-        r-cran-kableextra \
-        r-cran-pheatmap \
-        r-cran-rcolorbrewer \
-        r-cran-rmarkdown \
-        r-cran-tidyr \
+    && apt-get install -y --no-install-recommends \
+        openjdk-21-jre \
+        python3-venv \
         libcurl4-openssl-dev \
         libssl-dev \
         libxml2-dev \

@@ -1,10 +1,20 @@
 install.packages(
   c(
     "languageserver",  # R language server for VS Code
-    "ggpubr",          # plot theming
-    "fgsea",           # GSEA
-    "plotly",          # interactive plots
-    "remotes"          # needed to install mulea from GitHub
+    "bookdown",
+    "dplyr",
+    "DT",
+    "ggplot2",
+    "ggpubr",
+    "ggrepel",
+    "here",
+    "kableExtra",
+    "pheatmap",
+    "RColorBrewer",
+    "rmarkdown",
+    "tidyr",
+    "plotly",
+    "remotes"
   ),
   dependencies = TRUE,
   repos = "https://cloud.r-project.org",
@@ -20,7 +30,8 @@ BiocManager::install(
     "DESeq2",
     "apeglm",
     "EnhancedVolcano",
-    "KEGGREST"
+    "KEGGREST",
+    "fgsea"
   ),
   update = FALSE,
   ask = FALSE
