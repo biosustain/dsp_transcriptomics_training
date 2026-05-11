@@ -3,7 +3,8 @@ install.packages(
     "languageserver",  # R language server for VS Code
     "ggpubr",          # plot theming
     "fgsea",           # GSEA
-    "mulea"            # ORA
+    "mulea",            # ORA
+    "plotly"
   ),
   dependencies = TRUE,
   repos = "https://cloud.r-project.org",

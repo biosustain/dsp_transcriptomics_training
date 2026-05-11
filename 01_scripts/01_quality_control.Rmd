@@ -20,68 +20,61 @@ This report covers the quality control and exploratory analysis of bulk RNA-seq 
 
 The list of contrasts of interest is:
 
-- DE between [condition A] vs [condition B]
-- DE between [condition C] vs [condition D]
+-   DE between \[condition A\] vs \[condition B\]
+-   DE between \[condition C\] vs \[condition D\]
 
 **Topics covered**
 
-- RNAseq Quality control analysis
-- Mapping of short reads (Salmon)
-- Quantification of gene expression
-- Exploratory data analyses
-- Differential gene expression (DESeq2)
-- Gene set enrichment analysis
+-   RNAseq Quality control analysis
+-   Mapping of short reads (Salmon)
+-   Quantification of gene expression
+-   Exploratory data analyses
+-   Differential gene expression (DESeq2)
+-   Gene set enrichment analysis
 
 **Data**
 
-- Type of data: bulk RNASeq
-- Organism: *Escherichia coli* K-12 MG1655
-- Codes location: [GitHub repository](https://github.com/biosustain/dsp_transcriptomics_training)
-- Reference data used: *E. coli* K-12 MG1655 (NCBI RefSeq: NC_000913.3 / Ensembl)
+-   Type of data: bulk RNASeq
+-   Organism: *Escherichia coli* K-12 MG1655
+-   Codes location: [GitHub repository](https://github.com/biosustain/dsp_transcriptomics_training)
+-   Reference data used: *E. coli* K-12 MG1655 (NCBI RefSeq: NC_000913.3 / Ensembl)
 
-> **Note:** *E. coli* MG1655 is a prokaryote. Key differences to keep in mind:
-> - No introns → transcript = gene (tx2gene mapping is 1:1)
-> - Use **org.EcK12.eg.db** for annotation or **EcK12** KEGG pathways
-> - Genome size ~4.6 Mb with ~4,300 genes
-> - Enrichment analysis via KEGG or custom gene sets with **fgsea**
 
----
+<div class="note">
+<strong>📘 Note:</strong> *E. coli* MG1655 is a prokaryote. Key differences to keep in mind: - No introns → transcript = gene (tx2gene mapping is 1:1) - Use **org.EcK12.eg.db** for annotation or **EcK12** KEGG pathways - Genome size \~4.6 Mb with \~4,300 genes - Enrichment analysis via KEGG or custom gene sets with **fgsea**
+</div>
 
-# Explanation of the Report 🧾
+
+## Explanation of the QC analysis 🧾
 
 This document guides you through the standard QC pipeline for prokaryotic bulk RNA-seq data processed with nf-core/rnaseq + Salmon. It is structured to be both educational and reproducible.
 
----
+------------------------------------------------------------------------
 
 ## Setup the Environment
 
-<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
-  <strong>💡 Tip:</strong> Install packages only once. If already installed, skip this step.
-</div>
+::: {style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;"}
+<strong>💡 Tip:</strong> Install packages only once. If already installed, skip this step.
+:::
 
-<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
-  <strong>📌 Remember:</strong> Load all libraries at the start of every session before running any analysis.
-</div>
+::: {style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;"}
+<strong>📌 Remember:</strong> Load all libraries at the start of every session before running any analysis.
+:::
 
 ```{r libraries, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(reshape2)
 library(DESeq2)
-library(SummarizedExperiment)
 library(ggpubr)
 library(RColorBrewer)
 library(pheatmap)
 library(factoextra)
-library(plotly)
 library(knitr)
 library(kableExtra)
 library(DT)
-library(org.EcK12.eg.db)
-library(fgsea)
-library(clusterProfiler)
 ```
 
----
+------------------------------------------------------------------------
 
 ## Getting the Metadata
 
@@ -98,9 +91,9 @@ samples_info <- read.table(
 )
 ```
 
-<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
-  <strong>💡 Tip:</strong> Use the interactive table below to verify your sample metadata before proceeding.
-</div>
+::: {style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;"}
+<strong>💡 Tip:</strong> Use the interactive table below to verify your sample metadata before proceeding.
+:::
 
 ```{r view-metadata, echo=TRUE, include=TRUE, eval=TRUE, message=FALSE, warning=FALSE}
 DT::datatable(
@@ -119,7 +112,7 @@ DT::datatable(
 )
 ```
 
----
+------------------------------------------------------------------------
 
 ## Loading Count Data
 
@@ -127,9 +120,9 @@ DT::datatable(
 
 Raw counts must remain as integers — DESeq2's statistical model requires this.
 
-<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
-  <strong>💡 Tip:</strong> If you are unsure which assay name or rowData columns are available in your RDS, inspect them first with <code>assayNames(count_x)</code> and <code>names(rowData(count_x))</code>.
-</div>
+::: {style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;"}
+<strong>💡 Tip:</strong> If you are unsure which assay name or rowData columns are available in your RDS, inspect them first with <code>assayNames(count_x)</code> and <code>names(rowData(count_x))</code>.
+:::
 
 ```{r load-counts, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 count_x <- readRDS(
@@ -155,15 +148,15 @@ cat("Dimensions (genes × samples):", dim(count_genes), "\n")
 print(head(rownames(count_genes)))
 ```
 
----
+------------------------------------------------------------------------
 
 ## Preparing the Data
 
 Before building the DESeq2 object we need to:
 
-1. Set factor levels so that `control` is the **reference level** (the denominator in fold-change calculations).
-2. Clean column names in the count matrix to remove whitespace or special characters.
-3. Align the sample order between the count matrix and the metadata — DESeq2 requires these to match exactly.
+1.  Set factor levels so that `control` is the **reference level** (the denominator in fold-change calculations).
+2.  Clean column names in the count matrix to remove whitespace or special characters.
+3.  Align the sample order between the count matrix and the metadata — DESeq2 requires these to match exactly.
 
 ```{r prepare-data, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 condition_levels   <- c("control", "treatment")
@@ -183,7 +176,7 @@ print(data.frame(count_col    = colnames(count_genes),
                  metadata_row = samples_info$sample))
 ```
 
----
+------------------------------------------------------------------------
 
 ## Creating the DESeqDataSet
 
@@ -202,7 +195,7 @@ dds <- DESeqDataSetFromMatrix(
 )
 ```
 
----
+------------------------------------------------------------------------
 
 # Sanity Checks
 
@@ -221,15 +214,15 @@ hist(
 )
 ```
 
-> Raw *E. coli* RNA-seq counts are typically in the thousands to millions range (library sizes ~5–50 M reads for bacterial experiments). A highly right-skewed distribution is expected and correct at this stage.
+> Raw *E. coli* RNA-seq counts are typically in the thousands to millions range (library sizes \~5–50 M reads for bacterial experiments). A highly right-skewed distribution is expected and correct at this stage.
 
----
+------------------------------------------------------------------------
 
 ## Pre-filtering Low-count Genes
 
 Genes with very few counts across all samples carry no statistical power and inflate the multiple testing burden. We remove genes that do not have at least 10 counts in a minimum number of samples (equal to the size of the smallest group, i.e., 3 replicates here).
 
-*E. coli* has ~4,300 genes — after filtering you should retain the majority of them.
+*E. coli* has \~4,300 genes — after filtering you should retain the majority of them.
 
 ```{r prefilter, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 smallestGroupSize <- min(table(samples_info$condition))
@@ -242,7 +235,7 @@ cat("Genes after  filtering:", nrow(dds), "\n")
 cat("Genes removed         :", sum(!keep), "\n")
 ```
 
----
+------------------------------------------------------------------------
 
 ## Factor Order and Reference Level
 
@@ -253,11 +246,11 @@ dds$condition <- relevel(dds$condition, ref = "control")
 levels(dds$condition)
 ```
 
-<div style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;">
-  <strong>📌 Remember:</strong> The reference level determines the direction of fold changes. A positive log2FC means higher expression in the treatment relative to control.
-</div>
+::: {style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;"}
+<strong>📌 Remember:</strong> The reference level determines the direction of fold changes. A positive log2FC means higher expression in the treatment relative to control.
+:::
 
----
+------------------------------------------------------------------------
 
 # Exploratory Data Analysis
 
@@ -276,15 +269,15 @@ sizeFactors(dds) %>%
   kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
 ```
 
----
+------------------------------------------------------------------------
 
 ## Distribution of Normalised Counts
 
 Boxplots of log2-normalised counts per sample provide a quick visual check that all samples have comparable expression distributions. After normalisation, boxes should overlap substantially. A sample that is a clear outlier in median or spread may indicate a failed library or mislabelled condition.
 
-<div style="background:#f8d7da;border-left:4px solid #721c24;padding:10px;margin:10px 0;">
-  <strong>📌 Remember:</strong> These normalised counts are for visualisation only. Always feed DESeq2 <strong>raw integer counts</strong>.
-</div>
+::: {style="background:#f8d7da;border-left:4px solid #721c24;padding:10px;margin:10px 0;"}
+<strong>📌 Remember:</strong> These normalised counts are for visualisation only. Always feed DESeq2 <strong>raw integer counts</strong>.
+:::
 
 ```{r distribution, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 cols_condition <- c("control"   = "#2c7bb6",
@@ -320,7 +313,7 @@ distribution
 ggplotly(distribution)
 ```
 
----
+------------------------------------------------------------------------
 
 ## Sample Correlation Heatmap
 
@@ -350,7 +343,7 @@ pheatmap(
 )
 ```
 
----
+------------------------------------------------------------------------
 
 ## Principal Component Analysis (PCA)
 
@@ -392,7 +385,7 @@ PCAPlot
 ggplotly(PCAPlot)
 ```
 
----
+------------------------------------------------------------------------
 
 ## Detecting Outliers
 
@@ -411,7 +404,7 @@ fviz_pca_biplot(pca_full, repel = TRUE,
                 title = "Biplot — genes and samples")
 ```
 
----
+------------------------------------------------------------------------
 
 ## Top Variable Genes Heatmap
 
@@ -446,17 +439,17 @@ pheatmap(
 )
 ```
 
----
+------------------------------------------------------------------------
 
 # Summary
 
 Before proceeding to differential expression analysis, confirm all QC checks pass:
 
 | Check | Expected outcome |
-|---|---|
+|------------------------------------|------------------------------------|
 | Size factors ≈ 1.0 across samples | Library sizes are balanced |
 | Boxplots of normalised counts overlap | No extreme outlier samples |
-| Correlation heatmap: within-group distances < between-group | Replicates are reproducible |
+| Correlation heatmap: within-group distances \< between-group | Replicates are reproducible |
 | PCA PC1 separates conditions | Condition is the dominant source of variance |
 | No isolated samples in PCA or heatmap | No technical outliers |
 
@@ -484,5 +477,5 @@ sessionInfo()
 ```
 
 ```{r render, eval=FALSE, echo=FALSE}
-rmarkdown::render("01_quality_control_ecoli.Rmd")
+rmarkdown::render("01_scripts/01_quality_control.Rmd")
 ```
