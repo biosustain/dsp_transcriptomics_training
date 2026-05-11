@@ -3,8 +3,8 @@ install.packages(
     "languageserver",  # R language server for VS Code
     "ggpubr",          # plot theming
     "fgsea",           # GSEA
-    "mulea",            # ORA
-    "plotly"
+    "plotly",          # interactive plots
+    "remotes"          # needed to install mulea from GitHub
   ),
   dependencies = TRUE,
   repos = "https://cloud.r-project.org",
@@ -25,3 +25,6 @@ BiocManager::install(
   update = FALSE,
   ask = FALSE
 )
+
+# mulea is not on CRAN — install from GitHub
+remotes::install_github("ELTEbioinformatics/mulea")
