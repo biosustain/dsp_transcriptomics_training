@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>11 Part 1 — Over-Representation Analysis (ORA) | Introduction to Transcriptomics</title>
-  <meta name="description" content="11 Part 1 — Over-Representation Analysis (ORA) | Introduction to Transcriptomics" />
+  <title>3.1 Explanation of the QC analysis 🧾 | Introduction to Transcriptomics</title>
+  <meta name="description" content="3.1 Explanation of the QC analysis 🧾 | Introduction to Transcriptomics" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="11 Part 1 — Over-Representation Analysis (ORA) | Introduction to Transcriptomics" />
+  <meta property="og:title" content="3.1 Explanation of the QC analysis 🧾 | Introduction to Transcriptomics" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="11 Part 1 — Over-Representation Analysis (ORA) | Introduction to Transcriptomics" />
+  <meta name="twitter:title" content="3.1 Explanation of the QC analysis 🧾 | Introduction to Transcriptomics" />
   
   
   
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="convert-locus-tags-to-gene-symbols.html"/>
-<link rel="next" href="what-is-ora.html"/>
+<link rel="prev" href="quality-control.html"/>
+<link rel="next" href="setup-the-environment.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -175,27 +175,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="setup-the-environment.html"><a href="setup-the-environment.html"><i class="fa fa-check"></i><b>3.1</b> Setup the Environment</a></li>
-<li class="chapter" data-level="3.2" data-path="getting-the-metadata.html"><a href="getting-the-metadata.html"><i class="fa fa-check"></i><b>3.2</b> Getting the Metadata</a></li>
-<li class="chapter" data-level="3.3" data-path="loading-count-data.html"><a href="loading-count-data.html"><i class="fa fa-check"></i><b>3.3</b> Loading Count Data</a></li>
-<li class="chapter" data-level="3.4" data-path="preparing-the-data.html"><a href="preparing-the-data.html"><i class="fa fa-check"></i><b>3.4</b> Preparing the Data</a></li>
-<li class="chapter" data-level="3.5" data-path="creating-the-deseqdataset.html"><a href="creating-the-deseqdataset.html"><i class="fa fa-check"></i><b>3.5</b> Creating the DESeqDataSet</a></li>
-<li class="chapter" data-level="3.6" data-path="sanity-checks.html"><a href="sanity-checks.html"><i class="fa fa-check"></i><b>3.6</b> Sanity Checks</a>
+<li class="chapter" data-level="3.1" data-path="explanation-of-the-qc-analysis.html"><a href="explanation-of-the-qc-analysis.html"><i class="fa fa-check"></i><b>3.1</b> Explanation of the QC analysis 🧾</a></li>
+<li class="chapter" data-level="3.2" data-path="setup-the-environment.html"><a href="setup-the-environment.html"><i class="fa fa-check"></i><b>3.2</b> Setup the Environment</a></li>
+<li class="chapter" data-level="3.3" data-path="getting-the-metadata.html"><a href="getting-the-metadata.html"><i class="fa fa-check"></i><b>3.3</b> Getting the Metadata</a></li>
+<li class="chapter" data-level="3.4" data-path="loading-count-data.html"><a href="loading-count-data.html"><i class="fa fa-check"></i><b>3.4</b> Loading Count Data</a></li>
+<li class="chapter" data-level="3.5" data-path="preparing-the-data.html"><a href="preparing-the-data.html"><i class="fa fa-check"></i><b>3.5</b> Preparing the Data</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-the-deseqdataset.html"><a href="creating-the-deseqdataset.html"><i class="fa fa-check"></i><b>3.6</b> Creating the DESeqDataSet</a></li>
+<li class="chapter" data-level="3.7" data-path="sanity-checks.html"><a href="sanity-checks.html"><i class="fa fa-check"></i><b>3.7</b> Sanity Checks</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="sanity-checks.html"><a href="sanity-checks.html#are-we-working-with-raw-counts"><i class="fa fa-check"></i><b>3.6.1</b> Are We Working with Raw Counts?</a></li>
-<li class="chapter" data-level="3.6.2" data-path="sanity-checks.html"><a href="sanity-checks.html#pre-filtering-low-count-genes"><i class="fa fa-check"></i><b>3.6.2</b> Pre-filtering Low-count Genes</a></li>
-<li class="chapter" data-level="3.6.3" data-path="sanity-checks.html"><a href="sanity-checks.html#factor-order-and-reference-level"><i class="fa fa-check"></i><b>3.6.3</b> Factor Order and Reference Level</a></li>
+<li class="chapter" data-level="3.7.1" data-path="sanity-checks.html"><a href="sanity-checks.html#are-we-working-with-raw-counts"><i class="fa fa-check"></i><b>3.7.1</b> Are We Working with Raw Counts?</a></li>
+<li class="chapter" data-level="3.7.2" data-path="sanity-checks.html"><a href="sanity-checks.html#pre-filtering-low-count-genes"><i class="fa fa-check"></i><b>3.7.2</b> Pre-filtering Low-count Genes</a></li>
+<li class="chapter" data-level="3.7.3" data-path="sanity-checks.html"><a href="sanity-checks.html#factor-order-and-reference-level"><i class="fa fa-check"></i><b>3.7.3</b> Factor Order and Reference Level</a></li>
+<li class="chapter" data-level="3.7.4" data-path="sanity-checks.html"><a href="sanity-checks.html#exploratory-data-analysis"><i class="fa fa-check"></i><b>3.7.4</b> Exploratory Data Analysis</a></li>
+<li class="chapter" data-level="3.7.5" data-path="sanity-checks.html"><a href="sanity-checks.html#estimate-size-factors"><i class="fa fa-check"></i><b>3.7.5</b> Estimate Size Factors</a></li>
+<li class="chapter" data-level="3.7.6" data-path="sanity-checks.html"><a href="sanity-checks.html#distribution-of-normalised-counts"><i class="fa fa-check"></i><b>3.7.6</b> Distribution of Normalised Counts</a></li>
+<li class="chapter" data-level="3.7.7" data-path="sanity-checks.html"><a href="sanity-checks.html#sample-correlation-heatmap"><i class="fa fa-check"></i><b>3.7.7</b> Sample Correlation Heatmap</a></li>
+<li class="chapter" data-level="3.7.8" data-path="sanity-checks.html"><a href="sanity-checks.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>3.7.8</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="3.7.9" data-path="sanity-checks.html"><a href="sanity-checks.html#detecting-outliers"><i class="fa fa-check"></i><b>3.7.9</b> Detecting Outliers</a></li>
+<li class="chapter" data-level="3.7.10" data-path="sanity-checks.html"><a href="sanity-checks.html#top-variable-genes-heatmap"><i class="fa fa-check"></i><b>3.7.10</b> Top Variable Genes Heatmap</a></li>
 </ul></li>
-<li class="chapter" data-level="3.7" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>3.7</b> Exploratory Data Analysis</a>
-<ul>
-<li class="chapter" data-level="3.7.1" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#estimate-size-factors"><i class="fa fa-check"></i><b>3.7.1</b> Estimate Size Factors</a></li>
-<li class="chapter" data-level="3.7.2" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#distribution-of-normalised-counts"><i class="fa fa-check"></i><b>3.7.2</b> Distribution of Normalised Counts</a></li>
-</ul></li>
-<li class="chapter" data-level="3.8" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>3.8</b> Sample Correlation Heatmap</a></li>
-<li class="chapter" data-level="3.9" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>3.9</b> Principal Component Analysis (PCA)</a></li>
-<li class="chapter" data-level="3.10" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>3.10</b> Detecting Outliers</a></li>
-<li class="chapter" data-level="3.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>3.11</b> Top Variable Genes Heatmap</a></li>
-<li class="chapter" data-level="3.12" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>3.12</b> Summary</a></li>
+<li class="chapter" data-level="3.8" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>3.8</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>4</b> Differential Expression Analysis</a>
 <ul>
@@ -277,16 +276,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="part-1-over-representation-analysis-ora" class="section level1 hasAnchor" number="11">
-<h1><span class="header-section-number">11</span> Part 1 — Over-Representation Analysis (ORA)<a href="part-1-over-representation-analysis-ora.html#part-1-over-representation-analysis-ora" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="explanation-of-the-qc-analysis" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Explanation of the QC analysis 🧾<a href="explanation-of-the-qc-analysis.html#explanation-of-the-qc-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This document guides you through the standard QC pipeline for prokaryotic bulk RNA-seq data processed with <a href="https://nf-co.re/rnaseq/3.26.0/docs/usage/">nf-core/rnaseq</a> <code>Bowtie2</code> + <code>Salmon</code>. It is structured to be both educational and reproducible.</p>
+<hr />
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="convert-locus-tags-to-gene-symbols.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="what-is-ora.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="quality-control.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="setup-the-environment.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

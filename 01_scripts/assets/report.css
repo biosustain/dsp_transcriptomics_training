@@ -890,3 +890,34 @@ button.btn.dropdown-toggle::before {
 .extra { border-color: #6c5ce7; background: #f3f0ff; }
 
 
+.advanced {
+  border-left: 5px solid #f1c40f;   /* bright yellow border */
+  background: #fff9db;              /* lighter yellow background */
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  border-radius: 6px;
+}
+
+.important {
+  border-left: 5px solid #3498db;  /* blue border */
+  background: #eaf4fd;             /* light blue background */
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  border-radius: 6px;
+}
+
+<style>
+/* Base style for inline code */
+code {
+  background-color: #f8f8f8;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+/* Colored variants for variables */
+code.var-blue { color: #0072B2; font-weight: 600; }   /* ggplot2 blue  */
+code.var-orange { color: #D55E00; font-weight: 600; } /* ggplot2 orange */
+</style>
+
+

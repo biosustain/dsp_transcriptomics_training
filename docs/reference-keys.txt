@@ -1,10 +1,9 @@
-tab:size-factors
+tab:size-factors-0
 welcome
 instructions
 opening-the-nextflow-environment
 initial-checks
 quality-control
-explanation-of-the-report
 setup-the-environment
 getting-the-metadata
 loading-count-data
