@@ -1,7 +1,7 @@
-sample	fastq_1	fastq_2	strandedness	platform
-control_1	../data/seq_files_subsampled/SRR30606313_1_sub_50k.fastq.gz	../data/seq_files_subsampled/SRR30606313_2_sub_50k.fastq.gz	auto	ILLUMINA
-control_2	../data/seq_files_subsampled/SRR30606312_1_sub_50k.fastq.gz	../data/seq_files_subsampled/SRR30606312_2_sub_50k.fastq.gz	auto	ILLUMINA
-control_3	../data/seq_files_subsampled/SRR30606311_1_sub_50k.fastq.gz	../data/seq_files_subsampled/SRR30606311_2_sub_50k.fastq.gz	auto	ILLUMINA
-saccharin_1	../data/seq_files_subsampled/SRR30606316_1_sub_50k.fastq.gz	../data/seq_files_subsampled/SRR30606316_2_sub_50k.fastq.gz	auto	ILLUMINA
-saccharin_2	../data/seq_files_subsampled/SRR30606315_1_sub_50k.fastq.gz	../data/seq_files_subsampled/SRR30606315_2_sub_50k.fastq.gz	auto	ILLUMINA
-saccharin_3	../data/seq_files_subsampled/SRR30606314_1_sub_50k.fastq.gz	../data/seq_files_subsampled/SRR30606314_2_sub_50k.fastq.gz	auto	ILLUMINA
+﻿sample,fastq_1,fastq_2,strandedness,platform
+control_1,./data/seq_files_subsampled/SRR30606313_1_sub_50k.fastq.gz,./data/seq_files_subsampled/SRR30606313_2_sub_50k.fastq.gz,auto,ILLUMINA
+control_2,./data/seq_files_subsampled/SRR30606312_1_sub_50k.fastq.gz,./data/seq_files_subsampled/SRR30606312_2_sub_50k.fastq.gz,auto,ILLUMINA
+control_3,./data/seq_files_subsampled/SRR30606311_1_sub_50k.fastq.gz,./data/seq_files_subsampled/SRR30606311_2_sub_50k.fastq.gz,auto,ILLUMINA
+saccharin_1,./data/seq_files_subsampled/SRR30606316_1_sub_50k.fastq.gz,./data/seq_files_subsampled/SRR30606316_2_sub_50k.fastq.gz,auto,ILLUMINA
+saccharin_2,./data/seq_files_subsampled/SRR30606315_1_sub_50k.fastq.gz,./data/seq_files_subsampled/SRR30606315_2_sub_50k.fastq.gz,auto,ILLUMINA
+saccharin_3,./data/seq_files_subsampled/SRR30606314_1_sub_50k.fastq.gz,./data/seq_files_subsampled/SRR30606314_2_sub_50k.fastq.gz,auto,ILLUMINA
