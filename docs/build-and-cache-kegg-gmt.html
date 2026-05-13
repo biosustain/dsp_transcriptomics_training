@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6.3 Build and Cache KEGG GMT | Introduction to Transcriptomics</title>
-  <meta name="description" content="6.3 Build and Cache KEGG GMT | Introduction to Transcriptomics" />
+  <title>5.3 Build and Cache KEGG GMT | Introduction to Transcriptomics</title>
+  <meta name="description" content="5.3 Build and Cache KEGG GMT | Introduction to Transcriptomics" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6.3 Build and Cache KEGG GMT | Introduction to Transcriptomics" />
+  <meta property="og:title" content="5.3 Build and Cache KEGG GMT | Introduction to Transcriptomics" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6.3 Build and Cache KEGG GMT | Introduction to Transcriptomics" />
+  <meta name="twitter:title" content="5.3 Build and Cache KEGG GMT | Introduction to Transcriptomics" />
   
   
   
@@ -29,7 +29,7 @@
   
   
 <link rel="prev" href="load-results-from-differential-expression-analysis.html"/>
-<link rel="next" href="convert-locus-tags-to-gene-symbols.html"/>
+<link rel="next" href="part-1-over-representation-analysis-ora.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -210,43 +210,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>4.9</b> Saving Results</a></li>
 <li class="chapter" data-level="4.10" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>4.10</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="gene-functional-enrichment-analysis.html"><a href="gene-functional-enrichment-analysis.html"><i class="fa fa-check"></i><b>5</b> Gene Functional Enrichment Analysis</a></li>
-<li class="chapter" data-level="6" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>6</b> Setup</a>
+<li class="chapter" data-level="5" data-path="gene-functional-enrichment-analysis.html"><a href="gene-functional-enrichment-analysis.html"><i class="fa fa-check"></i><b>5</b> Gene Functional Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="load-libraries.html"><a href="load-libraries.html"><i class="fa fa-check"></i><b>6.1</b> Load Libraries</a></li>
-<li class="chapter" data-level="6.2" data-path="load-results-from-differential-expression-analysis.html"><a href="load-results-from-differential-expression-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Load Results from Differential Expression Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="build-and-cache-kegg-gmt.html"><a href="build-and-cache-kegg-gmt.html"><i class="fa fa-check"></i><b>6.3</b> Build and Cache KEGG GMT</a></li>
-<li class="chapter" data-level="6.4" data-path="convert-locus-tags-to-gene-symbols.html"><a href="convert-locus-tags-to-gene-symbols.html"><i class="fa fa-check"></i><b>6.4</b> Convert Locus Tags to Gene Symbols</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html"><i class="fa fa-check"></i><b>7</b> Part 1 — Over-Representation Analysis (ORA)</a>
+<li class="chapter" data-level="5.1" data-path="load-libraries.html"><a href="load-libraries.html"><i class="fa fa-check"></i><b>5.1</b> Load Libraries</a></li>
+<li class="chapter" data-level="5.2" data-path="load-results-from-differential-expression-analysis.html"><a href="load-results-from-differential-expression-analysis.html"><i class="fa fa-check"></i><b>5.2</b> Load Results from Differential Expression Analysis</a></li>
+<li class="chapter" data-level="5.3" data-path="build-and-cache-kegg-gmt.html"><a href="build-and-cache-kegg-gmt.html"><i class="fa fa-check"></i><b>5.3</b> Build and Cache KEGG GMT</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="what-is-ora.html"><a href="what-is-ora.html"><i class="fa fa-check"></i><b>7.1</b> What is ORA?</a></li>
-<li class="chapter" data-level="7.2" data-path="prepare-input.html"><a href="prepare-input.html"><i class="fa fa-check"></i><b>7.2</b> Prepare Input</a></li>
-<li class="chapter" data-level="7.3" data-path="run-ora.html"><a href="run-ora.html"><i class="fa fa-check"></i><b>7.3</b> Run ORA</a></li>
-<li class="chapter" data-level="7.4" data-path="filter-and-inspect-significant-pathways.html"><a href="filter-and-inspect-significant-pathways.html"><i class="fa fa-check"></i><b>7.4</b> Filter and Inspect Significant Pathways</a></li>
-<li class="chapter" data-level="7.5" data-path="visualise-ora-results.html"><a href="visualise-ora-results.html"><i class="fa fa-check"></i><b>7.5</b> Visualise ORA Results</a>
+<li class="chapter" data-level="5.3.1" data-path="build-and-cache-kegg-gmt.html"><a href="build-and-cache-kegg-gmt.html#convert-locus-tags-to-gene-symbols"><i class="fa fa-check"></i><b>5.3.1</b> Convert Locus Tags to Gene Symbols</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html"><i class="fa fa-check"></i><b>5.4</b> Part 1 — Over-Representation Analysis (ORA)</a>
 <ul>
-<li class="chapter" data-level="7.5.1" data-path="visualise-ora-results.html"><a href="visualise-ora-results.html#bar-plot-enriched-pathways"><i class="fa fa-check"></i><b>7.5.1</b> Bar Plot — Enriched Pathways</a></li>
-<li class="chapter" data-level="7.5.2" data-path="visualise-ora-results.html"><a href="visualise-ora-results.html#lollipop-plot-gene-hits-per-pathway"><i class="fa fa-check"></i><b>7.5.2</b> Lollipop Plot — Gene Hits per Pathway</a></li>
+<li class="chapter" data-level="5.4.1" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#prepare-input"><i class="fa fa-check"></i><b>5.4.1</b> Prepare Input</a></li>
+<li class="chapter" data-level="5.4.2" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#run-ora"><i class="fa fa-check"></i><b>5.4.2</b> Run ORA</a></li>
+<li class="chapter" data-level="5.4.3" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#filter-and-inspect-significant-pathways"><i class="fa fa-check"></i><b>5.4.3</b> Filter and Inspect Significant Pathways</a></li>
+<li class="chapter" data-level="5.4.4" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#bar-plot-enriched-pathways"><i class="fa fa-check"></i><b>5.4.4</b> Bar Plot — Enriched Pathways</a></li>
+<li class="chapter" data-level="5.4.5" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#lollipop-plot-gene-hits-per-pathway"><i class="fa fa-check"></i><b>5.4.5</b> Lollipop Plot — Gene Hits per Pathway</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html"><i class="fa fa-check"></i><b>8</b> Part 2 — Gene Set Enrichment Analysis (GSEA)</a>
+<li class="chapter" data-level="5.5" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html"><i class="fa fa-check"></i><b>5.5</b> Part 2 — Gene Set Enrichment Analysis (GSEA)</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="what-is-gsea.html"><a href="what-is-gsea.html"><i class="fa fa-check"></i><b>8.1</b> What is GSEA?</a></li>
-<li class="chapter" data-level="8.2" data-path="prepare-the-ranked-gene-list.html"><a href="prepare-the-ranked-gene-list.html"><i class="fa fa-check"></i><b>8.2</b> Prepare the Ranked Gene List</a></li>
-<li class="chapter" data-level="8.3" data-path="convert-gmt-to-fgsea-format.html"><a href="convert-gmt-to-fgsea-format.html"><i class="fa fa-check"></i><b>8.3</b> Convert GMT to fgsea Format</a></li>
-<li class="chapter" data-level="8.4" data-path="run-gsea.html"><a href="run-gsea.html"><i class="fa fa-check"></i><b>8.4</b> Run GSEA</a></li>
-<li class="chapter" data-level="8.5" data-path="filter-and-inspect-significant-pathways-1.html"><a href="filter-and-inspect-significant-pathways-1.html"><i class="fa fa-check"></i><b>8.5</b> Filter and Inspect Significant Pathways</a></li>
-<li class="chapter" data-level="8.6" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html"><i class="fa fa-check"></i><b>8.6</b> Visualise GSEA Results</a>
-<ul>
-<li class="chapter" data-level="8.6.1" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html#nes-bar-plot-activated-and-suppressed-pathways"><i class="fa fa-check"></i><b>8.6.1</b> NES Bar Plot — Activated and Suppressed Pathways</a></li>
-<li class="chapter" data-level="8.6.2" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html#dot-plot-nes-padj-and-gene-set-size"><i class="fa fa-check"></i><b>8.6.2</b> Dot Plot — NES, padj and Gene Set Size</a></li>
-<li class="chapter" data-level="8.6.3" data-path="visualise-gsea-results.html"><a href="visualise-gsea-results.html#enrichment-plot-top-pathways"><i class="fa fa-check"></i><b>8.6.3</b> Enrichment Plot — Top Pathways</a></li>
+<li class="chapter" data-level="5.5.1" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html#prepare-the-ranked-gene-list"><i class="fa fa-check"></i><b>5.5.1</b> Prepare the Ranked Gene List</a></li>
+<li class="chapter" data-level="5.5.2" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html#convert-gmt-to-fgsea-format"><i class="fa fa-check"></i><b>5.5.2</b> Convert GMT to fgsea Format</a></li>
+<li class="chapter" data-level="5.5.3" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html#run-gsea"><i class="fa fa-check"></i><b>5.5.3</b> Run GSEA</a></li>
+<li class="chapter" data-level="5.5.4" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html#filter-and-inspect-significant-pathways-1"><i class="fa fa-check"></i><b>5.5.4</b> Filter and Inspect Significant Pathways</a></li>
+<li class="chapter" data-level="5.5.5" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html#nes-bar-plot-activated-and-suppressed-pathways"><i class="fa fa-check"></i><b>5.5.5</b> NES Bar Plot — Activated and Suppressed Pathways</a></li>
+<li class="chapter" data-level="5.5.6" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html#dot-plot-nes-padj-and-gene-set-size"><i class="fa fa-check"></i><b>5.5.6</b> Dot Plot — NES, padj and Gene Set Size</a></li>
+<li class="chapter" data-level="5.5.7" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html#enrichment-plot-top-pathways"><i class="fa fa-check"></i><b>5.5.7</b> Enrichment Plot — Top Pathways</a></li>
 </ul></li>
+<li class="chapter" data-level="5.6" data-path="part-3-comparing-ora-and-gsea.html"><a href="part-3-comparing-ora-and-gsea.html"><i class="fa fa-check"></i><b>5.6</b> Part 3 — Comparing ORA and GSEA</a></li>
+<li class="chapter" data-level="5.7" data-path="saving-results-1.html"><a href="saving-results-1.html"><i class="fa fa-check"></i><b>5.7</b> Saving Results</a></li>
+<li class="chapter" data-level="5.8" data-path="summary-2.html"><a href="summary-2.html"><i class="fa fa-check"></i><b>5.8</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="part-3-comparing-ora-and-gsea.html"><a href="part-3-comparing-ora-and-gsea.html"><i class="fa fa-check"></i><b>9</b> Part 3 — Comparing ORA and GSEA</a></li>
-<li class="chapter" data-level="10" data-path="saving-results-1.html"><a href="saving-results-1.html"><i class="fa fa-check"></i><b>10</b> Saving Results</a></li>
-<li class="chapter" data-level="11" data-path="summary-2.html"><a href="summary-2.html"><i class="fa fa-check"></i><b>11</b> Summary</a></li>
 <li class="divider"></li>
 <p style="text-align:center; font-size:12px; color:#777;">
   Created by Juliana Assis — Introduction to Transcriptomics Workshop
@@ -269,18 +262,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="build-and-cache-kegg-gmt" class="section level2 hasAnchor" number="6.3">
-<h2><span class="header-section-number">6.3</span> Build and Cache KEGG GMT<a href="build-and-cache-kegg-gmt.html#build-and-cache-kegg-gmt" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="build-and-cache-kegg-gmt" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Build and Cache KEGG GMT<a href="build-and-cache-kegg-gmt.html#build-and-cache-kegg-gmt" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We retrieve KEGG pathway gene sets for <em>E. coli</em> K-12 MG1655 from the KEGG API using
 <code>KEGGREST</code>. Both the GMT and the locus tag to gene symbol mapping table are cached locally
 as RDS files so this step only runs once.</p>
-<blockquote>
+<div class="boxy">
 <p><strong>Why do we need a mapping step?</strong>
 The nf-core/rnaseq pipeline uses locus tags (<code>b0001</code>, <code>b0002</code>…) as gene identifiers
 when no <code>gene_name</code> field is present in the reference GTF, which is common for
 prokaryotic genomes. The KEGG pathway GMT uses gene symbols (<code>aceE</code>, <code>recA</code>…).
 We build a locus tag to gene symbol map directly from KEGG and convert before analysis.</p>
-</blockquote>
+</div>
 <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
 <p><strong>Tip:</strong> The first time you run this chunk it queries the KEGG API (~2-3 min).
 After that both RDS files load instantly. Do not delete the files in
@@ -360,7 +353,36 @@ After that both RDS files load instantly. Do not delete the files in
 ## [4] &quot;Pentose and glucuronate interconversions&quot;
 ## [5] &quot;Fructose and mannose metabolism&quot;         
 ## [6] &quot;Galactose metabolism&quot;</code></pre>
-<hr />
+<div id="convert-locus-tags-to-gene-symbols" class="section level3 hasAnchor" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> Convert Locus Tags to Gene Symbols<a href="build-and-cache-kegg-gmt.html#convert-locus-tags-to-gene-symbols" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="build-and-cache-kegg-gmt.html#cb90-1" tabindex="-1"></a>res_df_sym <span class="ot">&lt;-</span> res_df <span class="sc">%&gt;%</span></span>
+<span id="cb90-2"><a href="build-and-cache-kegg-gmt.html#cb90-2" tabindex="-1"></a>  <span class="fu">left_join</span>(id_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span> <span class="ot">=</span> <span class="st">&quot;locus_tag&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb90-3"><a href="build-and-cache-kegg-gmt.html#cb90-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol), gene_symbol, gene)) <span class="sc">%&gt;%</span></span>
+<span id="cb90-4"><a href="build-and-cache-kegg-gmt.html#cb90-4" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene_symbol)</span>
+<span id="cb90-5"><a href="build-and-cache-kegg-gmt.html#cb90-5" tabindex="-1"></a></span>
+<span id="cb90-6"><a href="build-and-cache-kegg-gmt.html#cb90-6" tabindex="-1"></a>res_sig_sym <span class="ot">&lt;-</span> res_sig <span class="sc">%&gt;%</span></span>
+<span id="cb90-7"><a href="build-and-cache-kegg-gmt.html#cb90-7" tabindex="-1"></a>  <span class="fu">left_join</span>(id_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span> <span class="ot">=</span> <span class="st">&quot;locus_tag&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb90-8"><a href="build-and-cache-kegg-gmt.html#cb90-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol), gene_symbol, gene)) <span class="sc">%&gt;%</span></span>
+<span id="cb90-9"><a href="build-and-cache-kegg-gmt.html#cb90-9" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene_symbol)</span>
+<span id="cb90-10"><a href="build-and-cache-kegg-gmt.html#cb90-10" tabindex="-1"></a></span>
+<span id="cb90-11"><a href="build-and-cache-kegg-gmt.html#cb90-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes mapped to symbols  :&quot;</span>, <span class="fu">sum</span>(res_df<span class="sc">$</span>gene <span class="sc">%in%</span> id_map<span class="sc">$</span>locus_tag),</span>
+<span id="cb90-12"><a href="build-and-cache-kegg-gmt.html#cb90-12" tabindex="-1"></a>    <span class="st">&quot;of&quot;</span>, <span class="fu">nrow</span>(res_df), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Genes mapped to symbols  : 1576 of 3698</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="build-and-cache-kegg-gmt.html#cb92-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Remaining as locus tags  :&quot;</span>, <span class="fu">sum</span>(<span class="sc">!</span>res_df_sym<span class="sc">$</span>gene <span class="sc">%in%</span> id_map<span class="sc">$</span>gene_symbol),</span>
+<span id="cb92-2"><a href="build-and-cache-kegg-gmt.html#cb92-2" tabindex="-1"></a>    <span class="st">&quot;(unannotated in KEGG - expected)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Remaining as locus tags  : 2122 (unannotated in KEGG - expected)</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="build-and-cache-kegg-gmt.html#cb94-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Example converted gene names:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## Example converted gene names:</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="build-and-cache-kegg-gmt.html#cb96-1" tabindex="-1"></a><span class="fu">head</span>(res_sig_sym<span class="sc">$</span>gene, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;ompF&quot;  &quot;b3508&quot; &quot;b3510&quot; &quot;garR&quot;  &quot;b0553&quot; &quot;b3127&quot; &quot;gadC&quot;  &quot;b3509&quot; &quot;gadB&quot; 
+## [10] &quot;b3514&quot;</code></pre>
+<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
+<p><strong>Note:</strong> Genes remaining as locus tags are not annotated in any KEGG
+pathway. They are included in the ORA background but will not match any gene set.
+This is expected — not all <em>E. coli</em> genes are assigned to KEGG pathways.</p>
+</div>
+</div>
 </div>
             </section>
 
@@ -368,7 +390,7 @@ After that both RDS files load instantly. Do not delete the files in
         </div>
       </div>
 <a href="load-results-from-differential-expression-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="convert-locus-tags-to-gene-symbols.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="part-1-over-representation-analysis-ora.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
