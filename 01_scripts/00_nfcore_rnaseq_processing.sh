@@ -8,4 +8,4 @@ nextflow run 'https://github.com/nf-core/rnaseq' \
     --gtf './data/genome_files/GCF_000005845.2_ASM584v2_genomic.gtf.gz' \
     -r 3.23.0 \
     -profile prokaryotic,docker \
-    -c custom.config 
+    -c ./custom.config 
