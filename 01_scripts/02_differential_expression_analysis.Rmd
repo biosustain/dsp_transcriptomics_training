@@ -1,19 +1,36 @@
+---
+title: "RNA-seq Differential Expression Analysis — *E. coli* MG1655"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    css: assets/report.css
+---
 
 # Background
 
-This report covers differential expression (DE) analysis of bulk RNA-seq data from *Escherichia coli* K-12 MG1655 using DESeq2.
+This report covers differential expression (DE) analysis of bulk RNA-seq data from *Escherichia coli* K-12 MG1655 using `DESeq2`.
 
 We test one contrast:
 
-- **Treatment vs Control** — which genes change expression in response to treatment?
+::: boxy
+- **Control vs Treatment** — which genes change expression in response to treatment?
+:::
 
-> **Note:** This script assumes you have already run `01_quality_control_ecoli.Rmd` and that the `dds` object is available in your environment. If not, re-run the QC script first.
+::: {style="background:#eaf4fd;border-left:5px solid #3498db;padding:0.5em 1em;margin:1em 0;border-radius:6px;"}
+<strong>⭐ Important:</strong> This script assumes you have already run `01_quality_control_ecoli.Rmd` and that the `dds` object is available in your environment. If not, re-run the QC script first.
+:::
 
----
-
-## Setup the Environment
+**Setup the Environment**
 
 ```{r libraries, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+
 library(tidyverse)
 library(DESeq2)
 library(ggpubr)
@@ -25,13 +42,10 @@ library(kableExtra)
 library(DT)
 ```
 
----
 
-# Differential Expression Analysis
+## Differential Expression Analysis
 
-## Running DESeq2
-
-DESeq2 fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but `DESeq()` handles all three in one call.
+`DESeq2` fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but `DESeq()` handles all three in one call.
 
 <div style="background:#f8d7da;border-left:4px solid #721c24;padding:10px;margin:10px 0;">
   <strong>⚠️ Warning:</strong> Always use raw integer counts as input. Do not use TPM, FPKM, or any normalised values — DESeq2 handles normalisation internally.
@@ -57,8 +71,6 @@ dds <- DESeq(dds)
 
 resultsNames(dds)
 ```
-
----
 
 ## Extracting Results
 
