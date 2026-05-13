@@ -22,15 +22,11 @@ detecting-outliers
 top-variable-genes-heatmap
 summary
 differential-expression-analysis
-setup-the-environment-1
 differential-expression-analysis-1
-running-deseq2
 extracting-results
 log2-fold-change-shrinkage
 sorting-and-filtering-significant-genes
-interactive-results-table
 visualisation
-volcano-plot
 ma-plot
 top-gene-count-plot
 heatmap-of-significant-genes
