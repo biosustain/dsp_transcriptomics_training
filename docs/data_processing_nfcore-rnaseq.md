@@ -1,6 +1,9 @@
 
+# 2.3. Data processing using the nf-core/rnaseq pipeline
+This section details the steps to perform RNAseq data processing using the nf-core/rnaseq pipeline.
+
 ## Sources of data and genome files
-RNAseq analysis of *Escherichia coli* str. K-12 substr. MG1655 (accession: GCF_000005845.2) was performed. RNA sequencing read files and genome files were obtained from the following links.
+RNAseq analysis of *Escherichia coli* str. K-12 substr. MG1655 (accession: GCF_000005845.2) will be performed. RNA sequencing read files and genome files were obtained from the following links. The data do not have to be downloaded. We have already deposited a size-reduced data set as well as the genome files in the repository.  
 
 [RNAseq files (.fastq.gz) - PRJNA1158806](https://www.ebi.ac.uk/ena/browser/view/PRJNA1158806)  
 
@@ -8,8 +11,9 @@ RNAseq analysis of *Escherichia coli* str. K-12 substr. MG1655 (accession: GCF_0
 
 [*E. coli* genome annotation file (.gtf.gz)](https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.gtf.gz)  
 
-## Running data processing with nf-core/rnaseq v3.23.0
-We will not process the original data because more computing power would be required. Instead, we will process only 2 samples where only 50 000 reads were randomly sampled from the original data (used script for subsampling: util/subsample_50k_PRJNA1158806.sh).  
+## Running the nf-core/rnaseq pipeline v3.23.0
+We will not process the original data set because more computing power would be required. Instead, we will process only two size-reduced samples where 50 000 reads were randomly sampled from the original data (used script for sub-sampling: ```util/subsample_50k_PRJNA1158806.sh```).  
+We will use pipeline release [v3.23.0](https://nf-co.re/rnaseq/3.23.0). From this release, it is possible to use Bowtie2 for read alignment which is advantageous to process prokayotic RNAseq data. For simplicity, we specify a "prokaryotic" profile which automatically uses Bowtie2 for read alignment and Salmon for read quantification.  
 
 To process the data, we will use the following command:  
 ```
@@ -25,20 +29,26 @@ nextflow run 'https://github.com/nf-core/rnaseq' \
 ```  
 
 ```-name```: name of the processing run  
-```--outdir```: absolite path to the outfile directory where results will be saved (the sub-directory is created automatically)  
-```ìnput```: ADD MORE HERE  
-
-There are many parameters of the pipeline that can be customized. Rather than doing this manually, nf-core offers the possibility to generate such parameter configuration automatically [here](https://nf-co.re/rnaseq/3.23.0). Press the button ```Launch version 3.23.0``` to see all pipeline parameters and change as needed. A configuration file will be generated automatically that can be used with a nextflow command for pipeline configuration.
-
+```--outdir```: (absolute) path to the outfile directory where results will be saved (the sub-directory is created automatically)  
+```--ìnput```: (absolute) path to the sample sheet  
+```--fasta```: (absolute) path to the gzipped genome fasta file  
+```--gtf```: (absolute) path to gzipped genome annotation file  
+```-r```: nf-core/rnaseq pipeline release/version  
+```-profile```: profile(s) to run; here "prokaryotic" mode using "docker"  
+```-c```: (absolute) path to the custom configuration file; used here to limit the number of CPUs and memory  
 
 The nextlow command is stored in a bash script and can be executed by running the following command in the terminal:  
 ```
 bash 01_scripts/00_nfcore_rnaseq_processing.sh
-``` 
+```  
+The processing time is about 7 minutes.  
 
+#### Automatic generation of configuration files
+There are many parameters of the pipeline that can be customized. Rather than doing this manually, nf-core offers the possibility to generate the parameter configuration automatically [here](https://nf-co.re/rnaseq/3.23.0). Press the button ```Launch version 3.23.0``` to see all pipeline parameters and change as needed. A configuration file can be generated automatically that can be used with a nextflow command for pipeline configuration.
 
 
 ## Structure of the outfile directory
+The results of the pipeline run will be saved in the folder ```results/nfcore_rnaseq_processing_subsampled```. The folder structure is as follows:  
 ```
 .
 ├── bowtie2_salmon
