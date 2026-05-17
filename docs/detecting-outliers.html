@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -265,16 +270,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="detecting-outliers" class="section level2 hasAnchor" number="3.10">
 <h2><span class="header-section-number">3.10</span> Detecting Outliers<a href="detecting-outliers.html#detecting-outliers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The PCA above uses only the top 500 most variable genes (DESeq2 default). Here we run PCA on the full VST matrix and inspect a scree plot and biplot to assess whether any single sample drives an unusual amount of variance, a common sign of a technical outlier.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="detecting-outliers.html#cb35-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
-<span id="cb35-2"><a href="detecting-outliers.html#cb35-2" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="detecting-outliers.html#cb35-3" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb35-4"><a href="detecting-outliers.html#cb35-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="detecting-outliers.html#cb39-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
+<span id="cb39-2"><a href="detecting-outliers.html#cb39-2" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="detecting-outliers.html#cb39-3" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb39-4"><a href="detecting-outliers.html#cb39-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-1.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="detecting-outliers.html#cb36-1" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb36-2"><a href="detecting-outliers.html#cb36-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="detecting-outliers.html#cb40-1" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-2"><a href="detecting-outliers.html#cb40-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-2.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="detecting-outliers.html#cb37-1" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_full, <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb37-2"><a href="detecting-outliers.html#cb37-2" tabindex="-1"></a>                <span class="at">title =</span> <span class="st">&quot;Biplot — genes and samples&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="detecting-outliers.html#cb41-1" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_full, <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb41-2"><a href="detecting-outliers.html#cb41-2" tabindex="-1"></a>                <span class="at">title =</span> <span class="st">&quot;Biplot — genes and samples&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-3.png" alt="" width="672" /></p>
 </div>
             </section>

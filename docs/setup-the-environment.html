@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -270,17 +275,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
 <p><strong>📌 Remember:</strong> Load all libraries at the start of every session before running any analysis.</p>
 </div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="setup-the-environment.html#cb7-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb7-2"><a href="setup-the-environment.html#cb7-2" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
-<span id="cb7-3"><a href="setup-the-environment.html#cb7-3" tabindex="-1"></a><span class="fu">library</span>(DESeq2)</span>
-<span id="cb7-4"><a href="setup-the-environment.html#cb7-4" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
-<span id="cb7-5"><a href="setup-the-environment.html#cb7-5" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
-<span id="cb7-6"><a href="setup-the-environment.html#cb7-6" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
-<span id="cb7-7"><a href="setup-the-environment.html#cb7-7" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
-<span id="cb7-8"><a href="setup-the-environment.html#cb7-8" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb7-9"><a href="setup-the-environment.html#cb7-9" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb7-10"><a href="setup-the-environment.html#cb7-10" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
-<span id="cb7-11"><a href="setup-the-environment.html#cb7-11" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="setup-the-environment.html#cb11-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb11-2"><a href="setup-the-environment.html#cb11-2" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb11-3"><a href="setup-the-environment.html#cb11-3" tabindex="-1"></a><span class="fu">library</span>(DESeq2)</span>
+<span id="cb11-4"><a href="setup-the-environment.html#cb11-4" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb11-5"><a href="setup-the-environment.html#cb11-5" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb11-6"><a href="setup-the-environment.html#cb11-6" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
+<span id="cb11-7"><a href="setup-the-environment.html#cb11-7" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb11-8"><a href="setup-the-environment.html#cb11-8" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb11-9"><a href="setup-the-environment.html#cb11-9" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb11-10"><a href="setup-the-environment.html#cb11-10" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb11-11"><a href="setup-the-environment.html#cb11-11" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code></pre></div>
 </div>
             </section>
 

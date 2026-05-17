@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -286,11 +291,11 @@ are used exclusively for <strong>ranking and visualisation</strong> (volcano plo
 <p>For a treatment vs control design in <em>E. coli</em>, <code>apeglm</code> is the right choice.
 See <a href="https://doi.org/10.1093/bioinformatics/btz585">Zhu <em>et al.</em>, 2019</a> for benchmarks.</p>
 </div>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="log2-fold-change-shrinkage.html#cb55-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
-<span id="cb55-2"><a href="log2-fold-change-shrinkage.html#cb55-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
-<span id="cb55-3"><a href="log2-fold-change-shrinkage.html#cb55-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
-<span id="cb55-4"><a href="log2-fold-change-shrinkage.html#cb55-4" tabindex="-1"></a></span>
-<span id="cb55-5"><a href="log2-fold-change-shrinkage.html#cb55-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="log2-fold-change-shrinkage.html#cb59-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
+<span id="cb59-2"><a href="log2-fold-change-shrinkage.html#cb59-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
+<span id="cb59-3"><a href="log2-fold-change-shrinkage.html#cb59-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
+<span id="cb59-4"><a href="log2-fold-change-shrinkage.html#cb59-4" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="log2-fold-change-shrinkage.html#cb59-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk)</span></code></pre></div>
 <pre><code>## 
 ## out of 3698 with nonzero total read count
 ## adjusted p-value &lt; 0.1

@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -279,74 +284,74 @@ We build a locus tag to gene symbol map directly from KEGG and convert before an
 After that both RDS files load instantly. Do not delete the files in
 <code>data/databases/</code>.</p>
 </div>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="build-and-cache-kegg-gmt.html#cb84-1" tabindex="-1"></a>gmt_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;databases&quot;</span>,</span>
-<span id="cb84-2"><a href="build-and-cache-kegg-gmt.html#cb84-2" tabindex="-1"></a>                      <span class="st">&quot;KEGG_Pathways_Ecoli_MG1655_GeneSymbol.rds&quot;</span>)</span>
-<span id="cb84-3"><a href="build-and-cache-kegg-gmt.html#cb84-3" tabindex="-1"></a>map_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;databases&quot;</span>,</span>
-<span id="cb84-4"><a href="build-and-cache-kegg-gmt.html#cb84-4" tabindex="-1"></a>                      <span class="st">&quot;KEGG_locus_to_symbol_Ecoli_MG1655.rds&quot;</span>)</span>
-<span id="cb84-5"><a href="build-and-cache-kegg-gmt.html#cb84-5" tabindex="-1"></a></span>
-<span id="cb84-6"><a href="build-and-cache-kegg-gmt.html#cb84-6" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(gmt_path) <span class="sc">&amp;&amp;</span> <span class="fu">file.exists</span>(map_path)) {</span>
-<span id="cb84-7"><a href="build-and-cache-kegg-gmt.html#cb84-7" tabindex="-1"></a></span>
-<span id="cb84-8"><a href="build-and-cache-kegg-gmt.html#cb84-8" tabindex="-1"></a>  kegg_gmt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(gmt_path)</span>
-<span id="cb84-9"><a href="build-and-cache-kegg-gmt.html#cb84-9" tabindex="-1"></a>  id_map   <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(map_path)</span>
-<span id="cb84-10"><a href="build-and-cache-kegg-gmt.html#cb84-10" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Loaded cached GMT    :&quot;</span>, <span class="fu">nrow</span>(kegg_gmt), <span class="st">&quot;pathways</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb84-11"><a href="build-and-cache-kegg-gmt.html#cb84-11" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Loaded cached ID map :&quot;</span>, <span class="fu">nrow</span>(id_map), <span class="st">&quot;entries</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb84-12"><a href="build-and-cache-kegg-gmt.html#cb84-12" tabindex="-1"></a></span>
-<span id="cb84-13"><a href="build-and-cache-kegg-gmt.html#cb84-13" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb84-14"><a href="build-and-cache-kegg-gmt.html#cb84-14" tabindex="-1"></a></span>
-<span id="cb84-15"><a href="build-and-cache-kegg-gmt.html#cb84-15" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Fetching KEGG data for E. coli MG1655 — ~2-3 min...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb84-16"><a href="build-and-cache-kegg-gmt.html#cb84-16" tabindex="-1"></a></span>
-<span id="cb84-17"><a href="build-and-cache-kegg-gmt.html#cb84-17" tabindex="-1"></a>  ecoli_pathways <span class="ot">&lt;-</span> <span class="fu">keggList</span>(<span class="st">&quot;pathway&quot;</span>, <span class="st">&quot;eco&quot;</span>)</span>
-<span id="cb84-18"><a href="build-and-cache-kegg-gmt.html#cb84-18" tabindex="-1"></a>  pathway_ids    <span class="ot">&lt;-</span> <span class="fu">names</span>(ecoli_pathways)</span>
-<span id="cb84-19"><a href="build-and-cache-kegg-gmt.html#cb84-19" tabindex="-1"></a>  pathway_names  <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot; - Escherichia coli K-12 MG1655$&quot;</span>, <span class="st">&quot;&quot;</span>,</span>
-<span id="cb84-20"><a href="build-and-cache-kegg-gmt.html#cb84-20" tabindex="-1"></a>                         <span class="fu">as.character</span>(ecoli_pathways))</span>
-<span id="cb84-21"><a href="build-and-cache-kegg-gmt.html#cb84-21" tabindex="-1"></a></span>
-<span id="cb84-22"><a href="build-and-cache-kegg-gmt.html#cb84-22" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Total pathways found:&quot;</span>, <span class="fu">length</span>(pathway_ids), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb84-23"><a href="build-and-cache-kegg-gmt.html#cb84-23" tabindex="-1"></a></span>
-<span id="cb84-24"><a href="build-and-cache-kegg-gmt.html#cb84-24" tabindex="-1"></a>  batches         <span class="ot">&lt;-</span> <span class="fu">split</span>(pathway_ids, <span class="fu">ceiling</span>(<span class="fu">seq_along</span>(pathway_ids) <span class="sc">/</span> <span class="dv">10</span>))</span>
-<span id="cb84-25"><a href="build-and-cache-kegg-gmt.html#cb84-25" tabindex="-1"></a>  pathway_genes   <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb84-26"><a href="build-and-cache-kegg-gmt.html#cb84-26" tabindex="-1"></a>  locus_to_symbol <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb84-27"><a href="build-and-cache-kegg-gmt.html#cb84-27" tabindex="-1"></a></span>
-<span id="cb84-28"><a href="build-and-cache-kegg-gmt.html#cb84-28" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(batches)) {</span>
-<span id="cb84-29"><a href="build-and-cache-kegg-gmt.html#cb84-29" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;  Batch&quot;</span>, i, <span class="st">&quot;of&quot;</span>, <span class="fu">length</span>(batches), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb84-30"><a href="build-and-cache-kegg-gmt.html#cb84-30" tabindex="-1"></a>    <span class="cf">for</span> (pid <span class="cf">in</span> batches[[i]]) {</span>
-<span id="cb84-31"><a href="build-and-cache-kegg-gmt.html#cb84-31" tabindex="-1"></a>      <span class="fu">tryCatch</span>({</span>
-<span id="cb84-32"><a href="build-and-cache-kegg-gmt.html#cb84-32" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">keggGet</span>(pid)[[<span class="dv">1</span>]]</span>
-<span id="cb84-33"><a href="build-and-cache-kegg-gmt.html#cb84-33" tabindex="-1"></a>        <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(result<span class="sc">$</span>GENE) <span class="sc">&amp;&amp;</span> <span class="fu">length</span>(result<span class="sc">$</span>GENE) <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
-<span id="cb84-34"><a href="build-and-cache-kegg-gmt.html#cb84-34" tabindex="-1"></a>          locus  <span class="ot">&lt;-</span> result<span class="sc">$</span>GENE[<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">length</span>(result<span class="sc">$</span>GENE), <span class="at">by =</span> <span class="dv">2</span>)]</span>
-<span id="cb84-35"><a href="build-and-cache-kegg-gmt.html#cb84-35" tabindex="-1"></a>          symbl  <span class="ot">&lt;-</span> <span class="fu">trimws</span>(<span class="fu">sub</span>(<span class="st">&quot;;.*&quot;</span>, <span class="st">&quot;&quot;</span>, result<span class="sc">$</span>GENE[<span class="fu">seq</span>(<span class="dv">2</span>, <span class="fu">length</span>(result<span class="sc">$</span>GENE), <span class="at">by =</span> <span class="dv">2</span>)]))</span>
-<span id="cb84-36"><a href="build-and-cache-kegg-gmt.html#cb84-36" tabindex="-1"></a>          pathway_genes[[pid]] <span class="ot">&lt;-</span> symbl</span>
-<span id="cb84-37"><a href="build-and-cache-kegg-gmt.html#cb84-37" tabindex="-1"></a>          <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(locus)) locus_to_symbol[[locus[j]]] <span class="ot">&lt;-</span> symbl[j]</span>
-<span id="cb84-38"><a href="build-and-cache-kegg-gmt.html#cb84-38" tabindex="-1"></a>        }</span>
-<span id="cb84-39"><a href="build-and-cache-kegg-gmt.html#cb84-39" tabindex="-1"></a>      }, <span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">cat</span>(<span class="st">&quot;  Skipped:&quot;</span>, pid, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>))</span>
-<span id="cb84-40"><a href="build-and-cache-kegg-gmt.html#cb84-40" tabindex="-1"></a>    }</span>
-<span id="cb84-41"><a href="build-and-cache-kegg-gmt.html#cb84-41" tabindex="-1"></a>    <span class="fu">Sys.sleep</span>(<span class="fl">0.3</span>)</span>
-<span id="cb84-42"><a href="build-and-cache-kegg-gmt.html#cb84-42" tabindex="-1"></a>  }</span>
-<span id="cb84-43"><a href="build-and-cache-kegg-gmt.html#cb84-43" tabindex="-1"></a></span>
-<span id="cb84-44"><a href="build-and-cache-kegg-gmt.html#cb84-44" tabindex="-1"></a>  kegg_gmt <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb84-45"><a href="build-and-cache-kegg-gmt.html#cb84-45" tabindex="-1"></a>    <span class="at">ontology_id    =</span> <span class="fu">names</span>(pathway_genes),</span>
-<span id="cb84-46"><a href="build-and-cache-kegg-gmt.html#cb84-46" tabindex="-1"></a>    <span class="at">ontology_name  =</span> pathway_names[<span class="fu">match</span>(<span class="fu">names</span>(pathway_genes), pathway_ids)],</span>
-<span id="cb84-47"><a href="build-and-cache-kegg-gmt.html#cb84-47" tabindex="-1"></a>    <span class="at">list_of_values =</span> <span class="fu">I</span>(pathway_genes),</span>
-<span id="cb84-48"><a href="build-and-cache-kegg-gmt.html#cb84-48" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
-<span id="cb84-49"><a href="build-and-cache-kegg-gmt.html#cb84-49" tabindex="-1"></a>  )</span>
-<span id="cb84-50"><a href="build-and-cache-kegg-gmt.html#cb84-50" tabindex="-1"></a></span>
-<span id="cb84-51"><a href="build-and-cache-kegg-gmt.html#cb84-51" tabindex="-1"></a>  id_map <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb84-52"><a href="build-and-cache-kegg-gmt.html#cb84-52" tabindex="-1"></a>    <span class="at">locus_tag   =</span> <span class="fu">names</span>(locus_to_symbol),</span>
-<span id="cb84-53"><a href="build-and-cache-kegg-gmt.html#cb84-53" tabindex="-1"></a>    <span class="at">gene_symbol =</span> <span class="fu">unlist</span>(locus_to_symbol),</span>
-<span id="cb84-54"><a href="build-and-cache-kegg-gmt.html#cb84-54" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
-<span id="cb84-55"><a href="build-and-cache-kegg-gmt.html#cb84-55" tabindex="-1"></a>  )</span>
-<span id="cb84-56"><a href="build-and-cache-kegg-gmt.html#cb84-56" tabindex="-1"></a></span>
-<span id="cb84-57"><a href="build-and-cache-kegg-gmt.html#cb84-57" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="fu">dirname</span>(gmt_path), <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb84-58"><a href="build-and-cache-kegg-gmt.html#cb84-58" tabindex="-1"></a>  <span class="fu">saveRDS</span>(kegg_gmt, gmt_path)</span>
-<span id="cb84-59"><a href="build-and-cache-kegg-gmt.html#cb84-59" tabindex="-1"></a>  <span class="fu">saveRDS</span>(id_map,   map_path)</span>
-<span id="cb84-60"><a href="build-and-cache-kegg-gmt.html#cb84-60" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;GMT saved    :&quot;</span>, <span class="fu">nrow</span>(kegg_gmt), <span class="st">&quot;pathways</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb84-61"><a href="build-and-cache-kegg-gmt.html#cb84-61" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;ID map saved :&quot;</span>, <span class="fu">nrow</span>(id_map), <span class="st">&quot;entries</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb84-62"><a href="build-and-cache-kegg-gmt.html#cb84-62" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="build-and-cache-kegg-gmt.html#cb88-1" tabindex="-1"></a>gmt_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;databases&quot;</span>,</span>
+<span id="cb88-2"><a href="build-and-cache-kegg-gmt.html#cb88-2" tabindex="-1"></a>                      <span class="st">&quot;KEGG_Pathways_Ecoli_MG1655_GeneSymbol.rds&quot;</span>)</span>
+<span id="cb88-3"><a href="build-and-cache-kegg-gmt.html#cb88-3" tabindex="-1"></a>map_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;databases&quot;</span>,</span>
+<span id="cb88-4"><a href="build-and-cache-kegg-gmt.html#cb88-4" tabindex="-1"></a>                      <span class="st">&quot;KEGG_locus_to_symbol_Ecoli_MG1655.rds&quot;</span>)</span>
+<span id="cb88-5"><a href="build-and-cache-kegg-gmt.html#cb88-5" tabindex="-1"></a></span>
+<span id="cb88-6"><a href="build-and-cache-kegg-gmt.html#cb88-6" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(gmt_path) <span class="sc">&amp;&amp;</span> <span class="fu">file.exists</span>(map_path)) {</span>
+<span id="cb88-7"><a href="build-and-cache-kegg-gmt.html#cb88-7" tabindex="-1"></a></span>
+<span id="cb88-8"><a href="build-and-cache-kegg-gmt.html#cb88-8" tabindex="-1"></a>  kegg_gmt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(gmt_path)</span>
+<span id="cb88-9"><a href="build-and-cache-kegg-gmt.html#cb88-9" tabindex="-1"></a>  id_map   <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(map_path)</span>
+<span id="cb88-10"><a href="build-and-cache-kegg-gmt.html#cb88-10" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Loaded cached GMT    :&quot;</span>, <span class="fu">nrow</span>(kegg_gmt), <span class="st">&quot;pathways</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb88-11"><a href="build-and-cache-kegg-gmt.html#cb88-11" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Loaded cached ID map :&quot;</span>, <span class="fu">nrow</span>(id_map), <span class="st">&quot;entries</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb88-12"><a href="build-and-cache-kegg-gmt.html#cb88-12" tabindex="-1"></a></span>
+<span id="cb88-13"><a href="build-and-cache-kegg-gmt.html#cb88-13" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb88-14"><a href="build-and-cache-kegg-gmt.html#cb88-14" tabindex="-1"></a></span>
+<span id="cb88-15"><a href="build-and-cache-kegg-gmt.html#cb88-15" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Fetching KEGG data for E. coli MG1655 — ~2-3 min...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb88-16"><a href="build-and-cache-kegg-gmt.html#cb88-16" tabindex="-1"></a></span>
+<span id="cb88-17"><a href="build-and-cache-kegg-gmt.html#cb88-17" tabindex="-1"></a>  ecoli_pathways <span class="ot">&lt;-</span> <span class="fu">keggList</span>(<span class="st">&quot;pathway&quot;</span>, <span class="st">&quot;eco&quot;</span>)</span>
+<span id="cb88-18"><a href="build-and-cache-kegg-gmt.html#cb88-18" tabindex="-1"></a>  pathway_ids    <span class="ot">&lt;-</span> <span class="fu">names</span>(ecoli_pathways)</span>
+<span id="cb88-19"><a href="build-and-cache-kegg-gmt.html#cb88-19" tabindex="-1"></a>  pathway_names  <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot; - Escherichia coli K-12 MG1655$&quot;</span>, <span class="st">&quot;&quot;</span>,</span>
+<span id="cb88-20"><a href="build-and-cache-kegg-gmt.html#cb88-20" tabindex="-1"></a>                         <span class="fu">as.character</span>(ecoli_pathways))</span>
+<span id="cb88-21"><a href="build-and-cache-kegg-gmt.html#cb88-21" tabindex="-1"></a></span>
+<span id="cb88-22"><a href="build-and-cache-kegg-gmt.html#cb88-22" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Total pathways found:&quot;</span>, <span class="fu">length</span>(pathway_ids), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb88-23"><a href="build-and-cache-kegg-gmt.html#cb88-23" tabindex="-1"></a></span>
+<span id="cb88-24"><a href="build-and-cache-kegg-gmt.html#cb88-24" tabindex="-1"></a>  batches         <span class="ot">&lt;-</span> <span class="fu">split</span>(pathway_ids, <span class="fu">ceiling</span>(<span class="fu">seq_along</span>(pathway_ids) <span class="sc">/</span> <span class="dv">10</span>))</span>
+<span id="cb88-25"><a href="build-and-cache-kegg-gmt.html#cb88-25" tabindex="-1"></a>  pathway_genes   <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb88-26"><a href="build-and-cache-kegg-gmt.html#cb88-26" tabindex="-1"></a>  locus_to_symbol <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb88-27"><a href="build-and-cache-kegg-gmt.html#cb88-27" tabindex="-1"></a></span>
+<span id="cb88-28"><a href="build-and-cache-kegg-gmt.html#cb88-28" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(batches)) {</span>
+<span id="cb88-29"><a href="build-and-cache-kegg-gmt.html#cb88-29" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;  Batch&quot;</span>, i, <span class="st">&quot;of&quot;</span>, <span class="fu">length</span>(batches), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb88-30"><a href="build-and-cache-kegg-gmt.html#cb88-30" tabindex="-1"></a>    <span class="cf">for</span> (pid <span class="cf">in</span> batches[[i]]) {</span>
+<span id="cb88-31"><a href="build-and-cache-kegg-gmt.html#cb88-31" tabindex="-1"></a>      <span class="fu">tryCatch</span>({</span>
+<span id="cb88-32"><a href="build-and-cache-kegg-gmt.html#cb88-32" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">keggGet</span>(pid)[[<span class="dv">1</span>]]</span>
+<span id="cb88-33"><a href="build-and-cache-kegg-gmt.html#cb88-33" tabindex="-1"></a>        <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(result<span class="sc">$</span>GENE) <span class="sc">&amp;&amp;</span> <span class="fu">length</span>(result<span class="sc">$</span>GENE) <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
+<span id="cb88-34"><a href="build-and-cache-kegg-gmt.html#cb88-34" tabindex="-1"></a>          locus  <span class="ot">&lt;-</span> result<span class="sc">$</span>GENE[<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">length</span>(result<span class="sc">$</span>GENE), <span class="at">by =</span> <span class="dv">2</span>)]</span>
+<span id="cb88-35"><a href="build-and-cache-kegg-gmt.html#cb88-35" tabindex="-1"></a>          symbl  <span class="ot">&lt;-</span> <span class="fu">trimws</span>(<span class="fu">sub</span>(<span class="st">&quot;;.*&quot;</span>, <span class="st">&quot;&quot;</span>, result<span class="sc">$</span>GENE[<span class="fu">seq</span>(<span class="dv">2</span>, <span class="fu">length</span>(result<span class="sc">$</span>GENE), <span class="at">by =</span> <span class="dv">2</span>)]))</span>
+<span id="cb88-36"><a href="build-and-cache-kegg-gmt.html#cb88-36" tabindex="-1"></a>          pathway_genes[[pid]] <span class="ot">&lt;-</span> symbl</span>
+<span id="cb88-37"><a href="build-and-cache-kegg-gmt.html#cb88-37" tabindex="-1"></a>          <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(locus)) locus_to_symbol[[locus[j]]] <span class="ot">&lt;-</span> symbl[j]</span>
+<span id="cb88-38"><a href="build-and-cache-kegg-gmt.html#cb88-38" tabindex="-1"></a>        }</span>
+<span id="cb88-39"><a href="build-and-cache-kegg-gmt.html#cb88-39" tabindex="-1"></a>      }, <span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">cat</span>(<span class="st">&quot;  Skipped:&quot;</span>, pid, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>))</span>
+<span id="cb88-40"><a href="build-and-cache-kegg-gmt.html#cb88-40" tabindex="-1"></a>    }</span>
+<span id="cb88-41"><a href="build-and-cache-kegg-gmt.html#cb88-41" tabindex="-1"></a>    <span class="fu">Sys.sleep</span>(<span class="fl">0.3</span>)</span>
+<span id="cb88-42"><a href="build-and-cache-kegg-gmt.html#cb88-42" tabindex="-1"></a>  }</span>
+<span id="cb88-43"><a href="build-and-cache-kegg-gmt.html#cb88-43" tabindex="-1"></a></span>
+<span id="cb88-44"><a href="build-and-cache-kegg-gmt.html#cb88-44" tabindex="-1"></a>  kegg_gmt <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb88-45"><a href="build-and-cache-kegg-gmt.html#cb88-45" tabindex="-1"></a>    <span class="at">ontology_id    =</span> <span class="fu">names</span>(pathway_genes),</span>
+<span id="cb88-46"><a href="build-and-cache-kegg-gmt.html#cb88-46" tabindex="-1"></a>    <span class="at">ontology_name  =</span> pathway_names[<span class="fu">match</span>(<span class="fu">names</span>(pathway_genes), pathway_ids)],</span>
+<span id="cb88-47"><a href="build-and-cache-kegg-gmt.html#cb88-47" tabindex="-1"></a>    <span class="at">list_of_values =</span> <span class="fu">I</span>(pathway_genes),</span>
+<span id="cb88-48"><a href="build-and-cache-kegg-gmt.html#cb88-48" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb88-49"><a href="build-and-cache-kegg-gmt.html#cb88-49" tabindex="-1"></a>  )</span>
+<span id="cb88-50"><a href="build-and-cache-kegg-gmt.html#cb88-50" tabindex="-1"></a></span>
+<span id="cb88-51"><a href="build-and-cache-kegg-gmt.html#cb88-51" tabindex="-1"></a>  id_map <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb88-52"><a href="build-and-cache-kegg-gmt.html#cb88-52" tabindex="-1"></a>    <span class="at">locus_tag   =</span> <span class="fu">names</span>(locus_to_symbol),</span>
+<span id="cb88-53"><a href="build-and-cache-kegg-gmt.html#cb88-53" tabindex="-1"></a>    <span class="at">gene_symbol =</span> <span class="fu">unlist</span>(locus_to_symbol),</span>
+<span id="cb88-54"><a href="build-and-cache-kegg-gmt.html#cb88-54" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb88-55"><a href="build-and-cache-kegg-gmt.html#cb88-55" tabindex="-1"></a>  )</span>
+<span id="cb88-56"><a href="build-and-cache-kegg-gmt.html#cb88-56" tabindex="-1"></a></span>
+<span id="cb88-57"><a href="build-and-cache-kegg-gmt.html#cb88-57" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="fu">dirname</span>(gmt_path), <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb88-58"><a href="build-and-cache-kegg-gmt.html#cb88-58" tabindex="-1"></a>  <span class="fu">saveRDS</span>(kegg_gmt, gmt_path)</span>
+<span id="cb88-59"><a href="build-and-cache-kegg-gmt.html#cb88-59" tabindex="-1"></a>  <span class="fu">saveRDS</span>(id_map,   map_path)</span>
+<span id="cb88-60"><a href="build-and-cache-kegg-gmt.html#cb88-60" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;GMT saved    :&quot;</span>, <span class="fu">nrow</span>(kegg_gmt), <span class="st">&quot;pathways</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb88-61"><a href="build-and-cache-kegg-gmt.html#cb88-61" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;ID map saved :&quot;</span>, <span class="fu">nrow</span>(id_map), <span class="st">&quot;entries</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb88-62"><a href="build-and-cache-kegg-gmt.html#cb88-62" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## Loaded cached GMT    : 121 pathways
 ## Loaded cached ID map : 1765 entries</code></pre>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="build-and-cache-kegg-gmt.html#cb86-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Example pathways:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="build-and-cache-kegg-gmt.html#cb90-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Example pathways:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Example pathways:</code></pre>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="build-and-cache-kegg-gmt.html#cb88-1" tabindex="-1"></a><span class="fu">head</span>(kegg_gmt<span class="sc">$</span>ontology_name, <span class="dv">6</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="build-and-cache-kegg-gmt.html#cb92-1" tabindex="-1"></a><span class="fu">head</span>(kegg_gmt<span class="sc">$</span>ontology_name, <span class="dv">6</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Glycolysis / Gluconeogenesis&quot;            
 ## [2] &quot;Citrate cycle (TCA cycle)&quot;               
 ## [3] &quot;Pentose phosphate pathway&quot;               
@@ -355,26 +360,26 @@ After that both RDS files load instantly. Do not delete the files in
 ## [6] &quot;Galactose metabolism&quot;</code></pre>
 <div id="convert-locus-tags-to-gene-symbols" class="section level3 hasAnchor" number="5.3.1">
 <h3><span class="header-section-number">5.3.1</span> Convert Locus Tags to Gene Symbols<a href="build-and-cache-kegg-gmt.html#convert-locus-tags-to-gene-symbols" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="build-and-cache-kegg-gmt.html#cb90-1" tabindex="-1"></a>res_df_sym <span class="ot">&lt;-</span> res_df <span class="sc">%&gt;%</span></span>
-<span id="cb90-2"><a href="build-and-cache-kegg-gmt.html#cb90-2" tabindex="-1"></a>  <span class="fu">left_join</span>(id_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span> <span class="ot">=</span> <span class="st">&quot;locus_tag&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb90-3"><a href="build-and-cache-kegg-gmt.html#cb90-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol), gene_symbol, gene)) <span class="sc">%&gt;%</span></span>
-<span id="cb90-4"><a href="build-and-cache-kegg-gmt.html#cb90-4" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene_symbol)</span>
-<span id="cb90-5"><a href="build-and-cache-kegg-gmt.html#cb90-5" tabindex="-1"></a></span>
-<span id="cb90-6"><a href="build-and-cache-kegg-gmt.html#cb90-6" tabindex="-1"></a>res_sig_sym <span class="ot">&lt;-</span> res_sig <span class="sc">%&gt;%</span></span>
-<span id="cb90-7"><a href="build-and-cache-kegg-gmt.html#cb90-7" tabindex="-1"></a>  <span class="fu">left_join</span>(id_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span> <span class="ot">=</span> <span class="st">&quot;locus_tag&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb90-8"><a href="build-and-cache-kegg-gmt.html#cb90-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol), gene_symbol, gene)) <span class="sc">%&gt;%</span></span>
-<span id="cb90-9"><a href="build-and-cache-kegg-gmt.html#cb90-9" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene_symbol)</span>
-<span id="cb90-10"><a href="build-and-cache-kegg-gmt.html#cb90-10" tabindex="-1"></a></span>
-<span id="cb90-11"><a href="build-and-cache-kegg-gmt.html#cb90-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes mapped to symbols  :&quot;</span>, <span class="fu">sum</span>(res_df<span class="sc">$</span>gene <span class="sc">%in%</span> id_map<span class="sc">$</span>locus_tag),</span>
-<span id="cb90-12"><a href="build-and-cache-kegg-gmt.html#cb90-12" tabindex="-1"></a>    <span class="st">&quot;of&quot;</span>, <span class="fu">nrow</span>(res_df), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="build-and-cache-kegg-gmt.html#cb94-1" tabindex="-1"></a>res_df_sym <span class="ot">&lt;-</span> res_df <span class="sc">%&gt;%</span></span>
+<span id="cb94-2"><a href="build-and-cache-kegg-gmt.html#cb94-2" tabindex="-1"></a>  <span class="fu">left_join</span>(id_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span> <span class="ot">=</span> <span class="st">&quot;locus_tag&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb94-3"><a href="build-and-cache-kegg-gmt.html#cb94-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol), gene_symbol, gene)) <span class="sc">%&gt;%</span></span>
+<span id="cb94-4"><a href="build-and-cache-kegg-gmt.html#cb94-4" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene_symbol)</span>
+<span id="cb94-5"><a href="build-and-cache-kegg-gmt.html#cb94-5" tabindex="-1"></a></span>
+<span id="cb94-6"><a href="build-and-cache-kegg-gmt.html#cb94-6" tabindex="-1"></a>res_sig_sym <span class="ot">&lt;-</span> res_sig <span class="sc">%&gt;%</span></span>
+<span id="cb94-7"><a href="build-and-cache-kegg-gmt.html#cb94-7" tabindex="-1"></a>  <span class="fu">left_join</span>(id_map, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;gene&quot;</span> <span class="ot">=</span> <span class="st">&quot;locus_tag&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb94-8"><a href="build-and-cache-kegg-gmt.html#cb94-8" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(gene_symbol), gene_symbol, gene)) <span class="sc">%&gt;%</span></span>
+<span id="cb94-9"><a href="build-and-cache-kegg-gmt.html#cb94-9" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gene_symbol)</span>
+<span id="cb94-10"><a href="build-and-cache-kegg-gmt.html#cb94-10" tabindex="-1"></a></span>
+<span id="cb94-11"><a href="build-and-cache-kegg-gmt.html#cb94-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes mapped to symbols  :&quot;</span>, <span class="fu">sum</span>(res_df<span class="sc">$</span>gene <span class="sc">%in%</span> id_map<span class="sc">$</span>locus_tag),</span>
+<span id="cb94-12"><a href="build-and-cache-kegg-gmt.html#cb94-12" tabindex="-1"></a>    <span class="st">&quot;of&quot;</span>, <span class="fu">nrow</span>(res_df), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Genes mapped to symbols  : 1576 of 3698</code></pre>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="build-and-cache-kegg-gmt.html#cb92-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Remaining as locus tags  :&quot;</span>, <span class="fu">sum</span>(<span class="sc">!</span>res_df_sym<span class="sc">$</span>gene <span class="sc">%in%</span> id_map<span class="sc">$</span>gene_symbol),</span>
-<span id="cb92-2"><a href="build-and-cache-kegg-gmt.html#cb92-2" tabindex="-1"></a>    <span class="st">&quot;(unannotated in KEGG - expected)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="build-and-cache-kegg-gmt.html#cb96-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Remaining as locus tags  :&quot;</span>, <span class="fu">sum</span>(<span class="sc">!</span>res_df_sym<span class="sc">$</span>gene <span class="sc">%in%</span> id_map<span class="sc">$</span>gene_symbol),</span>
+<span id="cb96-2"><a href="build-and-cache-kegg-gmt.html#cb96-2" tabindex="-1"></a>    <span class="st">&quot;(unannotated in KEGG - expected)</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Remaining as locus tags  : 2122 (unannotated in KEGG - expected)</code></pre>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="build-and-cache-kegg-gmt.html#cb94-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Example converted gene names:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="build-and-cache-kegg-gmt.html#cb98-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Example converted gene names:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Example converted gene names:</code></pre>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="build-and-cache-kegg-gmt.html#cb96-1" tabindex="-1"></a><span class="fu">head</span>(res_sig_sym<span class="sc">$</span>gene, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="build-and-cache-kegg-gmt.html#cb100-1" tabindex="-1"></a><span class="fu">head</span>(res_sig_sym<span class="sc">$</span>gene, <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>##  [1] &quot;ompF&quot;  &quot;b3508&quot; &quot;b3510&quot; &quot;garR&quot;  &quot;b0553&quot; &quot;b3127&quot; &quot;gadC&quot;  &quot;b3509&quot; &quot;gadB&quot; 
 ## [10] &quot;b3514&quot;</code></pre>
 <div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">

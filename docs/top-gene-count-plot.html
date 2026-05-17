@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -265,12 +270,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="top-gene-count-plot" class="section level2 hasAnchor" number="4.7">
 <h2><span class="header-section-number">4.7</span> Top Gene Count Plot<a href="top-gene-count-plot.html#top-gene-count-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Plotting raw normalised counts for the most significant gene provides a sanity check: the direction and magnitude of the fold change should be visually obvious. If it isn’t, investigate further.</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="top-gene-count-plot.html#cb69-1" tabindex="-1"></a>top_gene <span class="ot">&lt;-</span> res_sig<span class="sc">$</span>gene[<span class="dv">1</span>]</span>
-<span id="cb69-2"><a href="top-gene-count-plot.html#cb69-2" tabindex="-1"></a></span>
-<span id="cb69-3"><a href="top-gene-count-plot.html#cb69-3" tabindex="-1"></a><span class="fu">plotCounts</span>(dds,</span>
-<span id="cb69-4"><a href="top-gene-count-plot.html#cb69-4" tabindex="-1"></a>           <span class="at">gene     =</span> top_gene,</span>
-<span id="cb69-5"><a href="top-gene-count-plot.html#cb69-5" tabindex="-1"></a>           <span class="at">intgroup =</span> <span class="st">&quot;condition&quot;</span>,</span>
-<span id="cb69-6"><a href="top-gene-count-plot.html#cb69-6" tabindex="-1"></a>           <span class="at">main     =</span> <span class="fu">paste</span>(<span class="st">&quot;Normalised counts —&quot;</span>, top_gene))</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="top-gene-count-plot.html#cb73-1" tabindex="-1"></a>top_gene <span class="ot">&lt;-</span> res_sig<span class="sc">$</span>gene[<span class="dv">1</span>]</span>
+<span id="cb73-2"><a href="top-gene-count-plot.html#cb73-2" tabindex="-1"></a></span>
+<span id="cb73-3"><a href="top-gene-count-plot.html#cb73-3" tabindex="-1"></a><span class="fu">plotCounts</span>(dds,</span>
+<span id="cb73-4"><a href="top-gene-count-plot.html#cb73-4" tabindex="-1"></a>           <span class="at">gene     =</span> top_gene,</span>
+<span id="cb73-5"><a href="top-gene-count-plot.html#cb73-5" tabindex="-1"></a>           <span class="at">intgroup =</span> <span class="st">&quot;condition&quot;</span>,</span>
+<span id="cb73-6"><a href="top-gene-count-plot.html#cb73-6" tabindex="-1"></a>           <span class="at">main     =</span> <span class="fu">paste</span>(<span class="st">&quot;Normalised counts —&quot;</span>, top_gene))</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/top-gene-1.png" alt="" width="672" /></p>
 </div>
             </section>

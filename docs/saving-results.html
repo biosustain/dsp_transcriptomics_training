@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -264,26 +269,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="saving-results" class="section level2 hasAnchor" number="4.9">
 <h2><span class="header-section-number">4.9</span> Saving Results<a href="saving-results.html#saving-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="saving-results.html#cb71-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
-<span id="cb71-2"><a href="saving-results.html#cb71-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb71-3"><a href="saving-results.html#cb71-3" tabindex="-1"></a></span>
-<span id="cb71-4"><a href="saving-results.html#cb71-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb71-5"><a href="saving-results.html#cb71-5" tabindex="-1"></a>  res_df,</span>
-<span id="cb71-6"><a href="saving-results.html#cb71-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_all.tsv&quot;</span>),</span>
-<span id="cb71-7"><a href="saving-results.html#cb71-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb71-8"><a href="saving-results.html#cb71-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb71-9"><a href="saving-results.html#cb71-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb71-10"><a href="saving-results.html#cb71-10" tabindex="-1"></a>)</span>
-<span id="cb71-11"><a href="saving-results.html#cb71-11" tabindex="-1"></a></span>
-<span id="cb71-12"><a href="saving-results.html#cb71-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb71-13"><a href="saving-results.html#cb71-13" tabindex="-1"></a>  res_sig,</span>
-<span id="cb71-14"><a href="saving-results.html#cb71-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_significant.tsv&quot;</span>),</span>
-<span id="cb71-15"><a href="saving-results.html#cb71-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb71-16"><a href="saving-results.html#cb71-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb71-17"><a href="saving-results.html#cb71-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb71-18"><a href="saving-results.html#cb71-18" tabindex="-1"></a>)</span>
-<span id="cb71-19"><a href="saving-results.html#cb71-19" tabindex="-1"></a></span>
-<span id="cb71-20"><a href="saving-results.html#cb71-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Results saved to:&quot;</span>, results_dir, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="saving-results.html#cb75-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
+<span id="cb75-2"><a href="saving-results.html#cb75-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb75-3"><a href="saving-results.html#cb75-3" tabindex="-1"></a></span>
+<span id="cb75-4"><a href="saving-results.html#cb75-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb75-5"><a href="saving-results.html#cb75-5" tabindex="-1"></a>  res_df,</span>
+<span id="cb75-6"><a href="saving-results.html#cb75-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_all.tsv&quot;</span>),</span>
+<span id="cb75-7"><a href="saving-results.html#cb75-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb75-8"><a href="saving-results.html#cb75-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb75-9"><a href="saving-results.html#cb75-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb75-10"><a href="saving-results.html#cb75-10" tabindex="-1"></a>)</span>
+<span id="cb75-11"><a href="saving-results.html#cb75-11" tabindex="-1"></a></span>
+<span id="cb75-12"><a href="saving-results.html#cb75-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb75-13"><a href="saving-results.html#cb75-13" tabindex="-1"></a>  res_sig,</span>
+<span id="cb75-14"><a href="saving-results.html#cb75-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_significant.tsv&quot;</span>),</span>
+<span id="cb75-15"><a href="saving-results.html#cb75-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb75-16"><a href="saving-results.html#cb75-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb75-17"><a href="saving-results.html#cb75-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb75-18"><a href="saving-results.html#cb75-18" tabindex="-1"></a>)</span>
+<span id="cb75-19"><a href="saving-results.html#cb75-19" tabindex="-1"></a></span>
+<span id="cb75-20"><a href="saving-results.html#cb75-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Results saved to:&quot;</span>, results_dir, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Results saved to: /Users/jasge/Documents/GitHub/dsp_transcriptomics_training/results</code></pre>
 <hr />
 </div>

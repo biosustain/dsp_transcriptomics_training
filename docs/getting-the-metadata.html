@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -265,33 +270,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="getting-the-metadata" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Getting the Metadata<a href="getting-the-metadata.html#getting-the-metadata" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The metadata file describes the experimental design: which sample belongs to which condition and replicate. This information is essential for <code>DESeq2</code> to model expression differences correctly.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="getting-the-metadata.html#cb8-1" tabindex="-1"></a>git_root <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="st">&quot;git rev-parse --show-toplevel&quot;</span>, <span class="at">intern =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-2"><a href="getting-the-metadata.html#cb8-2" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="getting-the-metadata.html#cb8-3" tabindex="-1"></a>samples_info <span class="ot">&lt;-</span> <span class="fu">read.table</span>(</span>
-<span id="cb8-4"><a href="getting-the-metadata.html#cb8-4" tabindex="-1"></a>  <span class="fu">file.path</span>(git_root, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;metadata&quot;</span>, <span class="st">&quot;metadata.tsv&quot;</span>),</span>
-<span id="cb8-5"><a href="getting-the-metadata.html#cb8-5" tabindex="-1"></a>  <span class="at">header      =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb8-6"><a href="getting-the-metadata.html#cb8-6" tabindex="-1"></a>  <span class="at">sep         =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb8-7"><a href="getting-the-metadata.html#cb8-7" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">TRUE</span></span>
-<span id="cb8-8"><a href="getting-the-metadata.html#cb8-8" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="getting-the-metadata.html#cb12-1" tabindex="-1"></a>git_root <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="st">&quot;git rev-parse --show-toplevel&quot;</span>, <span class="at">intern =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-2"><a href="getting-the-metadata.html#cb12-2" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="getting-the-metadata.html#cb12-3" tabindex="-1"></a>samples_info <span class="ot">&lt;-</span> <span class="fu">read.table</span>(</span>
+<span id="cb12-4"><a href="getting-the-metadata.html#cb12-4" tabindex="-1"></a>  <span class="fu">file.path</span>(git_root, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;metadata&quot;</span>, <span class="st">&quot;metadata.tsv&quot;</span>),</span>
+<span id="cb12-5"><a href="getting-the-metadata.html#cb12-5" tabindex="-1"></a>  <span class="at">header      =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-6"><a href="getting-the-metadata.html#cb12-6" tabindex="-1"></a>  <span class="at">sep         =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb12-7"><a href="getting-the-metadata.html#cb12-7" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb12-8"><a href="getting-the-metadata.html#cb12-8" tabindex="-1"></a>)</span></code></pre></div>
 <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
 <p><strong>💡 Tip:</strong> Use the interactive table below to verify your sample metadata before proceeding.</p>
 </div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="getting-the-metadata.html#cb9-1" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(</span>
-<span id="cb9-2"><a href="getting-the-metadata.html#cb9-2" tabindex="-1"></a>  <span class="at">data       =</span> samples_info,</span>
-<span id="cb9-3"><a href="getting-the-metadata.html#cb9-3" tabindex="-1"></a>  <span class="at">rownames   =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb9-4"><a href="getting-the-metadata.html#cb9-4" tabindex="-1"></a>  <span class="at">extensions =</span> <span class="fu">c</span>(<span class="st">&#39;Buttons&#39;</span>, <span class="st">&#39;Scroller&#39;</span>),</span>
-<span id="cb9-5"><a href="getting-the-metadata.html#cb9-5" tabindex="-1"></a>  <span class="at">options    =</span> <span class="fu">list</span>(</span>
-<span id="cb9-6"><a href="getting-the-metadata.html#cb9-6" tabindex="-1"></a>    <span class="at">dom         =</span> <span class="st">&#39;Bfrtip&#39;</span>,</span>
-<span id="cb9-7"><a href="getting-the-metadata.html#cb9-7" tabindex="-1"></a>    <span class="at">buttons     =</span> <span class="fu">c</span>(<span class="st">&#39;copy&#39;</span>, <span class="st">&#39;csv&#39;</span>),</span>
-<span id="cb9-8"><a href="getting-the-metadata.html#cb9-8" tabindex="-1"></a>    <span class="at">deferRender =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-9"><a href="getting-the-metadata.html#cb9-9" tabindex="-1"></a>    <span class="at">scrollX     =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-10"><a href="getting-the-metadata.html#cb9-10" tabindex="-1"></a>    <span class="at">scrollY     =</span> <span class="dv">200</span>,</span>
-<span id="cb9-11"><a href="getting-the-metadata.html#cb9-11" tabindex="-1"></a>    <span class="at">scroller    =</span> <span class="cn">TRUE</span></span>
-<span id="cb9-12"><a href="getting-the-metadata.html#cb9-12" tabindex="-1"></a>  ),</span>
-<span id="cb9-13"><a href="getting-the-metadata.html#cb9-13" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&#39;Sample metadata — E. coli MG1655&#39;</span></span>
-<span id="cb9-14"><a href="getting-the-metadata.html#cb9-14" tabindex="-1"></a>)</span></code></pre></div>
-<div class="datatables html-widget html-fill-item" id="htmlwidget-be40f3353ef350bc37c6" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-be40f3353ef350bc37c6">{"x":{"filter":"none","vertical":false,"extensions":["Buttons","Scroller"],"caption":"<caption>Sample metadata — E. coli MG1655<\/caption>","data":[["C1","C2","C3","sac1","sac2","sac3"],["control","control","control","treatment","treatment","treatment"],[1,2,3,1,2,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>sample<\/th>\n      <th>group<\/th>\n      <th>replicate<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv"],"deferRender":true,"scrollX":true,"scrollY":200,"scroller":true,"columnDefs":[{"className":"dt-right","targets":2},{"name":"sample","targets":0},{"name":"group","targets":1},{"name":"replicate","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="getting-the-metadata.html#cb13-1" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(</span>
+<span id="cb13-2"><a href="getting-the-metadata.html#cb13-2" tabindex="-1"></a>  <span class="at">data       =</span> samples_info,</span>
+<span id="cb13-3"><a href="getting-the-metadata.html#cb13-3" tabindex="-1"></a>  <span class="at">rownames   =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb13-4"><a href="getting-the-metadata.html#cb13-4" tabindex="-1"></a>  <span class="at">extensions =</span> <span class="fu">c</span>(<span class="st">&#39;Buttons&#39;</span>, <span class="st">&#39;Scroller&#39;</span>),</span>
+<span id="cb13-5"><a href="getting-the-metadata.html#cb13-5" tabindex="-1"></a>  <span class="at">options    =</span> <span class="fu">list</span>(</span>
+<span id="cb13-6"><a href="getting-the-metadata.html#cb13-6" tabindex="-1"></a>    <span class="at">dom         =</span> <span class="st">&#39;Bfrtip&#39;</span>,</span>
+<span id="cb13-7"><a href="getting-the-metadata.html#cb13-7" tabindex="-1"></a>    <span class="at">buttons     =</span> <span class="fu">c</span>(<span class="st">&#39;copy&#39;</span>, <span class="st">&#39;csv&#39;</span>),</span>
+<span id="cb13-8"><a href="getting-the-metadata.html#cb13-8" tabindex="-1"></a>    <span class="at">deferRender =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-9"><a href="getting-the-metadata.html#cb13-9" tabindex="-1"></a>    <span class="at">scrollX     =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-10"><a href="getting-the-metadata.html#cb13-10" tabindex="-1"></a>    <span class="at">scrollY     =</span> <span class="dv">200</span>,</span>
+<span id="cb13-11"><a href="getting-the-metadata.html#cb13-11" tabindex="-1"></a>    <span class="at">scroller    =</span> <span class="cn">TRUE</span></span>
+<span id="cb13-12"><a href="getting-the-metadata.html#cb13-12" tabindex="-1"></a>  ),</span>
+<span id="cb13-13"><a href="getting-the-metadata.html#cb13-13" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&#39;Sample metadata — E. coli MG1655&#39;</span></span>
+<span id="cb13-14"><a href="getting-the-metadata.html#cb13-14" tabindex="-1"></a>)</span></code></pre></div>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-51f00eb79423e311e003" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-51f00eb79423e311e003">{"x":{"filter":"none","vertical":false,"extensions":["Buttons","Scroller"],"caption":"<caption>Sample metadata — E. coli MG1655<\/caption>","data":[["C1","C2","C3","sac1","sac2","sac3"],["control","control","control","treatment","treatment","treatment"],[1,2,3,1,2,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>sample<\/th>\n      <th>group<\/th>\n      <th>replicate<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv"],"deferRender":true,"scrollX":true,"scrollY":200,"scroller":true,"columnDefs":[{"className":"dt-right","targets":2},{"name":"sample","targets":0},{"name":"group","targets":1},{"name":"replicate","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
             </section>
 

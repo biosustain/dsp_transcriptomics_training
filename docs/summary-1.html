@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -302,7 +307,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr />
 <!-- --------------------- Do not edit this and below ---------------------- -->
 <p></br></p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="summary-1.html#cb73-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="summary-1.html#cb77-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.4.1 (2024-06-14)
 ## Platform: aarch64-apple-darwin20
 ## Running under: macOS Sonoma 14.3
@@ -322,51 +327,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] plotly_4.12.0               DT_0.34.0                  
-##  [3] kableExtra_1.4.0            knitr_1.51                 
-##  [5] factoextra_2.0.0            pheatmap_1.0.13            
-##  [7] RColorBrewer_1.1-3          ggpubr_0.6.3               
-##  [9] DESeq2_1.46.0               SummarizedExperiment_1.36.0
-## [11] Biobase_2.66.0              MatrixGenerics_1.18.1      
-## [13] matrixStats_1.5.0           GenomicRanges_1.58.0       
-## [15] GenomeInfoDb_1.42.3         IRanges_2.40.1             
-## [17] S4Vectors_0.44.0            BiocGenerics_0.52.0        
-## [19] reshape2_1.4.5              lubridate_1.9.5            
-## [21] forcats_1.0.1               stringr_1.6.0              
-## [23] dplyr_1.2.1                 purrr_1.2.2                
-## [25] readr_2.2.0                 tidyr_1.3.2                
-## [27] tibble_3.3.1                ggplot2_4.0.3              
-## [29] tidyverse_2.0.0            
+##  [1] KEGGREST_1.46.0             mulea_1.1.1                
+##  [3] clusterProfiler_4.14.6      fgsea_1.32.4               
+##  [5] DT_0.34.0                   kableExtra_1.4.0           
+##  [7] knitr_1.51                  plotly_4.12.0              
+##  [9] factoextra_2.0.0            pheatmap_1.0.13            
+## [11] RColorBrewer_1.1-3          ggpubr_0.6.3               
+## [13] DESeq2_1.46.0               SummarizedExperiment_1.36.0
+## [15] Biobase_2.66.0              MatrixGenerics_1.18.1      
+## [17] matrixStats_1.5.0           GenomicRanges_1.58.0       
+## [19] GenomeInfoDb_1.42.3         IRanges_2.40.1             
+## [21] S4Vectors_0.44.0            BiocGenerics_0.52.0        
+## [23] reshape2_1.4.5              lubridate_1.9.5            
+## [25] forcats_1.0.1               stringr_1.6.0              
+## [27] dplyr_1.2.1                 purrr_1.2.2                
+## [29] readr_2.2.0                 tidyr_1.3.2                
+## [31] tibble_3.3.1                ggplot2_4.0.3              
+## [33] tidyverse_2.0.0            
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] rlang_1.2.0             magrittr_2.0.5          otel_0.2.0             
-##  [4] compiler_4.4.1          systemfonts_1.3.2       vctrs_0.7.3            
-##  [7] pkgconfig_2.0.3         crayon_1.5.3            fastmap_1.2.0          
-## [10] backports_1.5.1         XVector_0.46.0          labeling_0.4.3         
-## [13] rmarkdown_2.31          tzdb_0.5.0              UCSC.utils_1.2.0       
-## [16] xfun_0.57               zlibbioc_1.52.0         cachem_1.1.0           
-## [19] jsonlite_2.0.0          DelayedArray_0.32.0     BiocParallel_1.40.2    
-## [22] broom_1.0.12            parallel_4.4.1          R6_2.6.1               
-## [25] bslib_0.10.0            stringi_1.8.7           car_3.1-5              
-## [28] numDeriv_2016.8-1.1     jquerylib_0.1.4         Rcpp_1.1.1-1.1         
-## [31] bookdown_0.46           Matrix_1.7-5            timechange_0.4.0       
-## [34] tidyselect_1.2.1        rstudioapi_0.18.0       abind_1.4-8            
-## [37] yaml_2.3.12             codetools_0.2-20        lattice_0.22-9         
-## [40] plyr_1.8.9              withr_3.0.2             S7_0.2.2               
-## [43] coda_0.19-4.1           evaluate_1.0.5          xml2_1.5.2             
-## [46] pillar_1.11.1           carData_3.0-6           generics_0.1.4         
-## [49] emdbook_1.3.14          hms_1.1.4               scales_1.4.0           
-## [52] glue_1.8.1              lazyeval_0.2.3          tools_4.4.1            
-## [55] apeglm_1.28.0           data.table_1.18.2.1     locfit_1.5-9.12        
-## [58] ggsignif_0.6.4          mvtnorm_1.3-6           grid_4.4.1             
-## [61] bbmle_1.0.25.1          crosstalk_1.2.2         bdsmatrix_1.3-7        
-## [64] colorspace_2.1-2        GenomeInfoDbData_1.2.13 Formula_1.2-5          
-## [67] cli_3.6.6               textshaping_1.0.5       S4Arrays_1.6.0         
-## [70] viridisLite_0.4.3       svglite_2.2.2           gtable_0.3.6           
-## [73] rstatix_0.7.3           sass_0.4.10             digest_0.6.39          
-## [76] SparseArray_1.6.2       ggrepel_0.9.8           htmlwidgets_1.6.4      
-## [79] farver_2.1.2            htmltools_0.5.9         lifecycle_1.0.5        
-## [82] httr_1.4.8              MASS_7.3-65</code></pre>
+##   [1] rstudioapi_0.18.0       jsonlite_2.0.0          magrittr_2.0.5         
+##   [4] ggtangle_0.1.2          farver_2.1.2            rmarkdown_2.31         
+##   [7] fs_2.1.0                zlibbioc_1.52.0         vctrs_0.7.3            
+##  [10] memoise_2.0.1           ggtree_3.14.0           rstatix_0.7.3          
+##  [13] htmltools_0.5.9         S4Arrays_1.6.0          broom_1.0.12           
+##  [16] SparseArray_1.6.2       Formula_1.2-5           gridGraphics_0.5-1     
+##  [19] sass_0.4.10             bslib_0.10.0            htmlwidgets_1.6.4      
+##  [22] plyr_1.8.9              cachem_1.1.0            igraph_2.2.2           
+##  [25] lifecycle_1.0.5         pkgconfig_2.0.3         gson_0.1.0             
+##  [28] Matrix_1.7-5            R6_2.6.1                fastmap_1.2.0          
+##  [31] GenomeInfoDbData_1.2.13 numDeriv_2016.8-1.1     digest_0.6.39          
+##  [34] aplot_0.2.9             enrichplot_1.26.6       colorspace_2.1-2       
+##  [37] patchwork_1.3.2         AnnotationDbi_1.68.0    crosstalk_1.2.2        
+##  [40] textshaping_1.0.5       RSQLite_2.4.6           labeling_0.4.3         
+##  [43] timechange_0.4.0        httr_1.4.8              abind_1.4-8            
+##  [46] compiler_4.4.1          bit64_4.8.0             withr_3.0.2            
+##  [49] S7_0.2.2                backports_1.5.1         BiocParallel_1.40.2    
+##  [52] carData_3.0-6           DBI_1.3.0               R.utils_2.13.0         
+##  [55] ggsignif_0.6.4          MASS_7.3-65             rappdirs_0.3.4         
+##  [58] DelayedArray_0.32.0     tools_4.4.1             otel_0.2.0             
+##  [61] ape_5.8-1               R.oo_1.27.1             glue_1.8.1             
+##  [64] nlme_3.1-168            GOSemSim_2.32.0         grid_4.4.1             
+##  [67] generics_0.1.4          gtable_0.3.6            tzdb_0.5.0             
+##  [70] R.methodsS3_1.8.2       data.table_1.18.2.1     hms_1.1.4              
+##  [73] xml2_1.5.2              car_3.1-5               XVector_0.46.0         
+##  [76] ggrepel_0.9.8           pillar_1.11.1           emdbook_1.3.14         
+##  [79] yulab.utils_0.2.4       splines_4.4.1           treeio_1.30.0          
+##  [82] lattice_0.22-9          bit_4.6.0               tidyselect_1.2.1       
+##  [85] GO.db_3.20.0            locfit_1.5-9.12         Biostrings_2.74.1      
+##  [88] bookdown_0.46           svglite_2.2.2           xfun_0.57              
+##  [91] stringi_1.8.7           UCSC.utils_1.2.0        lazyeval_0.2.3         
+##  [94] ggfun_0.2.0             yaml_2.3.12             evaluate_1.0.5         
+##  [97] codetools_0.2-20        bbmle_1.0.25.1          qvalue_2.38.0          
+## [100] ggplotify_0.1.3         cli_3.6.6               systemfonts_1.3.2      
+## [103] jquerylib_0.1.4         Rcpp_1.1.1-1.1          coda_0.19-4.1          
+## [106] png_0.1-9               bdsmatrix_1.3-7         parallel_4.4.1         
+## [109] blob_1.3.0              DOSE_4.0.1              mvtnorm_1.3-6          
+## [112] apeglm_1.28.0           tidytree_0.4.7          viridisLite_0.4.3      
+## [115] scales_1.4.0            crayon_1.5.3            rlang_1.2.0            
+## [118] cowplot_1.2.0           fastmatch_1.1-8</code></pre>
 
 </div>
 <!-- </div> -->

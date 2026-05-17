@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -269,26 +274,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="boxy">
 <p>VST removes this mean–variance dependence, making distances meaningful across the full expression range (<a href="https://doi.org/10.1186/gb-2010-11-10-r106">Anders &amp; Huber, 2010</a>).</p>
 </div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="sample-correlation-heatmap.html#cb31-1" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> <span class="fu">varianceStabilizingTransformation</span>(dds, <span class="at">blind =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="sample-correlation-heatmap.html#cb35-1" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> <span class="fu">varianceStabilizingTransformation</span>(dds, <span class="at">blind =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <div class="boxy">
 <p><strong><code>blind = TRUE</code></strong>,the VST is computed ignoring the experimental design. This is recommended for QC and exploratory analysis, where you want an unbiased view of sample similarity.</p>
 <p>Use <code>blind = FALSE</code> only when the transformation is feeding into a model that already accounts for the design.</p>
 </div>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="sample-correlation-heatmap.html#cb32-1" tabindex="-1"></a>sampleDists      <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
-<span id="cb32-2"><a href="sample-correlation-heatmap.html#cb32-2" tabindex="-1"></a>sampleDistMatrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(sampleDists)</span>
-<span id="cb32-3"><a href="sample-correlation-heatmap.html#cb32-3" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="sample-correlation-heatmap.html#cb32-4" tabindex="-1"></a><span class="fu">rownames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">paste</span>(vsd<span class="sc">$</span>sample, vsd<span class="sc">$</span>condition, <span class="at">sep =</span> <span class="st">&quot; | &quot;</span>)</span>
-<span id="cb32-5"><a href="sample-correlation-heatmap.html#cb32-5" tabindex="-1"></a><span class="fu">colnames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(sampleDistMatrix)</span>
-<span id="cb32-6"><a href="sample-correlation-heatmap.html#cb32-6" tabindex="-1"></a></span>
-<span id="cb32-7"><a href="sample-correlation-heatmap.html#cb32-7" tabindex="-1"></a>colours <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&quot;Blues&quot;</span>)))(<span class="dv">255</span>)</span>
-<span id="cb32-8"><a href="sample-correlation-heatmap.html#cb32-8" tabindex="-1"></a></span>
-<span id="cb32-9"><a href="sample-correlation-heatmap.html#cb32-9" tabindex="-1"></a><span class="fu">pheatmap</span>(</span>
-<span id="cb32-10"><a href="sample-correlation-heatmap.html#cb32-10" tabindex="-1"></a>  sampleDistMatrix,</span>
-<span id="cb32-11"><a href="sample-correlation-heatmap.html#cb32-11" tabindex="-1"></a>  <span class="at">col          =</span> colours,</span>
-<span id="cb32-12"><a href="sample-correlation-heatmap.html#cb32-12" tabindex="-1"></a>  <span class="at">border_color =</span> <span class="cn">NA</span>,</span>
-<span id="cb32-13"><a href="sample-correlation-heatmap.html#cb32-13" tabindex="-1"></a>  <span class="at">main         =</span> <span class="st">&quot;Sample-to-sample distances (VST) — E. coli MG1655&quot;</span>,</span>
-<span id="cb32-14"><a href="sample-correlation-heatmap.html#cb32-14" tabindex="-1"></a>  <span class="at">fontsize     =</span> <span class="dv">10</span></span>
-<span id="cb32-15"><a href="sample-correlation-heatmap.html#cb32-15" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="sample-correlation-heatmap.html#cb36-1" tabindex="-1"></a>sampleDists      <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
+<span id="cb36-2"><a href="sample-correlation-heatmap.html#cb36-2" tabindex="-1"></a>sampleDistMatrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(sampleDists)</span>
+<span id="cb36-3"><a href="sample-correlation-heatmap.html#cb36-3" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="sample-correlation-heatmap.html#cb36-4" tabindex="-1"></a><span class="fu">rownames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">paste</span>(vsd<span class="sc">$</span>sample, vsd<span class="sc">$</span>condition, <span class="at">sep =</span> <span class="st">&quot; | &quot;</span>)</span>
+<span id="cb36-5"><a href="sample-correlation-heatmap.html#cb36-5" tabindex="-1"></a><span class="fu">colnames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(sampleDistMatrix)</span>
+<span id="cb36-6"><a href="sample-correlation-heatmap.html#cb36-6" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="sample-correlation-heatmap.html#cb36-7" tabindex="-1"></a>colours <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&quot;Blues&quot;</span>)))(<span class="dv">255</span>)</span>
+<span id="cb36-8"><a href="sample-correlation-heatmap.html#cb36-8" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="sample-correlation-heatmap.html#cb36-9" tabindex="-1"></a><span class="fu">pheatmap</span>(</span>
+<span id="cb36-10"><a href="sample-correlation-heatmap.html#cb36-10" tabindex="-1"></a>  sampleDistMatrix,</span>
+<span id="cb36-11"><a href="sample-correlation-heatmap.html#cb36-11" tabindex="-1"></a>  <span class="at">col          =</span> colours,</span>
+<span id="cb36-12"><a href="sample-correlation-heatmap.html#cb36-12" tabindex="-1"></a>  <span class="at">border_color =</span> <span class="cn">NA</span>,</span>
+<span id="cb36-13"><a href="sample-correlation-heatmap.html#cb36-13" tabindex="-1"></a>  <span class="at">main         =</span> <span class="st">&quot;Sample-to-sample distances (VST) — E. coli MG1655&quot;</span>,</span>
+<span id="cb36-14"><a href="sample-correlation-heatmap.html#cb36-14" tabindex="-1"></a>  <span class="at">fontsize     =</span> <span class="dv">10</span></span>
+<span id="cb36-15"><a href="sample-correlation-heatmap.html#cb36-15" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/correlation-heatmap-0-1.png" alt="" width="672" /></p>
 </div>
             </section>

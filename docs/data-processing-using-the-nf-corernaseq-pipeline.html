@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.6 Sanity Checks | Introduction to Transcriptomics</title>
-  <meta name="description" content="3.6 Sanity Checks | Introduction to Transcriptomics" />
+  <title>2.3 Data processing using the nf-core/rnaseq pipeline | Introduction to Transcriptomics</title>
+  <meta name="description" content="2.3 Data processing using the nf-core/rnaseq pipeline | Introduction to Transcriptomics" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.6 Sanity Checks | Introduction to Transcriptomics" />
+  <meta property="og:title" content="2.3 Data processing using the nf-core/rnaseq pipeline | Introduction to Transcriptomics" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.6 Sanity Checks | Introduction to Transcriptomics" />
+  <meta name="twitter:title" content="2.3 Data processing using the nf-core/rnaseq pipeline | Introduction to Transcriptomics" />
   
   
   
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="creating-the-deseqdataset.html"/>
-<link rel="next" href="exploratory-data-analysis.html"/>
+<link rel="prev" href="initial-checks.html"/>
+<link rel="next" href="running-the-nf-corernaseq-pipeline-v3.23.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -267,77 +267,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="sanity-checks" class="section level2 hasAnchor" number="3.6">
-<h2><span class="header-section-number">3.6</span> Sanity Checks<a href="sanity-checks.html#sanity-checks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="remember">
-<p><strong>📌 Remember:</strong> Always do a sanity check!</p>
-</div>
-<div id="are-we-working-with-raw-counts" class="section level3 hasAnchor" number="3.6.1">
-<h3><span class="header-section-number">3.6.1</span> Are We Working with Raw Counts?<a href="sanity-checks.html#are-we-working-with-raw-counts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><code>DESeq2</code> requires <strong>raw, un-normalised integer counts</strong>. Feeding it normalised values (TPM, FPKM) will produce incorrect results.</p>
-<div class="remember">
-<p><strong>📌 Remember:</strong> Always verify your input before proceeding.</p>
-</div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="sanity-checks.html#cb21-1" tabindex="-1"></a><span class="fu">head</span>(count_genes[, <span class="dv">1</span><span class="sc">:</span><span class="fu">min</span>(<span class="dv">6</span>, <span class="fu">ncol</span>(count_genes))])</span></code></pre></div>
-<pre><code>##         C1   C2   C3 sac1 sac2 sac3
-## b0001    0    0    1    1    0    0
-## b0002 2754 2375 8666 5901 4451 6523
-## b0003 1085  899 4300 1882 1410 2199
-## b0004 1851 1484 7284 2973 2182 3516
-## b0005    4    4    3   15    9    5
-## b0006  250  222 1011  269  288  439</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="sanity-checks.html#cb23-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">hist</span>(</span>
-<span id="cb23-2"><a href="sanity-checks.html#cb23-2" tabindex="-1"></a>  <span class="fu">as.numeric</span>(count_genes[<span class="dv">1</span>, ]),</span>
-<span id="cb23-3"><a href="sanity-checks.html#cb23-3" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;Raw counts —&quot;</span>, <span class="fu">rownames</span>(count_genes)[<span class="dv">1</span>]),</span>
-<span id="cb23-4"><a href="sanity-checks.html#cb23-4" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Raw count&quot;</span>,</span>
-<span id="cb23-5"><a href="sanity-checks.html#cb23-5" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
-<span id="cb23-6"><a href="sanity-checks.html#cb23-6" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">FALSE</span></span>
-<span id="cb23-7"><a href="sanity-checks.html#cb23-7" tabindex="-1"></a>)</span>
-<span id="cb23-8"><a href="sanity-checks.html#cb23-8" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="sanity-checks.html#cb23-9" tabindex="-1"></a><span class="fu">plot</span>(p, <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
-<span id="cb23-10"><a href="sanity-checks.html#cb23-10" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;Raw counts —&quot;</span>, <span class="fu">rownames</span>(count_genes)[<span class="dv">1</span>]),</span>
-<span id="cb23-11"><a href="sanity-checks.html#cb23-11" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Raw count&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/check-raw-0-1.png" alt="" width="672" /></p>
-<div class="boxy">
-<p>Raw <em>E. coli</em> RNA-seq counts are typically in the thousands to millions range (library sizes ~5–50 M reads for bacterial experiments).</p>
-<p>A highly right-skewed distribution is expected and correct at this stage.</p>
-</div>
-</div>
-<div id="pre-filtering-low-count-genes" class="section level3 hasAnchor" number="3.6.2">
-<h3><span class="header-section-number">3.6.2</span> Pre-filtering Low-count Genes<a href="sanity-checks.html#pre-filtering-low-count-genes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Genes with very few counts across all samples carry no statistical power and inflate the multiple testing burden. We remove genes that do not have at least 10 counts in a minimum number of samples (equal to the size of the smallest group, i.e., 3 replicates here).</p>
-<p><em>E. coli</em> has ~4,300 genes — after filtering you should retain the majority of them.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="sanity-checks.html#cb24-1" tabindex="-1"></a>smallestGroupSize <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">table</span>(samples_info<span class="sc">$</span>condition))</span>
-<span id="cb24-2"><a href="sanity-checks.html#cb24-2" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="sanity-checks.html#cb24-3" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(<span class="fu">counts</span>(dds) <span class="sc">&gt;=</span> <span class="dv">10</span>) <span class="sc">&gt;=</span> smallestGroupSize</span>
-<span id="cb24-4"><a href="sanity-checks.html#cb24-4" tabindex="-1"></a>dds  <span class="ot">&lt;-</span> dds[keep, ]</span>
-<span id="cb24-5"><a href="sanity-checks.html#cb24-5" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="sanity-checks.html#cb24-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes before filtering:&quot;</span>, <span class="fu">nrow</span>(<span class="fu">counts</span>(dds)) <span class="sc">+</span> <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Genes before filtering: 4523</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="sanity-checks.html#cb26-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes after  filtering:&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Genes after  filtering: 3698</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="sanity-checks.html#cb28-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes removed         :&quot;</span>, <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Genes removed         : 825</code></pre>
-</div>
-<div id="factor-order-and-reference-level" class="section level3 hasAnchor" number="3.6.3">
-<h3><span class="header-section-number">3.6.3</span> Factor Order and Reference Level<a href="sanity-checks.html#factor-order-and-reference-level" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The first factor level is always the reference (denominator) in <code>DESeq2</code> comparisons. Setting it explicitly ensures that fold changes are computed in the intended direction: <strong>treatment vs control</strong>, not the reverse.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="sanity-checks.html#cb30-1" tabindex="-1"></a>dds<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">relevel</span>(dds<span class="sc">$</span>condition, <span class="at">ref =</span> <span class="st">&quot;control&quot;</span>)</span>
-<span id="cb30-2"><a href="sanity-checks.html#cb30-2" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="sanity-checks.html#cb30-3" tabindex="-1"></a><span class="fu">levels</span>(dds<span class="sc">$</span>condition)</span></code></pre></div>
-<pre><code>## [1] &quot;control&quot;   &quot;treatment&quot;</code></pre>
-<div style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;">
-<p><strong>📌 Remember:</strong> The reference level determines the direction of fold changes. A positive log2FC means higher expression in the treatment relative to control.</p>
-</div>
-</div>
+<div id="data-processing-using-the-nf-corernaseq-pipeline" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Data processing using the nf-core/rnaseq pipeline<a href="data-processing-using-the-nf-corernaseq-pipeline.html#data-processing-using-the-nf-corernaseq-pipeline" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Sources of data and genome files</strong></p>
+<p>RNAseq analysis of <em>Escherichia coli</em> str. K-12 substr. MG1655 (accession: GCF_000005845.2) will be performed. RNA sequencing read files and genome files were obtained from the following links. The data do not have to be downloaded — a size-reduced dataset and the genome files are already deposited in the repository.</p>
+<ul>
+<li><a href="https://www.ebi.ac.uk/ena/browser/view/PRJNA1158806">RNAseq files (.fastq.gz) - PRJNA1158806</a></li>
+<li><a href="https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz"><em>E. coli</em> genome sequence (.fna.gz)</a></li>
+<li><a href="https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.gtf.gz"><em>E. coli</em> genome annotation file (.gtf.gz)</a></li>
+</ul>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="creating-the-deseqdataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="exploratory-data-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="initial-checks.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="running-the-nf-corernaseq-pipeline-v3.23.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

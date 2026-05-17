@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -265,13 +270,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ma-plot" class="section level2 hasAnchor" number="4.6">
 <h2><span class="header-section-number">4.6</span> MA Plot<a href="ma-plot.html#ma-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>An MA plot shows log2 fold change (y-axis) against mean expression (x-axis). It helps assess whether the fold change estimates are stable across the expression range. After shrinkage, estimates for lowly expressed genes (left side) should be pulled toward zero.</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="ma-plot.html#cb68-1" tabindex="-1"></a><span class="fu">plotMA</span>(res_shrunk,</span>
-<span id="cb68-2"><a href="ma-plot.html#cb68-2" tabindex="-1"></a>       <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
-<span id="cb68-3"><a href="ma-plot.html#cb68-3" tabindex="-1"></a>       <span class="at">main  =</span> <span class="st">&quot;MA Plot — Treatment vs Control (shrunken LFC)&quot;</span>,</span>
-<span id="cb68-4"><a href="ma-plot.html#cb68-4" tabindex="-1"></a>       <span class="at">colSig =</span> <span class="st">&quot;#d7191c&quot;</span>,</span>
-<span id="cb68-5"><a href="ma-plot.html#cb68-5" tabindex="-1"></a>       <span class="at">colNonSig =</span> <span class="st">&quot;grey70&quot;</span>,</span>
-<span id="cb68-6"><a href="ma-plot.html#cb68-6" tabindex="-1"></a>       <span class="at">ylab  =</span> <span class="st">&quot;log2 Fold Change&quot;</span>)</span>
-<span id="cb68-7"><a href="ma-plot.html#cb68-7" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="ma-plot.html#cb72-1" tabindex="-1"></a><span class="fu">plotMA</span>(res_shrunk,</span>
+<span id="cb72-2"><a href="ma-plot.html#cb72-2" tabindex="-1"></a>       <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb72-3"><a href="ma-plot.html#cb72-3" tabindex="-1"></a>       <span class="at">main  =</span> <span class="st">&quot;MA Plot — Treatment vs Control (shrunken LFC)&quot;</span>,</span>
+<span id="cb72-4"><a href="ma-plot.html#cb72-4" tabindex="-1"></a>       <span class="at">colSig =</span> <span class="st">&quot;#d7191c&quot;</span>,</span>
+<span id="cb72-5"><a href="ma-plot.html#cb72-5" tabindex="-1"></a>       <span class="at">colNonSig =</span> <span class="st">&quot;grey70&quot;</span>,</span>
+<span id="cb72-6"><a href="ma-plot.html#cb72-6" tabindex="-1"></a>       <span class="at">ylab  =</span> <span class="st">&quot;log2 Fold Change&quot;</span>)</span>
+<span id="cb72-7"><a href="ma-plot.html#cb72-7" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/ma-plot-1.png" alt="" width="672" /></p>
 </div>
             </section>

@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -268,14 +273,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="note">
 <p><strong>📘 Note:</strong> <strong>Prokaryote:</strong> DESeq2’s negative binomial model is organism-agnostic. It works identically for <em>E. coli</em> as for mouse or human data. ✅</p>
 </div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="creating-the-deseqdataset.html#cb16-1" tabindex="-1"></a>samples_info<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">factor</span>(samples_info<span class="sc">$</span>group,</span>
-<span id="cb16-2"><a href="creating-the-deseqdataset.html#cb16-2" tabindex="-1"></a>                                 <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;control&quot;</span>, <span class="st">&quot;treatment&quot;</span>))</span>
-<span id="cb16-3"><a href="creating-the-deseqdataset.html#cb16-3" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="creating-the-deseqdataset.html#cb16-4" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSetFromMatrix</span>(</span>
-<span id="cb16-5"><a href="creating-the-deseqdataset.html#cb16-5" tabindex="-1"></a>  <span class="at">countData =</span> count_genes,</span>
-<span id="cb16-6"><a href="creating-the-deseqdataset.html#cb16-6" tabindex="-1"></a>  <span class="at">colData   =</span> samples_info,</span>
-<span id="cb16-7"><a href="creating-the-deseqdataset.html#cb16-7" tabindex="-1"></a>  <span class="at">design    =</span> <span class="sc">~</span> condition</span>
-<span id="cb16-8"><a href="creating-the-deseqdataset.html#cb16-8" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="creating-the-deseqdataset.html#cb20-1" tabindex="-1"></a>samples_info<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">factor</span>(samples_info<span class="sc">$</span>group,</span>
+<span id="cb20-2"><a href="creating-the-deseqdataset.html#cb20-2" tabindex="-1"></a>                                 <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;control&quot;</span>, <span class="st">&quot;treatment&quot;</span>))</span>
+<span id="cb20-3"><a href="creating-the-deseqdataset.html#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="creating-the-deseqdataset.html#cb20-4" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSetFromMatrix</span>(</span>
+<span id="cb20-5"><a href="creating-the-deseqdataset.html#cb20-5" tabindex="-1"></a>  <span class="at">countData =</span> count_genes,</span>
+<span id="cb20-6"><a href="creating-the-deseqdataset.html#cb20-6" tabindex="-1"></a>  <span class="at">colData   =</span> samples_info,</span>
+<span id="cb20-7"><a href="creating-the-deseqdataset.html#cb20-7" tabindex="-1"></a>  <span class="at">design    =</span> <span class="sc">~</span> condition</span>
+<span id="cb20-8"><a href="creating-the-deseqdataset.html#cb20-8" tabindex="-1"></a>)</span></code></pre></div>
 </div>
             </section>
 

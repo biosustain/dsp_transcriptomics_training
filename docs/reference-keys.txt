@@ -3,6 +3,9 @@ welcome
 instructions
 opening-the-nextflow-environment
 initial-checks
+data-processing-using-the-nf-corernaseq-pipeline
+running-the-nf-corernaseq-pipeline-v3.23.0
+structure-of-the-output-directory
 quality-control
 setup-the-environment
 getting-the-metadata

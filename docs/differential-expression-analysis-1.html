@@ -172,6 +172,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="opening-the-nextflow-environment.html"><a href="opening-the-nextflow-environment.html"><i class="fa fa-check"></i><b>2.1</b> Opening the Nextflow environment</a></li>
 <li class="chapter" data-level="2.2" data-path="initial-checks.html"><a href="initial-checks.html"><i class="fa fa-check"></i><b>2.2</b> Initial checks</a></li>
+<li class="chapter" data-level="2.3" data-path="data-processing-using-the-nf-corernaseq-pipeline.html"><a href="data-processing-using-the-nf-corernaseq-pipeline.html"><i class="fa fa-check"></i><b>2.3</b> Data processing using the nf-core/rnaseq pipeline</a></li>
+<li class="chapter" data-level="2.4" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html"><i class="fa fa-check"></i><b>2.4</b> Running the nf-core/rnaseq pipeline v3.23.0</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="running-the-nf-corernaseq-pipeline-v3.23.html"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory"><i class="fa fa-check"></i><b>2.4.1</b> Structure of the output directory</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
 <ul>
@@ -268,22 +273,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong>⚠️ Warning:</strong> Always use raw integer counts as input. Do not use TPM, FPKM, or any normalised values — DESeq2 handles normalisation internally.</p>
 </div>
 <p><code>DESeq2</code> fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but <code>DESeq()</code> handles all three in one call.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="differential-expression-analysis-1.html#cb45-1" tabindex="-1"></a>git_root <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="st">&quot;git rev-parse --show-toplevel&quot;</span>, <span class="at">intern =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb45-2"><a href="differential-expression-analysis-1.html#cb45-2" tabindex="-1"></a></span>
-<span id="cb45-3"><a href="differential-expression-analysis-1.html#cb45-3" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;rds&quot;</span>, <span class="st">&quot;dds_ecoli_MG1655.rds&quot;</span>))</span>
-<span id="cb45-4"><a href="differential-expression-analysis-1.html#cb45-4" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="differential-expression-analysis-1.html#cb45-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;✅ DDS loaded</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="differential-expression-analysis-1.html#cb49-1" tabindex="-1"></a>git_root <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="st">&quot;git rev-parse --show-toplevel&quot;</span>, <span class="at">intern =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-2"><a href="differential-expression-analysis-1.html#cb49-2" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="differential-expression-analysis-1.html#cb49-3" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;rds&quot;</span>, <span class="st">&quot;dds_ecoli_MG1655.rds&quot;</span>))</span>
+<span id="cb49-4"><a href="differential-expression-analysis-1.html#cb49-4" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="differential-expression-analysis-1.html#cb49-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;✅ DDS loaded</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## ✅ DDS loaded</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="differential-expression-analysis-1.html#cb47-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Dimensions  :&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;genes ×&quot;</span>, <span class="fu">ncol</span>(dds), <span class="st">&quot;samples</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="differential-expression-analysis-1.html#cb51-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Dimensions  :&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;genes ×&quot;</span>, <span class="fu">ncol</span>(dds), <span class="st">&quot;samples</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##    Dimensions  : 3698 genes × 6 samples</code></pre>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="differential-expression-analysis-1.html#cb49-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Conditions  :&quot;</span>, <span class="fu">paste</span>(<span class="fu">levels</span>(dds<span class="sc">$</span>condition), <span class="at">collapse =</span> <span class="st">&quot; vs &quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="differential-expression-analysis-1.html#cb53-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Conditions  :&quot;</span>, <span class="fu">paste</span>(<span class="fu">levels</span>(dds<span class="sc">$</span>condition), <span class="at">collapse =</span> <span class="st">&quot; vs &quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##    Conditions  : control vs treatment</code></pre>
 <div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
 <p><strong>📌 Remember:</strong> The variable of interest should be at the end of the design formula, and the control group must be the first (reference) factor level. Both were set in the QC script.</p>
 </div>
 <p><strong>Check the results</strong></p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="differential-expression-analysis-1.html#cb51-1" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span>
-<span id="cb51-2"><a href="differential-expression-analysis-1.html#cb51-2" tabindex="-1"></a><span class="fu">resultsNames</span>(dds)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="differential-expression-analysis-1.html#cb55-1" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span>
+<span id="cb55-2"><a href="differential-expression-analysis-1.html#cb55-2" tabindex="-1"></a><span class="fu">resultsNames</span>(dds)</span></code></pre></div>
 <pre><code>## [1] &quot;Intercept&quot;                      &quot;condition_treatment_vs_control&quot;</code></pre>
 </div>
             </section>

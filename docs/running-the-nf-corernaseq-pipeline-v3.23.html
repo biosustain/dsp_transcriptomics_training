@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.6 Sanity Checks | Introduction to Transcriptomics</title>
-  <meta name="description" content="3.6 Sanity Checks | Introduction to Transcriptomics" />
+  <title>2.4 Running the nf-core/rnaseq pipeline v3.23.0 | Introduction to Transcriptomics</title>
+  <meta name="description" content="2.4 Running the nf-core/rnaseq pipeline v3.23.0 | Introduction to Transcriptomics" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.6 Sanity Checks | Introduction to Transcriptomics" />
+  <meta property="og:title" content="2.4 Running the nf-core/rnaseq pipeline v3.23.0 | Introduction to Transcriptomics" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.6 Sanity Checks | Introduction to Transcriptomics" />
+  <meta name="twitter:title" content="2.4 Running the nf-core/rnaseq pipeline v3.23.0 | Introduction to Transcriptomics" />
   
   
   
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="creating-the-deseqdataset.html"/>
-<link rel="next" href="exploratory-data-analysis.html"/>
+<link rel="prev" href="data-processing-using-the-nf-corernaseq-pipeline.html"/>
+<link rel="next" href="quality-control.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -267,77 +267,168 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="sanity-checks" class="section level2 hasAnchor" number="3.6">
-<h2><span class="header-section-number">3.6</span> Sanity Checks<a href="sanity-checks.html#sanity-checks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="running-the-nf-corernaseq-pipeline-v3.23.0" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Running the nf-core/rnaseq pipeline v3.23.0<a href="running-the-nf-corernaseq-pipeline-v3.23.html#running-the-nf-corernaseq-pipeline-v3.23.0" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We will not process the original dataset because more computing power would be required. Instead, we will process only two size-reduced samples where 50,000 reads were randomly sampled from the original data (used script for sub-sampling: <code>util/subsample_50k_PRJNA1158806.sh</code>).</p>
+<p>We will use pipeline release <a href="https://nf-co.re/rnaseq/3.23.0">v3.23.0</a>. From this release, it is possible to use Bowtie2 for read alignment, which is advantageous for processing prokaryotic RNAseq data. For simplicity, we specify a “prokaryotic” profile which automatically uses Bowtie2 for read alignment and Salmon for read quantification.</p>
+<p>To process the data, run the following command:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-1" tabindex="-1"></a><span class="ex">nextflow</span> run <span class="st">&#39;https://github.com/nf-core/rnaseq&#39;</span> <span class="dt">\</span></span>
+<span id="cb7-2"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-2" tabindex="-1"></a>    <span class="at">-name</span> <span class="st">&#39;Ecoli_MG1655_saccharin_2_samples&#39;</span> <span class="dt">\</span></span>
+<span id="cb7-3"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-3" tabindex="-1"></a>    <span class="at">--outdir</span> <span class="st">&#39;/workspaces/dsp_transcriptomics_training/results/nfcore_rnaseq_processing_subsampled&#39;</span> <span class="dt">\</span></span>
+<span id="cb7-4"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-4" tabindex="-1"></a>    <span class="at">--input</span> <span class="st">&#39;/workspaces/dsp_transcriptomics_training/data/seq_files_subsampled/samplesheet_50k_subsampled_2samples.csv&#39;</span> <span class="dt">\</span></span>
+<span id="cb7-5"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-5" tabindex="-1"></a>    <span class="at">--fasta</span> <span class="st">&#39;/workspaces/dsp_transcriptomics_training/data/genome_files/GCF_000005845.2_ASM584v2_genomic.fna.gz&#39;</span> <span class="dt">\</span></span>
+<span id="cb7-6"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-6" tabindex="-1"></a>    <span class="at">--gtf</span> <span class="st">&#39;/workspaces/dsp_transcriptomics_training/data/genome_files/GCF_000005845.2_ASM584v2_genomic.gtf.gz&#39;</span> <span class="dt">\</span></span>
+<span id="cb7-7"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-7" tabindex="-1"></a>    <span class="at">-r</span> 3.23.0 <span class="dt">\</span></span>
+<span id="cb7-8"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-8" tabindex="-1"></a>    <span class="at">-profile</span> prokaryotic,docker <span class="dt">\</span></span>
+<span id="cb7-9"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb7-9" tabindex="-1"></a>    <span class="at">-c</span> /workspaces/dsp_transcriptomics_training/01_scripts/custom.config</span></code></pre></div>
+<p><strong>Parameter descriptions:</strong></p>
+<ul>
+<li><code>-name</code>: name of the processing run</li>
+<li><code>--outdir</code>: (absolute) path to the output directory where results will be saved (the sub-directory is created automatically)</li>
+<li><code>--input</code>: (absolute) path to the sample sheet</li>
+<li><code>--fasta</code>: (absolute) path to the gzipped genome FASTA file</li>
+<li><code>--gtf</code>: (absolute) path to the gzipped genome annotation file</li>
+<li><code>-r</code>: nf-core/rnaseq pipeline release/version</li>
+<li><code>-profile</code>: profile(s) to run; here “prokaryotic” mode using “docker”</li>
+<li><code>-c</code>: (absolute) path to the custom configuration file; used here to limit the number of CPUs and memory</li>
+</ul>
+<p>The Nextflow command is stored in a bash script and can be executed by running:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="running-the-nf-corernaseq-pipeline-v3.23.html#cb8-1" tabindex="-1"></a><span class="fu">bash</span> 01_scripts/00_nfcore_rnaseq_processing.sh</span></code></pre></div>
+<p>The processing time is about 7 minutes.</p>
 <div class="remember">
-<p><strong>📌 Remember:</strong> Always do a sanity check!</p>
+<p><strong>📌 Remember:</strong> Rather than configuring parameters manually, nf-core offers automatic parameter configuration. Go to the <a href="https://nf-co.re/rnaseq/3.23.0">pipeline page</a> and press <strong>Launch version 3.23.0</strong> to see all pipeline parameters and change them as needed. A configuration file can be generated automatically for use with your Nextflow command.</p>
 </div>
-<div id="are-we-working-with-raw-counts" class="section level3 hasAnchor" number="3.6.1">
-<h3><span class="header-section-number">3.6.1</span> Are We Working with Raw Counts?<a href="sanity-checks.html#are-we-working-with-raw-counts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><code>DESeq2</code> requires <strong>raw, un-normalised integer counts</strong>. Feeding it normalised values (TPM, FPKM) will produce incorrect results.</p>
-<div class="remember">
-<p><strong>📌 Remember:</strong> Always verify your input before proceeding.</p>
+<div id="structure-of-the-output-directory" class="section level3 hasAnchor" number="2.4.1">
+<h3><span class="header-section-number">2.4.1</span> Structure of the output directory<a href="running-the-nf-corernaseq-pipeline-v3.23.html#structure-of-the-output-directory" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The results of the pipeline run will be saved in <code>results/nfcore_rnaseq_processing_subsampled</code>. The top-level folder structure is as follows:</p>
+<pre><code>.
+├── bowtie2_salmon
+├── fastqc
+├── fq_lint
+├── multiqc
+├── pipeline_info
+└── trimgalore</code></pre>
+<p>The detailed structure of the output directory:</p>
+<pre><code>.
+├── bowtie2_salmon
+│   ├── control_1
+│   │   ├── aux_info
+│   │   ├── cmd_info.json
+│   │   ├── libParams
+│   │   ├── logs
+│   │   ├── quant.genes.sf
+│   │   └── quant.sf
+│   ├── control_1.markdup.sorted.bam
+│   ├── control_1.markdup.sorted.bam.bai
+│   ├── deseq2_qc
+│   │   ├── deseq2.dds.RData
+│   │   ├── deseq2.pca.vals.txt
+│   │   ├── deseq2.plots.pdf
+│   │   ├── deseq2.sample.dists.txt
+│   │   ├── R_sessionInfo.log
+│   │   └── size_factors
+│   ├── log
+│   │   ├── control_1.bowtie2.log
+│   │   └── saccharin_1.bowtie2.log
+│   ├── picard_metrics
+│   │   ├── control_1.markdup.sorted.MarkDuplicates.metrics.txt
+│   │   └── saccharin_1.markdup.sorted.MarkDuplicates.metrics.txt
+│   ├── saccharin_1
+│   │   ├── aux_info
+│   │   ├── cmd_info.json
+│   │   ├── libParams
+│   │   ├── logs
+│   │   ├── quant.genes.sf
+│   │   └── quant.sf
+│   ├── saccharin_1.markdup.sorted.bam
+│   ├── saccharin_1.markdup.sorted.bam.bai
+│   ├── salmon.merged.gene_counts_length_scaled.tsv
+│   ├── salmon.merged.gene_counts_scaled.tsv
+│   ├── salmon.merged.gene_counts.tsv
+│   ├── salmon.merged.gene_lengths.tsv
+│   ├── salmon.merged.gene.SummarizedExperiment.rds
+│   ├── salmon.merged.gene_tpm.tsv
+│   ├── salmon.merged.transcript_counts.tsv
+│   ├── salmon.merged.transcript_lengths.tsv
+│   ├── salmon.merged.transcript.SummarizedExperiment.rds
+│   ├── salmon.merged.transcript_tpm.tsv
+│   ├── salmon.merged.tx2gene.tsv
+│   ├── samtools_stats
+│   │   ├── control_1.markdup.sorted.bam.flagstat
+│   │   ├── control_1.markdup.sorted.bam.idxstats
+│   │   ├── control_1.markdup.sorted.bam.stats
+│   │   ├── control_1.sorted.bam.flagstat
+│   │   ├── control_1.sorted.bam.idxstats
+│   │   ├── control_1.sorted.bam.stats
+│   │   ├── saccharin_1.markdup.sorted.bam.flagstat
+│   │   ├── saccharin_1.markdup.sorted.bam.idxstats
+│   │   ├── saccharin_1.markdup.sorted.bam.stats
+│   │   ├── saccharin_1.sorted.bam.flagstat
+│   │   ├── saccharin_1.sorted.bam.idxstats
+│   │   └── saccharin_1.sorted.bam.stats
+│   └── stringtie
+│       ├── control_1.ballgown
+│       ├── control_1.coverage.gtf
+│       ├── control_1.gene.abundance.txt
+│       ├── control_1.transcripts.gtf
+│       ├── saccharin_1.ballgown
+│       ├── saccharin_1.coverage.gtf
+│       ├── saccharin_1.gene.abundance.txt
+│       └── saccharin_1.transcripts.gtf
+├── fastqc
+│   ├── raw
+│   │   ├── control_1_raw_1_fastqc.html
+│   │   ├── control_1_raw_1_fastqc.zip
+│   │   ├── control_1_raw_2_fastqc.html
+│   │   ├── control_1_raw_2_fastqc.zip
+│   │   ├── saccharin_1_raw_1_fastqc.html
+│   │   ├── saccharin_1_raw_1_fastqc.zip
+│   │   ├── saccharin_1_raw_2_fastqc.html
+│   │   └── saccharin_1_raw_2_fastqc.zip
+│   └── trim
+│       ├── control_1_trimmed_1_val_1_fastqc.html
+│       ├── control_1_trimmed_1_val_1_fastqc.zip
+│       ├── control_1_trimmed_2_val_2_fastqc.html
+│       ├── control_1_trimmed_2_val_2_fastqc.zip
+│       ├── saccharin_1_trimmed_1_val_1_fastqc.html
+│       ├── saccharin_1_trimmed_1_val_1_fastqc.zip
+│       ├── saccharin_1_trimmed_2_val_2_fastqc.html
+│       └── saccharin_1_trimmed_2_val_2_fastqc.zip
+├── fq_lint
+│   ├── raw
+│   │   ├── control_1.fq_lint.txt
+│   │   └── saccharin_1.fq_lint.txt
+│   └── trimmed
+│       ├── control_1.fq_lint.txt
+│       └── saccharin_1.fq_lint.txt
+├── multiqc
+│   └── bowtie2_salmon
+│       ├── multiqc_report_data
+│       ├── multiqc_report.html
+│       └── multiqc_report_plots
+├── pipeline_info
+│   ├── execution_report_2026-05-15_15-41-45.html
+│   ├── execution_timeline_2026-05-15_15-41-45.html
+│   ├── execution_trace_2026-05-15_15-41-45.txt
+│   ├── nf_core_rnaseq_software_mqc_versions.yml
+│   ├── params_2026-05-15_15-42-05.json
+│   └── pipeline_dag_2026-05-15_15-41-45.html
+└── trimgalore
+    ├── control_1_trimmed_1.fastq.gz_trimming_report.txt
+    ├── control_1_trimmed_2.fastq.gz_trimming_report.txt
+    ├── saccharin_1_trimmed_1.fastq.gz_trimming_report.txt
+    └── saccharin_1_trimmed_2.fastq.gz_trimming_report.txt</code></pre>
+
 </div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="sanity-checks.html#cb21-1" tabindex="-1"></a><span class="fu">head</span>(count_genes[, <span class="dv">1</span><span class="sc">:</span><span class="fu">min</span>(<span class="dv">6</span>, <span class="fu">ncol</span>(count_genes))])</span></code></pre></div>
-<pre><code>##         C1   C2   C3 sac1 sac2 sac3
-## b0001    0    0    1    1    0    0
-## b0002 2754 2375 8666 5901 4451 6523
-## b0003 1085  899 4300 1882 1410 2199
-## b0004 1851 1484 7284 2973 2182 3516
-## b0005    4    4    3   15    9    5
-## b0006  250  222 1011  269  288  439</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="sanity-checks.html#cb23-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">hist</span>(</span>
-<span id="cb23-2"><a href="sanity-checks.html#cb23-2" tabindex="-1"></a>  <span class="fu">as.numeric</span>(count_genes[<span class="dv">1</span>, ]),</span>
-<span id="cb23-3"><a href="sanity-checks.html#cb23-3" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;Raw counts —&quot;</span>, <span class="fu">rownames</span>(count_genes)[<span class="dv">1</span>]),</span>
-<span id="cb23-4"><a href="sanity-checks.html#cb23-4" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Raw count&quot;</span>,</span>
-<span id="cb23-5"><a href="sanity-checks.html#cb23-5" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
-<span id="cb23-6"><a href="sanity-checks.html#cb23-6" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">FALSE</span></span>
-<span id="cb23-7"><a href="sanity-checks.html#cb23-7" tabindex="-1"></a>)</span>
-<span id="cb23-8"><a href="sanity-checks.html#cb23-8" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="sanity-checks.html#cb23-9" tabindex="-1"></a><span class="fu">plot</span>(p, <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
-<span id="cb23-10"><a href="sanity-checks.html#cb23-10" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;Raw counts —&quot;</span>, <span class="fu">rownames</span>(count_genes)[<span class="dv">1</span>]),</span>
-<span id="cb23-11"><a href="sanity-checks.html#cb23-11" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Raw count&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/check-raw-0-1.png" alt="" width="672" /></p>
-<div class="boxy">
-<p>Raw <em>E. coli</em> RNA-seq counts are typically in the thousands to millions range (library sizes ~5–50 M reads for bacterial experiments).</p>
-<p>A highly right-skewed distribution is expected and correct at this stage.</p>
 </div>
-</div>
-<div id="pre-filtering-low-count-genes" class="section level3 hasAnchor" number="3.6.2">
-<h3><span class="header-section-number">3.6.2</span> Pre-filtering Low-count Genes<a href="sanity-checks.html#pre-filtering-low-count-genes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Genes with very few counts across all samples carry no statistical power and inflate the multiple testing burden. We remove genes that do not have at least 10 counts in a minimum number of samples (equal to the size of the smallest group, i.e., 3 replicates here).</p>
-<p><em>E. coli</em> has ~4,300 genes — after filtering you should retain the majority of them.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="sanity-checks.html#cb24-1" tabindex="-1"></a>smallestGroupSize <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">table</span>(samples_info<span class="sc">$</span>condition))</span>
-<span id="cb24-2"><a href="sanity-checks.html#cb24-2" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="sanity-checks.html#cb24-3" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(<span class="fu">counts</span>(dds) <span class="sc">&gt;=</span> <span class="dv">10</span>) <span class="sc">&gt;=</span> smallestGroupSize</span>
-<span id="cb24-4"><a href="sanity-checks.html#cb24-4" tabindex="-1"></a>dds  <span class="ot">&lt;-</span> dds[keep, ]</span>
-<span id="cb24-5"><a href="sanity-checks.html#cb24-5" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="sanity-checks.html#cb24-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes before filtering:&quot;</span>, <span class="fu">nrow</span>(<span class="fu">counts</span>(dds)) <span class="sc">+</span> <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Genes before filtering: 4523</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="sanity-checks.html#cb26-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes after  filtering:&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Genes after  filtering: 3698</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="sanity-checks.html#cb28-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes removed         :&quot;</span>, <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Genes removed         : 825</code></pre>
-</div>
-<div id="factor-order-and-reference-level" class="section level3 hasAnchor" number="3.6.3">
-<h3><span class="header-section-number">3.6.3</span> Factor Order and Reference Level<a href="sanity-checks.html#factor-order-and-reference-level" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The first factor level is always the reference (denominator) in <code>DESeq2</code> comparisons. Setting it explicitly ensures that fold changes are computed in the intended direction: <strong>treatment vs control</strong>, not the reverse.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="sanity-checks.html#cb30-1" tabindex="-1"></a>dds<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">relevel</span>(dds<span class="sc">$</span>condition, <span class="at">ref =</span> <span class="st">&quot;control&quot;</span>)</span>
-<span id="cb30-2"><a href="sanity-checks.html#cb30-2" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="sanity-checks.html#cb30-3" tabindex="-1"></a><span class="fu">levels</span>(dds<span class="sc">$</span>condition)</span></code></pre></div>
-<pre><code>## [1] &quot;control&quot;   &quot;treatment&quot;</code></pre>
-<div style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;">
-<p><strong>📌 Remember:</strong> The reference level determines the direction of fold changes. A positive log2FC means higher expression in the treatment relative to control.</p>
-</div>
-</div>
-</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="creating-the-deseqdataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="exploratory-data-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="data-processing-using-the-nf-corernaseq-pipeline.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="quality-control.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
