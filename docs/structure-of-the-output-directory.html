@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.10 Detecting Outliers | Introduction to Transcriptomics</title>
-  <meta name="description" content="4.10 Detecting Outliers | Introduction to Transcriptomics" />
+  <title>3.1 Structure of the output directory | Introduction to Transcriptomics</title>
+  <meta name="description" content="3.1 Structure of the output directory | Introduction to Transcriptomics" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.10 Detecting Outliers | Introduction to Transcriptomics" />
+  <meta property="og:title" content="3.1 Structure of the output directory | Introduction to Transcriptomics" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.10 Detecting Outliers | Introduction to Transcriptomics" />
+  <meta name="twitter:title" content="3.1 Structure of the output directory | Introduction to Transcriptomics" />
   
   
   
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="principal-component-analysis-pca.html"/>
-<link rel="next" href="top-variable-genes-heatmap.html"/>
+<link rel="prev" href="running-the-nf-corernaseq-pipeline-v3.23.html"/>
+<link rel="next" href="interpretation-of-rnaseq-processing-results-using-the-multiqc-report.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -271,28 +271,134 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="detecting-outliers" class="section level2 hasAnchor" number="4.10">
-<h2><span class="header-section-number">4.10</span> Detecting Outliers<a href="detecting-outliers.html#detecting-outliers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The PCA above uses only the top 500 most variable genes (DESeq2 default). Here we run PCA on the full VST matrix and inspect a scree plot and biplot to assess whether any single sample drives an unusual amount of variance, a common sign of a technical outlier.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="detecting-outliers.html#cb38-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
-<span id="cb38-2"><a href="detecting-outliers.html#cb38-2" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="detecting-outliers.html#cb38-3" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb38-4"><a href="detecting-outliers.html#cb38-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-1.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="detecting-outliers.html#cb39-1" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb39-2"><a href="detecting-outliers.html#cb39-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-2.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="detecting-outliers.html#cb40-1" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_full, <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb40-2"><a href="detecting-outliers.html#cb40-2" tabindex="-1"></a>                <span class="at">title =</span> <span class="st">&quot;Biplot — genes and samples&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-3.png" alt="" width="672" /></p>
+<div id="structure-of-the-output-directory" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Structure of the output directory<a href="structure-of-the-output-directory.html#structure-of-the-output-directory" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The results of the pipeline run will be saved in <code>results/nfcore_rnaseq_processing_subsampled</code>. The top-level folder structure is as follows:</p>
+<pre><code>.
+├── bowtie2_salmon
+├── fastqc
+├── fq_lint
+├── multiqc
+├── pipeline_info
+└── trimgalore</code></pre>
+<p>The detailed structure of the output directory:</p>
+<pre><code>.
+├── bowtie2_salmon
+│   ├── control_1
+│   │   ├── aux_info
+│   │   ├── cmd_info.json
+│   │   ├── libParams
+│   │   ├── logs
+│   │   ├── quant.genes.sf
+│   │   └── quant.sf
+│   ├── control_1.markdup.sorted.bam
+│   ├── control_1.markdup.sorted.bam.bai
+│   ├── deseq2_qc
+│   │   ├── deseq2.dds.RData
+│   │   ├── deseq2.pca.vals.txt
+│   │   ├── deseq2.plots.pdf
+│   │   ├── deseq2.sample.dists.txt
+│   │   ├── R_sessionInfo.log
+│   │   └── size_factors
+│   ├── log
+│   │   ├── control_1.bowtie2.log
+│   │   └── saccharin_1.bowtie2.log
+│   ├── picard_metrics
+│   │   ├── control_1.markdup.sorted.MarkDuplicates.metrics.txt
+│   │   └── saccharin_1.markdup.sorted.MarkDuplicates.metrics.txt
+│   ├── saccharin_1
+│   │   ├── aux_info
+│   │   ├── cmd_info.json
+│   │   ├── libParams
+│   │   ├── logs
+│   │   ├── quant.genes.sf
+│   │   └── quant.sf
+│   ├── saccharin_1.markdup.sorted.bam
+│   ├── saccharin_1.markdup.sorted.bam.bai
+│   ├── salmon.merged.gene_counts_length_scaled.tsv
+│   ├── salmon.merged.gene_counts_scaled.tsv
+│   ├── salmon.merged.gene_counts.tsv
+│   ├── salmon.merged.gene_lengths.tsv
+│   ├── salmon.merged.gene.SummarizedExperiment.rds
+│   ├── salmon.merged.gene_tpm.tsv
+│   ├── salmon.merged.transcript_counts.tsv
+│   ├── salmon.merged.transcript_lengths.tsv
+│   ├── salmon.merged.transcript.SummarizedExperiment.rds
+│   ├── salmon.merged.transcript_tpm.tsv
+│   ├── salmon.merged.tx2gene.tsv
+│   ├── samtools_stats
+│   │   ├── control_1.markdup.sorted.bam.flagstat
+│   │   ├── control_1.markdup.sorted.bam.idxstats
+│   │   ├── control_1.markdup.sorted.bam.stats
+│   │   ├── control_1.sorted.bam.flagstat
+│   │   ├── control_1.sorted.bam.idxstats
+│   │   ├── control_1.sorted.bam.stats
+│   │   ├── saccharin_1.markdup.sorted.bam.flagstat
+│   │   ├── saccharin_1.markdup.sorted.bam.idxstats
+│   │   ├── saccharin_1.markdup.sorted.bam.stats
+│   │   ├── saccharin_1.sorted.bam.flagstat
+│   │   ├── saccharin_1.sorted.bam.idxstats
+│   │   └── saccharin_1.sorted.bam.stats
+│   └── stringtie
+│       ├── control_1.ballgown
+│       ├── control_1.coverage.gtf
+│       ├── control_1.gene.abundance.txt
+│       ├── control_1.transcripts.gtf
+│       ├── saccharin_1.ballgown
+│       ├── saccharin_1.coverage.gtf
+│       ├── saccharin_1.gene.abundance.txt
+│       └── saccharin_1.transcripts.gtf
+├── fastqc
+│   ├── raw
+│   │   ├── control_1_raw_1_fastqc.html
+│   │   ├── control_1_raw_1_fastqc.zip
+│   │   ├── control_1_raw_2_fastqc.html
+│   │   ├── control_1_raw_2_fastqc.zip
+│   │   ├── saccharin_1_raw_1_fastqc.html
+│   │   ├── saccharin_1_raw_1_fastqc.zip
+│   │   ├── saccharin_1_raw_2_fastqc.html
+│   │   └── saccharin_1_raw_2_fastqc.zip
+│   └── trim
+│       ├── control_1_trimmed_1_val_1_fastqc.html
+│       ├── control_1_trimmed_1_val_1_fastqc.zip
+│       ├── control_1_trimmed_2_val_2_fastqc.html
+│       ├── control_1_trimmed_2_val_2_fastqc.zip
+│       ├── saccharin_1_trimmed_1_val_1_fastqc.html
+│       ├── saccharin_1_trimmed_1_val_1_fastqc.zip
+│       ├── saccharin_1_trimmed_2_val_2_fastqc.html
+│       └── saccharin_1_trimmed_2_val_2_fastqc.zip
+├── fq_lint
+│   ├── raw
+│   │   ├── control_1.fq_lint.txt
+│   │   └── saccharin_1.fq_lint.txt
+│   └── trimmed
+│       ├── control_1.fq_lint.txt
+│       └── saccharin_1.fq_lint.txt
+├── multiqc
+│   └── bowtie2_salmon
+│       ├── multiqc_report_data
+│       ├── multiqc_report.html
+│       └── multiqc_report_plots
+├── pipeline_info
+│   ├── execution_report_2026-05-15_15-41-45.html
+│   ├── execution_timeline_2026-05-15_15-41-45.html
+│   ├── execution_trace_2026-05-15_15-41-45.txt
+│   ├── nf_core_rnaseq_software_mqc_versions.yml
+│   ├── params_2026-05-15_15-42-05.json
+│   └── pipeline_dag_2026-05-15_15-41-45.html
+└── trimgalore
+    ├── control_1_trimmed_1.fastq.gz_trimming_report.txt
+    ├── control_1_trimmed_2.fastq.gz_trimming_report.txt
+    ├── saccharin_1_trimmed_1.fastq.gz_trimming_report.txt
+    └── saccharin_1_trimmed_2.fastq.gz_trimming_report.txt</code></pre>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="principal-component-analysis-pca.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="top-variable-genes-heatmap.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="running-the-nf-corernaseq-pipeline-v3.23.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="interpretation-of-rnaseq-processing-results-using-the-multiqc-report.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

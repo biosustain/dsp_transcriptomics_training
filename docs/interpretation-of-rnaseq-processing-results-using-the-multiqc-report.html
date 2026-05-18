@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.10 Detecting Outliers | Introduction to Transcriptomics</title>
-  <meta name="description" content="4.10 Detecting Outliers | Introduction to Transcriptomics" />
+  <title>3.2 Interpretation of RNAseq processing results using the multiQC report | Introduction to Transcriptomics</title>
+  <meta name="description" content="3.2 Interpretation of RNAseq processing results using the multiQC report | Introduction to Transcriptomics" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.10 Detecting Outliers | Introduction to Transcriptomics" />
+  <meta property="og:title" content="3.2 Interpretation of RNAseq processing results using the multiQC report | Introduction to Transcriptomics" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.10 Detecting Outliers | Introduction to Transcriptomics" />
+  <meta name="twitter:title" content="3.2 Interpretation of RNAseq processing results using the multiQC report | Introduction to Transcriptomics" />
   
   
   
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="principal-component-analysis-pca.html"/>
-<link rel="next" href="top-variable-genes-heatmap.html"/>
+<link rel="prev" href="structure-of-the-output-directory.html"/>
+<link rel="next" href="quality-control.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -271,28 +271,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="detecting-outliers" class="section level2 hasAnchor" number="4.10">
-<h2><span class="header-section-number">4.10</span> Detecting Outliers<a href="detecting-outliers.html#detecting-outliers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The PCA above uses only the top 500 most variable genes (DESeq2 default). Here we run PCA on the full VST matrix and inspect a scree plot and biplot to assess whether any single sample drives an unusual amount of variance, a common sign of a technical outlier.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="detecting-outliers.html#cb38-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
-<span id="cb38-2"><a href="detecting-outliers.html#cb38-2" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="detecting-outliers.html#cb38-3" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb38-4"><a href="detecting-outliers.html#cb38-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-1.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="detecting-outliers.html#cb39-1" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb39-2"><a href="detecting-outliers.html#cb39-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-2.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="detecting-outliers.html#cb40-1" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_full, <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb40-2"><a href="detecting-outliers.html#cb40-2" tabindex="-1"></a>                <span class="at">title =</span> <span class="st">&quot;Biplot — genes and samples&quot;</span>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-3.png" alt="" width="672" /></p>
+<div id="interpretation-of-rnaseq-processing-results-using-the-multiqc-report" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Interpretation of RNAseq processing results using the multiQC report<a href="interpretation-of-rnaseq-processing-results-using-the-multiqc-report.html#interpretation-of-rnaseq-processing-results-using-the-multiqc-report" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The nf-core/rnaseq pipeline generates a multiQC report which consolidates all quality control (QC) metrics from the pipeline run.<br />
+We will be analyzing the <a href="https://github.com/biosustain/dsp_transcriptomics_training/tree/main/results/multiqc_nfcore_rnaseq_full_dataset/multiQC_Ecoli_sac_ctrl_deDios_2025_full_dataset.html">multiQC report from processing the entire dataset</a> - which we have done prior to this course - rather than the one generated in your test run.</p>
+<p>The multiQC reports summarizes important QC metrics from RNAseq data processing. This includes for example:</p>
+<ul>
+<li>Tabular overview of general statistics</li>
+<li>QC metrics from FastQC and other software tools, e.g. read quality scores, GC and adaptor content before and after read trimming, % duplication, % read alignmnt, etc</li>
+<li>PCA plot and Euclidean distance heatmap</li>
+<li>Versions of the software tools used (see the end of the report)</li>
+</ul>
+<p>Please take a few minutes to inspect the multiQC report, list your observations and questions, and try to find explanations for the observations made. You can use the left panel for navigating the report. We will discuss your findings and questions afterwards.</p>
+<div class="boxy">
+<p>The three control samples are <code>C1</code>, <code>C2</code> and <code>C3</code>.<br />
+The three saccharin treatment samples are <code>sac1</code>, <code>sac2</code>and <code>sac3</code>.</p>
 </div>
+<p>For example, you could pay attention to the details of the following:</p>
+<div class="question">
+<p><strong>❓ Question:</strong> How is are the per base quality scores?</p>
+</div>
+<ul>
+<li>see <code>Sequence Quality Histograms before and after trimming</code></li>
+</ul>
+<div class="question">
+<p><strong>❓ Question:</strong> There is a maximum of 85% aligned reads? What could be the reason(s)?</p>
+</div>
+<ul>
+<li>see the <code>General Statistics</code> section</li>
+</ul>
+<div class="question">
+<p><strong>❓ Question:</strong> Why is the percentage of aligned reads lower in C1 and C2 compared o all other samples?</p>
+</div>
+<ul>
+<li>see the <code>General Statistics</code> section, <code>Per Sequence GC Content before and after trimming</code> and <code>Top overrepresented sequences</code>and <code>Adaptor content</code></li>
+</ul>
+<div class="question">
+<p><strong>❓ Question:</strong> Insepct the duplication level of reads. What could duplication stem from and how to treat it?</p>
+</div>
+<ul>
+<li>see the <code>General Statistics</code> section, <code>Fastq Sequence Counts</code>, <code>Picard Mark duplicates</code></li>
+</ul>
+<div class="question">
+<p><strong>❓ Question:</strong> - How do the samples cluster? (see <code>BOWTIE2_SALMON DESeq2 PCA plot and sample similarity</code>)</p>
+</div>
+
+</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="principal-component-analysis-pca.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="top-variable-genes-heatmap.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="structure-of-the-output-directory.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="quality-control.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

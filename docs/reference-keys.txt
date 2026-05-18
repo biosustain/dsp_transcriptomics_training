@@ -6,6 +6,7 @@ initial-checks
 data-processing-using-the-nf-corernaseq-pipeline
 running-the-nf-corernaseq-pipeline-v3.23.0
 structure-of-the-output-directory
+interpretation-of-rnaseq-processing-results-using-the-multiqc-report
 quality-control
 setup-the-environment
 getting-the-metadata
@@ -36,6 +37,8 @@ heatmap-of-significant-genes
 saving-results
 summary-1
 gene-functional-enrichment-analysis
+why-two-packages
+why-kegg
 load-libraries
 load-results-from-differential-expression-analysis
 build-and-cache-kegg-gmt
@@ -46,6 +49,7 @@ run-ora
 filter-and-inspect-significant-pathways
 bar-plot-enriched-pathways
 lollipop-plot-gene-hits-per-pathway
+critical-interpretation-spurious-hits
 part-2-gene-set-enrichment-analysis-gsea
 prepare-the-ranked-gene-list
 convert-gmt-to-fgsea-format
