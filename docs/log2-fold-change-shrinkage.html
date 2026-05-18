@@ -295,11 +295,11 @@ are used exclusively for <strong>ranking and visualisation</strong> (volcano plo
 <p>For a treatment vs control design in <em>E. coli</em>, <code>apeglm</code> is the right choice.
 See <a href="https://doi.org/10.1093/bioinformatics/btz585">Zhu <em>et al.</em>, 2019</a> for benchmarks.</p>
 </div>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="log2-fold-change-shrinkage.html#cb58-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
-<span id="cb58-2"><a href="log2-fold-change-shrinkage.html#cb58-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
-<span id="cb58-3"><a href="log2-fold-change-shrinkage.html#cb58-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
-<span id="cb58-4"><a href="log2-fold-change-shrinkage.html#cb58-4" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="log2-fold-change-shrinkage.html#cb58-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="log2-fold-change-shrinkage.html#cb61-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
+<span id="cb61-2"><a href="log2-fold-change-shrinkage.html#cb61-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
+<span id="cb61-3"><a href="log2-fold-change-shrinkage.html#cb61-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
+<span id="cb61-4"><a href="log2-fold-change-shrinkage.html#cb61-4" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="log2-fold-change-shrinkage.html#cb61-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk)</span></code></pre></div>
 <pre><code>## 
 ## out of 3698 with nonzero total read count
 ## adjusted p-value &lt; 0.1

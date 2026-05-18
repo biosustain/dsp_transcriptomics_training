@@ -275,11 +275,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">5.2</span> Extracting Results<a href="extracting-results.html#extracting-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><code>results()</code> extracts the Wald test output for a given contrast. By default DESeq2 applies <strong>independent filtering</strong> — it removes genes with very low mean counts before multiple testing correction, which increases power to detect DE genes at a given FDR threshold.</p>
 <p>We set <code>alpha = 0.05</code> to optimise filtering for a 5% FDR cutoff.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="extracting-results.html#cb56-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds,</span>
-<span id="cb56-2"><a href="extracting-results.html#cb56-2" tabindex="-1"></a>               <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;control&quot;</span>),</span>
-<span id="cb56-3"><a href="extracting-results.html#cb56-3" tabindex="-1"></a>               <span class="at">alpha    =</span> <span class="fl">0.05</span>)</span>
-<span id="cb56-4"><a href="extracting-results.html#cb56-4" tabindex="-1"></a></span>
-<span id="cb56-5"><a href="extracting-results.html#cb56-5" tabindex="-1"></a><span class="fu">summary</span>(res)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="extracting-results.html#cb59-1" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds,</span>
+<span id="cb59-2"><a href="extracting-results.html#cb59-2" tabindex="-1"></a>               <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;control&quot;</span>),</span>
+<span id="cb59-3"><a href="extracting-results.html#cb59-3" tabindex="-1"></a>               <span class="at">alpha    =</span> <span class="fl">0.05</span>)</span>
+<span id="cb59-4"><a href="extracting-results.html#cb59-4" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="extracting-results.html#cb59-5" tabindex="-1"></a><span class="fu">summary</span>(res)</span></code></pre></div>
 <pre><code>## 
 ## out of 3698 with nonzero total read count
 ## adjusted p-value &lt; 0.05

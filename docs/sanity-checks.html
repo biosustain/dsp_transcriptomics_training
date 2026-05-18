@@ -282,26 +282,194 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="remember">
 <p><strong>📌 Remember:</strong> Always verify your input before proceeding.</p>
 </div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="sanity-checks.html#cb20-1" tabindex="-1"></a><span class="fu">head</span>(count_genes[, <span class="dv">1</span><span class="sc">:</span><span class="fu">min</span>(<span class="dv">6</span>, <span class="fu">ncol</span>(count_genes))])</span></code></pre></div>
-<pre><code>##         C1   C2   C3 sac1 sac2 sac3
-## b0001    0    0    1    1    0    0
-## b0002 2754 2375 8666 5901 4451 6523
-## b0003 1085  899 4300 1882 1410 2199
-## b0004 1851 1484 7284 2973 2182 3516
-## b0005    4    4    3   15    9    5
-## b0006  250  222 1011  269  288  439</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="sanity-checks.html#cb22-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">hist</span>(</span>
-<span id="cb22-2"><a href="sanity-checks.html#cb22-2" tabindex="-1"></a>  <span class="fu">as.numeric</span>(count_genes[<span class="dv">1</span>, ]),</span>
-<span id="cb22-3"><a href="sanity-checks.html#cb22-3" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;Raw counts —&quot;</span>, <span class="fu">rownames</span>(count_genes)[<span class="dv">1</span>]),</span>
-<span id="cb22-4"><a href="sanity-checks.html#cb22-4" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Raw count&quot;</span>,</span>
-<span id="cb22-5"><a href="sanity-checks.html#cb22-5" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
-<span id="cb22-6"><a href="sanity-checks.html#cb22-6" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">FALSE</span></span>
-<span id="cb22-7"><a href="sanity-checks.html#cb22-7" tabindex="-1"></a>)</span>
-<span id="cb22-8"><a href="sanity-checks.html#cb22-8" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="sanity-checks.html#cb22-9" tabindex="-1"></a><span class="fu">plot</span>(p, <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
-<span id="cb22-10"><a href="sanity-checks.html#cb22-10" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;Raw counts —&quot;</span>, <span class="fu">rownames</span>(count_genes)[<span class="dv">1</span>]),</span>
-<span id="cb22-11"><a href="sanity-checks.html#cb22-11" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Raw count&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="sanity-checks.html#cb20-1" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
+<span id="cb20-2"><a href="sanity-checks.html#cb20-2" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="sanity-checks.html#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="sanity-checks.html#cb20-4" tabindex="-1"></a><span class="fu">kable</span>(count_genes[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, ],</span>
+<span id="cb20-5"><a href="sanity-checks.html#cb20-5" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">&quot;Raw count matrix — first 6 genes&quot;</span>,</span>
+<span id="cb20-6"><a href="sanity-checks.html#cb20-6" tabindex="-1"></a>      <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">big.mark =</span> <span class="st">&quot;,&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="sanity-checks.html#cb20-7" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>),</span>
+<span id="cb20-8"><a href="sanity-checks.html#cb20-8" tabindex="-1"></a>                <span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:check-raw-0">Table 4.1: </span><span id="tab:check-raw-0">Table 4.2: </span>Raw count matrix — first 6 genes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+C1
+</th>
+<th style="text-align:right;">
+C2
+</th>
+<th style="text-align:right;">
+C3
+</th>
+<th style="text-align:right;">
+sac1
+</th>
+<th style="text-align:right;">
+sac2
+</th>
+<th style="text-align:right;">
+sac3
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+b0001
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+b0002
+</td>
+<td style="text-align:right;">
+2,754
+</td>
+<td style="text-align:right;">
+2,375
+</td>
+<td style="text-align:right;">
+8,666
+</td>
+<td style="text-align:right;">
+5,901
+</td>
+<td style="text-align:right;">
+4,451
+</td>
+<td style="text-align:right;">
+6,523
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+b0003
+</td>
+<td style="text-align:right;">
+1,085
+</td>
+<td style="text-align:right;">
+899
+</td>
+<td style="text-align:right;">
+4,300
+</td>
+<td style="text-align:right;">
+1,882
+</td>
+<td style="text-align:right;">
+1,410
+</td>
+<td style="text-align:right;">
+2,199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+b0004
+</td>
+<td style="text-align:right;">
+1,851
+</td>
+<td style="text-align:right;">
+1,484
+</td>
+<td style="text-align:right;">
+7,284
+</td>
+<td style="text-align:right;">
+2,973
+</td>
+<td style="text-align:right;">
+2,182
+</td>
+<td style="text-align:right;">
+3,516
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+b0005
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+b0006
+</td>
+<td style="text-align:right;">
+250
+</td>
+<td style="text-align:right;">
+222
+</td>
+<td style="text-align:right;">
+1,011
+</td>
+<td style="text-align:right;">
+269
+</td>
+<td style="text-align:right;">
+288
+</td>
+<td style="text-align:right;">
+439
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="sanity-checks.html#cb21-1" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">colSums</span>(count_genes),</span>
+<span id="cb21-2"><a href="sanity-checks.html#cb21-2" tabindex="-1"></a>        <span class="at">main   =</span> <span class="st">&quot;Library sizes (total counts per sample)&quot;</span>,</span>
+<span id="cb21-3"><a href="sanity-checks.html#cb21-3" tabindex="-1"></a>        <span class="at">ylab   =</span> <span class="st">&quot;Total raw counts&quot;</span>,</span>
+<span id="cb21-4"><a href="sanity-checks.html#cb21-4" tabindex="-1"></a>        <span class="at">xlab   =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-5"><a href="sanity-checks.html#cb21-5" tabindex="-1"></a>        <span class="at">col    =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
+<span id="cb21-6"><a href="sanity-checks.html#cb21-6" tabindex="-1"></a>        <span class="at">las    =</span> <span class="dv">2</span>,</span>
+<span id="cb21-7"><a href="sanity-checks.html#cb21-7" tabindex="-1"></a>        <span class="at">names.arg =</span> <span class="fu">colnames</span>(count_genes))</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/check-raw-0-1.png" alt="" width="672" /></p>
+<div class="tip">
+<p><strong>💡 Tip:</strong> scipen = 999 is a penalty against scientific notation. R uses it to decide when to switch between fixed (150000) and scientific (1.5e+05) format. The default is scipen = 0 — by setting it to 999 you make the penalty so high that R almost never switches to scientific notation, preferring plain numbers instead.</p>
+</div>
 <div class="boxy">
 <p>Raw <em>E. coli</em> RNA-seq counts are typically in the thousands to millions range (library sizes ~5–50 M reads for bacterial experiments).</p>
 <p>A highly right-skewed distribution is expected and correct at this stage.</p>
@@ -311,24 +479,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">4.6.2</span> Pre-filtering Low-count Genes<a href="sanity-checks.html#pre-filtering-low-count-genes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Genes with very few counts across all samples carry no statistical power and inflate the multiple testing burden. We remove genes that do not have at least 10 counts in a minimum number of samples (equal to the size of the smallest group, i.e., 3 replicates here).</p>
 <p><em>E. coli</em> has ~4,300 genes — after filtering you should retain the majority of them.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="sanity-checks.html#cb23-1" tabindex="-1"></a>smallestGroupSize <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">table</span>(samples_info<span class="sc">$</span>condition))</span>
-<span id="cb23-2"><a href="sanity-checks.html#cb23-2" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="sanity-checks.html#cb23-3" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(<span class="fu">counts</span>(dds) <span class="sc">&gt;=</span> <span class="dv">10</span>) <span class="sc">&gt;=</span> smallestGroupSize</span>
-<span id="cb23-4"><a href="sanity-checks.html#cb23-4" tabindex="-1"></a>dds  <span class="ot">&lt;-</span> dds[keep, ]</span>
-<span id="cb23-5"><a href="sanity-checks.html#cb23-5" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="sanity-checks.html#cb23-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes before filtering:&quot;</span>, <span class="fu">nrow</span>(<span class="fu">counts</span>(dds)) <span class="sc">+</span> <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="sanity-checks.html#cb22-1" tabindex="-1"></a>smallestGroupSize <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">table</span>(samples_info<span class="sc">$</span>condition))</span>
+<span id="cb22-2"><a href="sanity-checks.html#cb22-2" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="sanity-checks.html#cb22-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Smallest group size   :&quot;</span>, smallestGroupSize, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Smallest group size   : 3</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="sanity-checks.html#cb24-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Filtering threshold   : at least 10 counts in&quot;</span>, smallestGroupSize, <span class="st">&quot;or more samples</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Filtering threshold   : at least 10 counts in 3 or more samples</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="sanity-checks.html#cb26-1" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(<span class="fu">counts</span>(dds) <span class="sc">&gt;=</span> <span class="dv">10</span>) <span class="sc">&gt;=</span> smallestGroupSize</span>
+<span id="cb26-2"><a href="sanity-checks.html#cb26-2" tabindex="-1"></a>dds  <span class="ot">&lt;-</span> dds[keep, ]</span>
+<span id="cb26-3"><a href="sanity-checks.html#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="sanity-checks.html#cb26-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes before filtering:&quot;</span>, <span class="fu">nrow</span>(<span class="fu">counts</span>(dds)) <span class="sc">+</span> <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Genes before filtering: 4523</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="sanity-checks.html#cb25-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes after  filtering:&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="sanity-checks.html#cb28-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes after  filtering:&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Genes after  filtering: 3698</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="sanity-checks.html#cb27-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes removed         :&quot;</span>, <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="sanity-checks.html#cb30-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Genes removed         :&quot;</span>, <span class="fu">sum</span>(<span class="sc">!</span>keep), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Genes removed         : 825</code></pre>
 </div>
 <div id="factor-order-and-reference-level" class="section level3 hasAnchor" number="4.6.3">
 <h3><span class="header-section-number">4.6.3</span> Factor Order and Reference Level<a href="sanity-checks.html#factor-order-and-reference-level" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The first factor level is always the reference (denominator) in <code>DESeq2</code> comparisons. Setting it explicitly ensures that fold changes are computed in the intended direction: <strong>treatment vs control</strong>, not the reverse.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="sanity-checks.html#cb29-1" tabindex="-1"></a>dds<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">relevel</span>(dds<span class="sc">$</span>condition, <span class="at">ref =</span> <span class="st">&quot;control&quot;</span>)</span>
-<span id="cb29-2"><a href="sanity-checks.html#cb29-2" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="sanity-checks.html#cb29-3" tabindex="-1"></a><span class="fu">levels</span>(dds<span class="sc">$</span>condition)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="sanity-checks.html#cb32-1" tabindex="-1"></a>dds<span class="sc">$</span>condition <span class="ot">&lt;-</span> <span class="fu">relevel</span>(dds<span class="sc">$</span>condition, <span class="at">ref =</span> <span class="st">&quot;control&quot;</span>)</span>
+<span id="cb32-2"><a href="sanity-checks.html#cb32-2" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="sanity-checks.html#cb32-3" tabindex="-1"></a><span class="fu">levels</span>(dds<span class="sc">$</span>condition)</span></code></pre></div>
 <pre><code>## [1] &quot;control&quot;   &quot;treatment&quot;</code></pre>
 <div style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;">
 <p><strong>📌 Remember:</strong> The reference level determines the direction of fold changes. A positive log2FC means higher expression in the treatment relative to control.</p>

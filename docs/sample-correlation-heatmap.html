@@ -278,27 +278,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="boxy">
 <p>VST removes this mean–variance dependence, making distances meaningful across the full expression range (<a href="https://doi.org/10.1186/gb-2010-11-10-r106">Anders &amp; Huber, 2010</a>).</p>
 </div>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="sample-correlation-heatmap.html#cb34-1" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> <span class="fu">varianceStabilizingTransformation</span>(dds, <span class="at">blind =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="sample-correlation-heatmap.html#cb37-1" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> <span class="fu">varianceStabilizingTransformation</span>(dds, <span class="at">blind =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <div class="boxy">
 <p><strong><code>blind = TRUE</code></strong>,the VST is computed ignoring the experimental design. This is recommended for QC and exploratory analysis, where you want an unbiased view of sample similarity.</p>
 <p>Use <code>blind = FALSE</code> only when the transformation is feeding into a model that already accounts for the design.</p>
 </div>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="sample-correlation-heatmap.html#cb35-1" tabindex="-1"></a>sampleDists      <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
-<span id="cb35-2"><a href="sample-correlation-heatmap.html#cb35-2" tabindex="-1"></a>sampleDistMatrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(sampleDists)</span>
-<span id="cb35-3"><a href="sample-correlation-heatmap.html#cb35-3" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="sample-correlation-heatmap.html#cb35-4" tabindex="-1"></a><span class="fu">rownames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">paste</span>(vsd<span class="sc">$</span>sample, vsd<span class="sc">$</span>condition, <span class="at">sep =</span> <span class="st">&quot; | &quot;</span>)</span>
-<span id="cb35-5"><a href="sample-correlation-heatmap.html#cb35-5" tabindex="-1"></a><span class="fu">colnames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(sampleDistMatrix)</span>
-<span id="cb35-6"><a href="sample-correlation-heatmap.html#cb35-6" tabindex="-1"></a></span>
-<span id="cb35-7"><a href="sample-correlation-heatmap.html#cb35-7" tabindex="-1"></a>colours <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&quot;Blues&quot;</span>)))(<span class="dv">255</span>)</span>
-<span id="cb35-8"><a href="sample-correlation-heatmap.html#cb35-8" tabindex="-1"></a></span>
-<span id="cb35-9"><a href="sample-correlation-heatmap.html#cb35-9" tabindex="-1"></a><span class="fu">pheatmap</span>(</span>
-<span id="cb35-10"><a href="sample-correlation-heatmap.html#cb35-10" tabindex="-1"></a>  sampleDistMatrix,</span>
-<span id="cb35-11"><a href="sample-correlation-heatmap.html#cb35-11" tabindex="-1"></a>  <span class="at">col          =</span> colours,</span>
-<span id="cb35-12"><a href="sample-correlation-heatmap.html#cb35-12" tabindex="-1"></a>  <span class="at">border_color =</span> <span class="cn">NA</span>,</span>
-<span id="cb35-13"><a href="sample-correlation-heatmap.html#cb35-13" tabindex="-1"></a>  <span class="at">main         =</span> <span class="st">&quot;Sample-to-sample distances (VST) — E. coli MG1655&quot;</span>,</span>
-<span id="cb35-14"><a href="sample-correlation-heatmap.html#cb35-14" tabindex="-1"></a>  <span class="at">fontsize     =</span> <span class="dv">10</span></span>
-<span id="cb35-15"><a href="sample-correlation-heatmap.html#cb35-15" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="sample-correlation-heatmap.html#cb38-1" tabindex="-1"></a>sampleDists      <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
+<span id="cb38-2"><a href="sample-correlation-heatmap.html#cb38-2" tabindex="-1"></a>sampleDistMatrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(sampleDists)</span>
+<span id="cb38-3"><a href="sample-correlation-heatmap.html#cb38-3" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="sample-correlation-heatmap.html#cb38-4" tabindex="-1"></a><span class="fu">rownames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">paste</span>(vsd<span class="sc">$</span>sample, vsd<span class="sc">$</span>condition, <span class="at">sep =</span> <span class="st">&quot; | &quot;</span>)</span>
+<span id="cb38-5"><a href="sample-correlation-heatmap.html#cb38-5" tabindex="-1"></a><span class="fu">colnames</span>(sampleDistMatrix) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(sampleDistMatrix)</span>
+<span id="cb38-6"><a href="sample-correlation-heatmap.html#cb38-6" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="sample-correlation-heatmap.html#cb38-7" tabindex="-1"></a>colours <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&quot;Blues&quot;</span>)))(<span class="dv">255</span>)</span>
+<span id="cb38-8"><a href="sample-correlation-heatmap.html#cb38-8" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="sample-correlation-heatmap.html#cb38-9" tabindex="-1"></a><span class="fu">pheatmap</span>(</span>
+<span id="cb38-10"><a href="sample-correlation-heatmap.html#cb38-10" tabindex="-1"></a>  sampleDistMatrix,</span>
+<span id="cb38-11"><a href="sample-correlation-heatmap.html#cb38-11" tabindex="-1"></a>  <span class="at">col          =</span> colours,</span>
+<span id="cb38-12"><a href="sample-correlation-heatmap.html#cb38-12" tabindex="-1"></a>  <span class="at">border_color =</span> <span class="cn">NA</span>,</span>
+<span id="cb38-13"><a href="sample-correlation-heatmap.html#cb38-13" tabindex="-1"></a>  <span class="at">main         =</span> <span class="st">&quot;Sample-to-sample distances (VST) — E. coli MG1655&quot;</span>,</span>
+<span id="cb38-14"><a href="sample-correlation-heatmap.html#cb38-14" tabindex="-1"></a>  <span class="at">fontsize     =</span> <span class="dv">10</span></span>
+<span id="cb38-15"><a href="sample-correlation-heatmap.html#cb38-15" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/correlation-heatmap-0-1.png" alt="" width="672" /></p>
+<div class="boxy">
+<p>The diagonal is always zero (a sample compared to itself). Dark = similar, light = distant. You want dark blocks on the diagonal within conditions and light blocks between conditions. If a replicate appeared in the wrong block, you would stop and investigate before running DESeq2.</p>
+</div>
 </div>
             </section>
 

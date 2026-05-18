@@ -277,54 +277,67 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="boxy">
 <table>
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col width="39%" />
+<col width="39%" />
+<col width="21%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Check</th>
 <th>Expected outcome</th>
+<th>This dataset</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Size factors ≈ 1.0 across samples</td>
 <td>Library sizes are balanced</td>
+<td>⚠️ C3 = 2.324 — corrected by normalisation</td>
 </tr>
 <tr class="even">
 <td>Boxplots of normalised counts overlap</td>
 <td>No extreme outlier samples</td>
+<td>✅ All samples overlap after normalisation</td>
 </tr>
 <tr class="odd">
 <td>Correlation heatmap: within-group distances &lt; between-group</td>
 <td>Replicates are reproducible</td>
+<td>✅ Clean block structure</td>
 </tr>
 <tr class="even">
 <td>PCA PC1 separates conditions</td>
 <td>Condition is the dominant source of variance</td>
+<td>✅ PC1 = 85.4%, perfect separation</td>
 </tr>
 <tr class="odd">
 <td>No isolated samples in PCA or heatmap</td>
 <td>No technical outliers</td>
+<td>⚠️ C3 offset on PC2 — consistent, not alarming</td>
 </tr>
 </tbody>
 </table>
 </div>
+<div style="font-size: 0.9em; color: grey;">
+<p><em>Overall the dataset passes QC. C3 shows a higher sequencing depth and mild
+transcriptional offset from C1/C2, visible consistently across all QC plots.
+This is within acceptable range for biological replicates and does not
+compromise the downstream analysis. We proceed to differential expression.</em></p>
+</div>
 <div class="important">
 <p><strong>⭐ Important:</strong> If any check fails, investigate the cause before running DESeq2. Proceeding with outlier samples or confounded designs will compromise all downstream results</p>
 </div>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="summary.html#cb43-1" tabindex="-1"></a><span class="co"># ── Export DDS for downstream analysis ────────────────────────────────────────</span></span>
-<span id="cb43-2"><a href="summary.html#cb43-2" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;rds&quot;</span>)</span>
-<span id="cb43-3"><a href="summary.html#cb43-3" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb43-4"><a href="summary.html#cb43-4" tabindex="-1"></a></span>
-<span id="cb43-5"><a href="summary.html#cb43-5" tabindex="-1"></a>dds_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;dds_ecoli_MG1655.rds&quot;</span>)</span>
-<span id="cb43-6"><a href="summary.html#cb43-6" tabindex="-1"></a><span class="fu">saveRDS</span>(dds, <span class="at">file =</span> dds_path)</span></code></pre></div>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="summary.html#cb44-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;✅ DDS saved to:&quot;</span>, dds_path, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb44-2"><a href="summary.html#cb44-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Dimensions  :&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;genes ×&quot;</span>, <span class="fu">ncol</span>(dds), <span class="st">&quot;samples</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb44-3"><a href="summary.html#cb44-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Conditions  :&quot;</span>, <span class="fu">paste</span>(<span class="fu">levels</span>(dds<span class="sc">$</span>condition), <span class="at">collapse =</span> <span class="st">&quot; vs &quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="summary.html#cb46-1" tabindex="-1"></a><span class="co"># ── Export DDS for downstream analysis ────────────────────────────────────────</span></span>
+<span id="cb46-2"><a href="summary.html#cb46-2" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;rds&quot;</span>)</span>
+<span id="cb46-3"><a href="summary.html#cb46-3" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb46-4"><a href="summary.html#cb46-4" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="summary.html#cb46-5" tabindex="-1"></a>dds_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;dds_ecoli_MG1655.rds&quot;</span>)</span>
+<span id="cb46-6"><a href="summary.html#cb46-6" tabindex="-1"></a><span class="fu">saveRDS</span>(dds, <span class="at">file =</span> dds_path)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="summary.html#cb47-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;✅ DDS saved to:&quot;</span>, dds_path, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb47-2"><a href="summary.html#cb47-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Dimensions  :&quot;</span>, <span class="fu">nrow</span>(dds), <span class="st">&quot;genes ×&quot;</span>, <span class="fu">ncol</span>(dds), <span class="st">&quot;samples</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb47-3"><a href="summary.html#cb47-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;   Conditions  :&quot;</span>, <span class="fu">paste</span>(<span class="fu">levels</span>(dds<span class="sc">$</span>condition), <span class="at">collapse =</span> <span class="st">&quot; vs &quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <!-- --------------------- Do not edit this and below ---------------------- -->
 <p></br></p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="summary.html#cb45-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="summary.html#cb48-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.4.1 (2024-06-14)
 ## Platform: aarch64-apple-darwin20
 ## Running under: macOS Sonoma 14.3

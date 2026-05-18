@@ -275,34 +275,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.11</span> Top Variable Genes Heatmap<a href="top-variable-genes-heatmap.html#top-variable-genes-heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Clustering the 50 most variable genes across samples provides a gene-level view of the separation between conditions. Genes that are truly differentially expressed should show clear block structure, high expression in one condition, low in the other. This heatmap also helps identify whether replicates within a condition are consistent with each other.</p>
 <p>Row-scaling (z-score per gene) is applied so that highly expressed genes do not visually dominate over lowly expressed ones.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="top-variable-genes-heatmap.html#cb41-1" tabindex="-1"></a>topVarGenes <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">order</span>(<span class="fu">rowVars</span>(<span class="fu">assay</span>(vsd)), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">50</span>)</span>
-<span id="cb41-2"><a href="top-variable-genes-heatmap.html#cb41-2" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="top-variable-genes-heatmap.html#cb41-3" tabindex="-1"></a>df_anno <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(vsd)[, <span class="st">&quot;condition&quot;</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
-<span id="cb41-4"><a href="top-variable-genes-heatmap.html#cb41-4" tabindex="-1"></a></span>
-<span id="cb41-5"><a href="top-variable-genes-heatmap.html#cb41-5" tabindex="-1"></a>anno_colors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">condition =</span> cols_condition)</span>
-<span id="cb41-6"><a href="top-variable-genes-heatmap.html#cb41-6" tabindex="-1"></a></span>
-<span id="cb41-7"><a href="top-variable-genes-heatmap.html#cb41-7" tabindex="-1"></a>colsHeat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#F7F7F7&quot;</span>, <span class="st">&quot;#92C5DE&quot;</span>, <span class="st">&quot;#0571B0&quot;</span>, <span class="st">&quot;#F4A582&quot;</span>, <span class="st">&quot;#CA0020&quot;</span>)</span>
-<span id="cb41-8"><a href="top-variable-genes-heatmap.html#cb41-8" tabindex="-1"></a></span>
-<span id="cb41-9"><a href="top-variable-genes-heatmap.html#cb41-9" tabindex="-1"></a>heat_plot <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
-<span id="cb41-10"><a href="top-variable-genes-heatmap.html#cb41-10" tabindex="-1"></a>  <span class="fu">assay</span>(vsd)[topVarGenes, ],</span>
-<span id="cb41-11"><a href="top-variable-genes-heatmap.html#cb41-11" tabindex="-1"></a>  <span class="at">cluster_cols             =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb41-12"><a href="top-variable-genes-heatmap.html#cb41-12" tabindex="-1"></a>  <span class="at">cluster_rows             =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb41-13"><a href="top-variable-genes-heatmap.html#cb41-13" tabindex="-1"></a>  <span class="at">scale                    =</span> <span class="st">&quot;row&quot;</span>,</span>
-<span id="cb41-14"><a href="top-variable-genes-heatmap.html#cb41-14" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
-<span id="cb41-15"><a href="top-variable-genes-heatmap.html#cb41-15" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
-<span id="cb41-16"><a href="top-variable-genes-heatmap.html#cb41-16" tabindex="-1"></a>  <span class="at">annotation_col           =</span> df_anno,</span>
-<span id="cb41-17"><a href="top-variable-genes-heatmap.html#cb41-17" tabindex="-1"></a>  <span class="at">annotation_colors        =</span> anno_colors,</span>
-<span id="cb41-18"><a href="top-variable-genes-heatmap.html#cb41-18" tabindex="-1"></a>  <span class="at">show_colnames            =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb41-19"><a href="top-variable-genes-heatmap.html#cb41-19" tabindex="-1"></a>  <span class="at">show_rownames            =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb41-20"><a href="top-variable-genes-heatmap.html#cb41-20" tabindex="-1"></a>  <span class="at">color                    =</span> <span class="fu">colorRampPalette</span>(colsHeat)(<span class="dv">255</span>),</span>
-<span id="cb41-21"><a href="top-variable-genes-heatmap.html#cb41-21" tabindex="-1"></a>  <span class="at">border_color             =</span> <span class="st">&quot;#f8edeb&quot;</span>,</span>
-<span id="cb41-22"><a href="top-variable-genes-heatmap.html#cb41-22" tabindex="-1"></a>  <span class="at">fontsize_row             =</span> <span class="dv">7</span>,</span>
-<span id="cb41-23"><a href="top-variable-genes-heatmap.html#cb41-23" tabindex="-1"></a>  <span class="at">main                     =</span> <span class="st">&quot;Top 50 variable genes — E. coli MG1655 (VST, row-scaled)&quot;</span></span>
-<span id="cb41-24"><a href="top-variable-genes-heatmap.html#cb41-24" tabindex="-1"></a>)</span>
-<span id="cb41-25"><a href="top-variable-genes-heatmap.html#cb41-25" tabindex="-1"></a></span>
-<span id="cb41-26"><a href="top-variable-genes-heatmap.html#cb41-26" tabindex="-1"></a>heat_plot</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="top-variable-genes-heatmap.html#cb44-1" tabindex="-1"></a>topVarGenes <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">order</span>(<span class="fu">rowVars</span>(<span class="fu">assay</span>(vsd)), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">50</span>)</span>
+<span id="cb44-2"><a href="top-variable-genes-heatmap.html#cb44-2" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="top-variable-genes-heatmap.html#cb44-3" tabindex="-1"></a>df_anno <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(vsd)[, <span class="st">&quot;condition&quot;</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
+<span id="cb44-4"><a href="top-variable-genes-heatmap.html#cb44-4" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="top-variable-genes-heatmap.html#cb44-5" tabindex="-1"></a>anno_colors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">condition =</span> cols_condition)</span>
+<span id="cb44-6"><a href="top-variable-genes-heatmap.html#cb44-6" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="top-variable-genes-heatmap.html#cb44-7" tabindex="-1"></a>colsHeat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#F7F7F7&quot;</span>, <span class="st">&quot;#92C5DE&quot;</span>, <span class="st">&quot;#0571B0&quot;</span>, <span class="st">&quot;#F4A582&quot;</span>, <span class="st">&quot;#CA0020&quot;</span>)</span>
+<span id="cb44-8"><a href="top-variable-genes-heatmap.html#cb44-8" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="top-variable-genes-heatmap.html#cb44-9" tabindex="-1"></a>heat_plot <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(</span>
+<span id="cb44-10"><a href="top-variable-genes-heatmap.html#cb44-10" tabindex="-1"></a>  <span class="fu">assay</span>(vsd)[topVarGenes, ],</span>
+<span id="cb44-11"><a href="top-variable-genes-heatmap.html#cb44-11" tabindex="-1"></a>  <span class="at">cluster_cols             =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-12"><a href="top-variable-genes-heatmap.html#cb44-12" tabindex="-1"></a>  <span class="at">cluster_rows             =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-13"><a href="top-variable-genes-heatmap.html#cb44-13" tabindex="-1"></a>  <span class="at">scale                    =</span> <span class="st">&quot;row&quot;</span>,</span>
+<span id="cb44-14"><a href="top-variable-genes-heatmap.html#cb44-14" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
+<span id="cb44-15"><a href="top-variable-genes-heatmap.html#cb44-15" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
+<span id="cb44-16"><a href="top-variable-genes-heatmap.html#cb44-16" tabindex="-1"></a>  <span class="at">annotation_col           =</span> df_anno,</span>
+<span id="cb44-17"><a href="top-variable-genes-heatmap.html#cb44-17" tabindex="-1"></a>  <span class="at">annotation_colors        =</span> anno_colors,</span>
+<span id="cb44-18"><a href="top-variable-genes-heatmap.html#cb44-18" tabindex="-1"></a>  <span class="at">show_colnames            =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-19"><a href="top-variable-genes-heatmap.html#cb44-19" tabindex="-1"></a>  <span class="at">show_rownames            =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-20"><a href="top-variable-genes-heatmap.html#cb44-20" tabindex="-1"></a>  <span class="at">color                    =</span> <span class="fu">colorRampPalette</span>(colsHeat)(<span class="dv">255</span>),</span>
+<span id="cb44-21"><a href="top-variable-genes-heatmap.html#cb44-21" tabindex="-1"></a>  <span class="at">border_color             =</span> <span class="st">&quot;#f8edeb&quot;</span>,</span>
+<span id="cb44-22"><a href="top-variable-genes-heatmap.html#cb44-22" tabindex="-1"></a>  <span class="at">fontsize_row             =</span> <span class="dv">7</span>,</span>
+<span id="cb44-23"><a href="top-variable-genes-heatmap.html#cb44-23" tabindex="-1"></a>  <span class="at">main                     =</span> <span class="st">&quot;Top 50 variable genes — E. coli MG1655 (VST, row-scaled)&quot;</span></span>
+<span id="cb44-24"><a href="top-variable-genes-heatmap.html#cb44-24" tabindex="-1"></a>)</span>
+<span id="cb44-25"><a href="top-variable-genes-heatmap.html#cb44-25" tabindex="-1"></a></span>
+<span id="cb44-26"><a href="top-variable-genes-heatmap.html#cb44-26" tabindex="-1"></a>heat_plot</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/topvar-heatmap-0-1.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="top-variable-genes-heatmap.html#cb42-1" tabindex="-1"></a><span class="co">#install.packages(&quot;heatmaply&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="top-variable-genes-heatmap.html#cb45-1" tabindex="-1"></a><span class="co">#install.packages(&quot;heatmaply&quot;)</span></span></code></pre></div>
+<div class="boxy">
+<p><strong>How to read this heatmap:</strong></p>
+<ul>
+<li>Each <strong>row</strong> is a gene, each <strong>column</strong> is a sample</li>
+<li>Colours show the <strong>z-score</strong> (row-scaled expression) — red = higher than average for that gene, blue = lower</li>
+<li>The <strong>dendrograms</strong> show hierarchical clustering — samples/genes that behave similarly are grouped together</li>
+</ul>
+<p><strong>What to look for:</strong></p>
+<ul>
+<li>Clear colour blocks by condition → the treatment has a strong, consistent transcriptional effect</li>
+<li>Consistent colours within replicates → biological replicates are reproducible</li>
+<li>Genes in the <strong>upper cluster</strong> are upregulated in treatment (red in sac, blue in control)</li>
+<li>Genes in the <strong>lower cluster</strong> are downregulated in treatment (blue in sac, red in control)</li>
+<li>Note that C3 sits slightly apart from C1/C2 in the dendrogram — consistent with what we observed in the PCA and sample distance heatmap</li>
+</ul>
+</div>
 </div>
             </section>
 

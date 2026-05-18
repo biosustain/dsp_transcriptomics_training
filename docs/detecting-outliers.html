@@ -274,17 +274,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="detecting-outliers" class="section level2 hasAnchor" number="4.10">
 <h2><span class="header-section-number">4.10</span> Detecting Outliers<a href="detecting-outliers.html#detecting-outliers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The PCA above uses only the top 500 most variable genes (DESeq2 default). Here we run PCA on the full VST matrix and inspect a scree plot and biplot to assess whether any single sample drives an unusual amount of variance, a common sign of a technical outlier.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="detecting-outliers.html#cb38-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
-<span id="cb38-2"><a href="detecting-outliers.html#cb38-2" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="detecting-outliers.html#cb38-3" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb38-4"><a href="detecting-outliers.html#cb38-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="detecting-outliers.html#cb41-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
+<span id="cb41-2"><a href="detecting-outliers.html#cb41-2" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="detecting-outliers.html#cb41-3" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb41-4"><a href="detecting-outliers.html#cb41-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-1.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="detecting-outliers.html#cb39-1" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb39-2"><a href="detecting-outliers.html#cb39-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="detecting-outliers.html#cb42-1" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb42-2"><a href="detecting-outliers.html#cb42-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-2.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="detecting-outliers.html#cb40-1" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_full, <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb40-2"><a href="detecting-outliers.html#cb40-2" tabindex="-1"></a>                <span class="at">title =</span> <span class="st">&quot;Biplot — genes and samples&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="detecting-outliers.html#cb43-1" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_full,</span>
+<span id="cb43-2"><a href="detecting-outliers.html#cb43-2" tabindex="-1"></a>                <span class="at">repel        =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb43-3"><a href="detecting-outliers.html#cb43-3" tabindex="-1"></a>                <span class="at">select.var   =</span> <span class="fu">list</span>(<span class="at">contrib =</span> <span class="dv">50</span>),  <span class="co"># top  genes only</span></span>
+<span id="cb43-4"><a href="detecting-outliers.html#cb43-4" tabindex="-1"></a>                <span class="at">title        =</span> <span class="st">&quot;Biplot — top 50 contributing genes and samples&quot;</span>,</span>
+<span id="cb43-5"><a href="detecting-outliers.html#cb43-5" tabindex="-1"></a>                <span class="at">col.var      =</span> <span class="st">&quot;#92C5DE&quot;</span>,</span>
+<span id="cb43-6"><a href="detecting-outliers.html#cb43-6" tabindex="-1"></a>                <span class="at">col.ind      =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-3.png" alt="" width="672" /></p>
+<div class="boxy">
+<p><strong>How to read a biplot:</strong></p>
+<p><strong>Dots</strong> = samples (C1, C2, C3, sac1, sac2, sac3)</p>
+<p><strong>Arrows/lines</strong> = genes — the direction shows which samples that gene is highly expressed in, and the length shows how strongly it contributes to the PC:</p>
+<ul>
+<li>Genes pointing <strong>right</strong> → higher expression in treatment</li>
+<li>Genes pointing <strong>left</strong> → higher expression in control<br />
+</li>
+<li>Genes pointing <strong>up/down</strong> → contribute more to PC2 (within-condition variation)</li>
+<li>Genes near the <strong>centre</strong> → contribute little to either PC</li>
+</ul>
+<p><strong>What to look for:</strong></p>
+<ul>
+<li>Genes with long arrows along PC1 are your strongest candidates for driving the treatment response — these are likely to appear as significant DE genes</li>
+<li>If many arrows point in the same direction, it suggests coordinated regulation (a pathway-level response)</li>
+<li>A gene pointing toward C3 specifically (along PC2) would explain the C3 separation flagged in the PCA and heatmap</li>
+</ul>
+</div>
 </div>
             </section>
 

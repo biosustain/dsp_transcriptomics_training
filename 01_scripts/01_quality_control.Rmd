@@ -23,7 +23,7 @@ The list of contrasts of interest is:
 
 :::boxy
 - DE between [condition A] vs [condition B]
-- DE between [condition C] vs [condition D]
+- Control vs Treatment
 :::
 
 **Topics covered**
@@ -124,8 +124,9 @@ DT::datatable(
 
 The nf-core/rnaseq pipeline was run with `-profile prokaryotic`, which uses `Bowtie2` for alignment and `Salmon` for quantification. Since _E. coli_ has no introns*, splice-aware aligners like STAR are unnecessary. We load the `SummarizedExperiment` object produced by the pipeline, extract the raw count matrix, and assign gene symbols as row names
 
-*The dispersal of five group II introns among natural populations of Escherichia coli [Dai & Zimmerly -2002](https://pmc.ncbi.nlm.nih.gov/articles/PMC1370338/)
-). Despite their apparent intractability, at least five distinct group II introns exist naturally in _E. coli_ strains. These are self-splicing group II introns (retroelements), not spliceosomal introns like in eukaryotes — so they don't affect RNA-seq quantification in the way eukaryotic introns do, which is why `Bowtie2` (non-splice-aware) works fine for _E. coli_.
+::: {style="font-size: 0.75em; color: grey;"}
+*The dispersal of five group II introns among natural populations of Escherichia coli [Dai & Zimmerly -2002](https://pmc.ncbi.nlm.nih.gov/articles/PMC1370338/). Despite their apparent intractability, at least five distinct group II introns exist naturally in _E. coli_ strains. These are self-splicing group II introns (retroelements), not spliceosomal introns like in eukaryotes — so they don't affect RNA-seq quantification in the way eukaryotic introns do, which is why `Bowtie2` (non-splice-aware) works fine for _E. coli_.*
+:::
 
 
 <div class="important">
@@ -224,22 +225,32 @@ dds <- DESeqDataSetFromMatrix(
   <strong>📌 Remember:</strong> Always verify your input before proceeding.
 </div>
 
+
 ```{r check-raw-0, echo=TRUE, eval=TRUE, include=TRUE, warning=FALSE, message=FALSE}
+options(scipen = 999)
 
-head(count_genes[, 1:min(6, ncol(count_genes))])
 
-p <- hist(
-  as.numeric(count_genes[1, ]),
-  main = paste("Raw counts —", rownames(count_genes)[1]),
-  xlab = "Raw count",
-  col  = "steelblue",
-  plot = FALSE
-)
+kable(count_genes[1:6, ],
+      caption = "Raw count matrix — first 6 genes",
+      format.args = list(big.mark = ",")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
 
-plot(p, col = "steelblue",
-     main = paste("Raw counts —", rownames(count_genes)[1]),
-     xlab = "Raw count")
+
+barplot(colSums(count_genes),
+        main   = "Library sizes (total counts per sample)",
+        ylab   = "Total raw counts",
+        xlab   = NULL,
+        col    = "steelblue",
+        las    = 2,
+        names.arg = colnames(count_genes))
 ```
+
+<div class="tip">
+  <strong>💡 Tip:</strong> scipen = 999 is a penalty against scientific notation. R uses it to decide when to switch between fixed (150000) and scientific (1.5e+05) format. The default is scipen = 0 — by setting it to 999 you make the penalty so high that R almost never switches to scientific notation, preferring plain numbers instead.
+</div>
+
+
 
 :::boxy
  Raw *E. coli* RNA-seq counts are typically in the thousands to millions range (library sizes \~5–50 M reads for bacterial experiments). 
@@ -257,6 +268,9 @@ Genes with very few counts across all samples carry no statistical power and inf
 ```{r prefilter-0, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 
 smallestGroupSize <- min(table(samples_info$condition))
+
+cat("Smallest group size   :", smallestGroupSize, "\n")
+cat("Filtering threshold   : at least 10 counts in", smallestGroupSize, "or more samples\n")
 
 keep <- rowSums(counts(dds) >= 10) >= smallestGroupSize
 dds  <- dds[keep, ]
@@ -354,6 +368,10 @@ ggplotly(distribution)
 ```
 
 
+:::boxy
+C3 had a size factor of 2.324 — nearly 4x higher than C2 (0.584). Before normalization, C3 raw counts were inflated. After DESeq2's median-of-ratios normalization, all samples align. This is why you never skip the normalization check, and why raw counts must go into DESeq2 rather than pre-normalized values.
+:::
+
 ## Sample Correlation Heatmap
 
 Euclidean distances between `VST-transformed` samples reveal how similar samples are to each other globally. Replicates from the same condition should cluster together and show small (dark) distances. A sample that is more similar to the opposite condition than to its own replicates is a red flag for a labelling error or a failed experiment.
@@ -395,7 +413,9 @@ pheatmap(
 )
 ```
 
-
+:::boxy
+The diagonal is always zero (a sample compared to itself). Dark = similar, light = distant. You want dark blocks on the diagonal within conditions and light blocks between conditions. If a replicate appeared in the wrong block, you would stop and investigate before running DESeq2.
+:::
 
 ## Principal Component Analysis (PCA)
 
@@ -444,6 +464,10 @@ PCAPlot
 ggplotly(PCAPlot)
 ```
 
+:::boxy
+PC1 capturing 85.4% and separating conditions cleanly is a strong positive signal — the saccharin treatment has a large, consistent transcriptional effect. C3 separating on PC2 is worth noting: it passed normalization QC but shows some residual transcriptional difference from C1/C2. This is within acceptable range for biological replicates, but in a real experiment you would document it and check if C3 was grown or processed differently.
+:::
+
 ## Detecting Outliers
 
 The PCA above uses only the top 500 most variable genes (DESeq2 default). Here we run PCA on the full VST matrix and inspect a scree plot and biplot to assess whether any single sample drives an unusual amount of variance, a common sign of a technical outlier.
@@ -458,10 +482,32 @@ fviz_screeplot(pca_full, addlabels = TRUE,
 fviz_pca_ind(pca_full, geom = c("point", "text"), repel = TRUE,
              title = "PCA — sample positions (full gene matrix)")
 
-fviz_pca_biplot(pca_full, repel = TRUE,
-                title = "Biplot — genes and samples")
+fviz_pca_biplot(pca_full,
+                repel        = TRUE,
+                select.var   = list(contrib = 50),  # top  genes only
+                title        = "Biplot — top 50 contributing genes and samples",
+                col.var      = "#92C5DE",
+                col.ind      = "black")
 ```
 
+:::boxy
+**How to read a biplot:**
+
+**Dots** = samples (C1, C2, C3, sac1, sac2, sac3)
+
+**Arrows/lines** = genes — the direction shows which samples that gene is highly expressed in, and the length shows how strongly it contributes to the PC:
+
+- Genes pointing **right** → higher expression in treatment
+- Genes pointing **left** → higher expression in control  
+- Genes pointing **up/down** → contribute more to PC2 (within-condition variation)
+- Genes near the **centre** → contribute little to either PC
+
+**What to look for:**
+
+- Genes with long arrows along PC1 are your strongest candidates for driving the treatment response — these are likely to appear as significant DE genes
+- If many arrows point in the same direction, it suggests coordinated regulation (a pathway-level response)
+- A gene pointing toward C3 specifically (along PC2) would explain the C3 separation flagged in the PCA and heatmap
+:::
 
 ## Top Variable Genes Heatmap
 
@@ -500,6 +546,22 @@ heat_plot
 #install.packages("heatmaply")
 ```
 
+:::boxy
+**How to read this heatmap:**
+
+- Each **row** is a gene, each **column** is a sample
+- Colours show the **z-score** (row-scaled expression) — red = higher than average for that gene, blue = lower
+- The **dendrograms** show hierarchical clustering — samples/genes that behave similarly are grouped together
+
+**What to look for:**
+
+- Clear colour blocks by condition → the treatment has a strong, consistent transcriptional effect
+- Consistent colours within replicates → biological replicates are reproducible
+- Genes in the **upper cluster** are upregulated in treatment (red in sac, blue in control)
+- Genes in the **lower cluster** are downregulated in treatment (blue in sac, red in control)
+- Note that C3 sits slightly apart from C1/C2 in the dendrogram — consistent with what we observed in the PCA and sample distance heatmap
+:::
+
 ```{r heat0-0, echo=TRUE, eval=FALSE, include=FALSE, message=FALSE, warning=FALSE}
 
 library(heatmaply)
@@ -523,13 +585,20 @@ heatmaply(
 Before proceeding to differential expression analysis, confirm all QC checks pass:
 
 :::boxy
-| Check | Expected outcome |
-|------------------------------------|------------------------------------|
-| Size factors ≈ 1.0 across samples | Library sizes are balanced |
-| Boxplots of normalised counts overlap | No extreme outlier samples |
-| Correlation heatmap: within-group distances \< between-group | Replicates are reproducible |
-| PCA PC1 separates conditions | Condition is the dominant source of variance |
-| No isolated samples in PCA or heatmap | No technical outliers |
+| Check | Expected outcome | This dataset |
+|------------------------------------|------------------------------------|--------------------|
+| Size factors ≈ 1.0 across samples | Library sizes are balanced | ⚠️ C3 = 2.324 — corrected by normalisation |
+| Boxplots of normalised counts overlap | No extreme outlier samples | ✅ All samples overlap after normalisation |
+| Correlation heatmap: within-group distances < between-group | Replicates are reproducible | ✅ Clean block structure |
+| PCA PC1 separates conditions | Condition is the dominant source of variance | ✅ PC1 = 85.4%, perfect separation |
+| No isolated samples in PCA or heatmap | No technical outliers | ⚠️ C3 offset on PC2 — consistent, not alarming |
+:::
+
+::: {style="font-size: 0.9em; color: grey;"}
+*Overall the dataset passes QC. C3 shows a higher sequencing depth and mild 
+transcriptional offset from C1/C2, visible consistently across all QC plots. 
+This is within acceptable range for biological replicates and does not 
+compromise the downstream analysis. We proceed to differential expression.*
 :::
 
 

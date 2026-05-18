@@ -274,8 +274,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="loading-count-data" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Loading Count Data<a href="loading-count-data.html#loading-count-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The nf-core/rnaseq pipeline was run with <code>-profile prokaryotic</code>, which uses <code>Bowtie2</code> for alignment and <code>Salmon</code> for quantification. Since <em>E. coli</em> has no introns*, splice-aware aligners like STAR are unnecessary. We load the <code>SummarizedExperiment</code> object produced by the pipeline, extract the raw count matrix, and assign gene symbols as row names</p>
-<p>*The dispersal of five group II introns among natural populations of Escherichia coli <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1370338/">Dai &amp; Zimmerly -2002</a>
-). Despite their apparent intractability, at least five distinct group II introns exist naturally in <em>E. coli</em> strains. These are self-splicing group II introns (retroelements), not spliceosomal introns like in eukaryotes — so they don’t affect RNA-seq quantification in the way eukaryotic introns do, which is why <code>Bowtie2</code> (non-splice-aware) works fine for <em>E. coli</em>.</p>
+<div style="font-size: 0.75em; color: grey;">
+<p><em>The dispersal of five group II introns among natural populations of Escherichia coli <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1370338/">Dai &amp; Zimmerly -2002</a>. Despite their apparent intractability, at least five distinct group II introns exist naturally in <em>E. coli</em> strains. These are self-splicing group II introns (retroelements), not spliceosomal introns like in eukaryotes — so they don’t affect RNA-seq quantification in the way eukaryotic introns do, which is why <code>Bowtie2</code> (non-splice-aware) works fine for <em>E. coli</em>.</em></p>
+</div>
 <div class="important">
 <p><strong>⭐ Important:</strong> Raw counts must remain as integers — DESeq2’s statistical model requires this.</p>
 </div>
