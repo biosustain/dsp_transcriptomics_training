@@ -49,10 +49,14 @@ A draft agenda is already available in the repository. Check back closer to the 
 
 Below are two setup options for the practical activities:
 
->Run the workshop in the cloud (no need to install anything). 
+>Run the workshop in the cloud (no need to install anything).
+>
+<div class="warning">
+  <strong>⚠️ Warning:</strong> Change the configuration at the Machine type: increase it to 4-core .
+</div>
+
 
 **Launch the app:**
-
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/biosustain/dsp_transcriptomics_training)
 
 
@@ -183,4 +187,5 @@ We're looking forward to seeing everyone. If you have questions before the cours
 <div align="center">
 
 </div>
+
 
