@@ -44,10 +44,8 @@ A draft agenda is already available in the repository. Check back closer to the 
 
 ---
 
-:::boxy
-Material for the workshop is located at:
+**Material for the workshop is located at:**
 [dsp_transcriptomics_training](https://github.com/biosustain/dsp_transcriptomics_training)
-:::
 
 Below are two setup options for the practical activities:
 
@@ -61,7 +59,7 @@ Below are two setup options for the practical activities:
 >Run the workshop locally on your machine. 
 
 <div class="warning">
-  <strong>⚠️ Warning:</strong> Please, contact me if you need help! [Juliana Assis](jasge@dtu.dk)
+  <strong>⚠️ Warning:</strong> Please, contact me if you need help! Juliana Assis(jasge@dtu.dk)
 </div>
 
 
@@ -185,3 +183,4 @@ We're looking forward to seeing everyone. If you have questions before the cours
 <div align="center">
 
 </div>
+
