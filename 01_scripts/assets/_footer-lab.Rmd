@@ -10,7 +10,7 @@ title: "&DTUdsp;"
 
 <div class="col-sm-8" style="text-align:left;vertical-align:middle;">
 <p class="small" style="color:#bdbdbd;">
-<b>2024</b> • [Data Science Platform](https://www.biosustain.dtu.dk/technologies/informatics/data-science-platform) • [CFB](https://www.biosustain.dtu.dk/)
+<b>2025</b> • [Data Science Platform](https://www.biosustain.dtu.dk/technologies/informatics/data-science-platform) • [CFB](https://www.biosustain.dtu.dk/)
 </p>
 </div>
 
@@ -18,7 +18,7 @@ title: "&DTUdsp;"
 <p style="color:#bdbdbd;">
 <span>
 <span class="footericon" style="padding-right:4px; padding-left:4px">
-<a href="https://bric.ku.dk/core-facilities/bioinformatics/">`r fontawesome::fa("globe-americas",fill="#bdbdbd")`</a>
+<a href="https://www.biosustain.dtu.dk/technologies/biofoundry/informatics">`r fontawesome::fa("globe-americas",fill="#bdbdbd")`</a>
 </span>
 <span class="footericon" style="padding-right:4px; padding-left:4px">
 <a href="https://x.com/dtubiosustain">`r fontawesome::fa("twitter",fill="#bdbdbd")`</a>
@@ -33,3 +33,4 @@ title: "&DTUdsp;"
 </div>
 </div>
 </footer>
+
