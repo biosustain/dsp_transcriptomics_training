@@ -1,0 +1,78 @@
+# Instructions
+
+:::boxy
+[nf-core rnaseq pipeline](https://nf-co.re/rnaseq/3.26.0/docs/usage/) 
+:::
+
+**Topics covered**
+
+-   RNAseq Quality control analysis
+-   Mapping of short reads (Bowtie2)
+-   Quantification of gene expression (Salmon)
+-   Exploratory data analyses
+
+**Data**
+
+-   Type of data: bulk RNASeq
+-   Organism: *Escherichia coli* K-12 MG1655
+-   Codes location: [GitHub repository](https://github.com/biosustain/dsp_transcriptomics_training)
+-   Reference data used: [E. coli\* K-12 MG1655](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000005845.2/) NCBI RefSeq: NC_000913.3
+
+## Opening the Nextflow environment
+
+To avoid installation and configuration issues we are going to deploy an environment for you containing Nextflow and its requirements.
+
+If you want to open directly a GitHub codespace for this specific repository click here: [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/biosustain/dsp_transcriptomics_training)
+
+Don't change the configuration and accept the default option. It says pay but you're not paying...
+
+If you want to do it manually go to [course website](https://github.com/biosustain/dsp_transcriptomics_training)
+
+Click on button **Code** and click on the Codespaces tab. There click on **Create codespace**. Now your Nextflow environment will be built following the instructions in devcontainer.json file (i.e. installing Ubuntu, Docker, Nextflow, R, Python, VSCode and RStudio server)
+
+To learn more about Github codespaces go [here](https://github.com/features/codespaces)
+
+
+<div class="remember">
+  <strong>📌 Remember:</strong> Please remember to delete your Codespace by the end of the class so that you do not consume your free Github codespace credits! If you do not delete it it will be deleted automatically days after you created.
+</div>
+
+
+## Initial checks
+Now, Nextflow should be ready to run in your GitHub Codespace environment! Let's check that you have a fully functional environment with Nextflow, java and Docker properly installed
+
+**Verify java installation:**
+
+**Verify java installation:**
+```bash
+java -version
+```
+
+**Verify Nextflow installation:**
+```bash
+nextflow -v
+```
+
+**Nextflow current version, system and runtime:**
+```bash
+nextflow info
+```
+
+**Verify Docker installation:**
+```bash
+docker --version
+```
+
+If everything went well you have a fully functional Nextflow environment for today. Rememeber that we are going to use VS code as our editor to write code and handle our files.
+
+
+
+## Data processing using the nf-core/rnaseq pipeline
+
+**Sources of data and genome files**
+
+RNAseq analysis of *Escherichia coli* str. K-12 substr. MG1655 (accession: GCF_000005845.2) will be performed. RNA sequencing read files and genome files were obtained from the following links. The data do not have to be downloaded — a size-reduced dataset and the genome files are already deposited in the repository.
+
+-   [RNAseq files (.fastq.gz) - PRJNA1158806](https://www.ebi.ac.uk/ena/browser/view/PRJNA1158806)
+-   [*E. coli* genome sequence (.fna.gz)](https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz)
+-   [*E. coli* genome annotation file (.gtf.gz)](https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.gtf.gz)

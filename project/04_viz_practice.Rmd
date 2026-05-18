@@ -1,0 +1,330 @@
+# Differential Expression Analysis
+
+This report covers differential expression (DE) analysis of bulk RNA-seq data from *Escherichia coli* K-12 MG1655 using `DESeq2`.
+
+We test one contrast:
+
+::: boxy
+- **Control vs Treatment** — which genes change expression in response to treatment?
+:::
+
+::: {style="background:#eaf4fd;border-left:5px solid #3498db;padding:0.5em 1em;margin:1em 0;border-radius:6px;"}
+<strong>⭐ Important:</strong> This script assumes you have already run `01_quality_control_ecoli.Rmd` and that the `dds` object is available in your environment. If not, re-run the QC script first.
+:::
+
+**Setup the Environment**
+
+```{r libraries, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(DESeq2)
+library(ggpubr)
+library(plotly)
+library(pheatmap)
+library(RColorBrewer)
+library(knitr)
+library(kableExtra)
+library(DT)
+```
+
+
+## Differential Expression Analysis
+
+<div style="background:#f8d7da;border-left:4px solid #721c24;padding:10px;margin:10px 0;">
+  <strong>⚠️ Warning:</strong> Always use raw integer counts as input. Do not use TPM, FPKM, or any normalised values — DESeq2 handles normalisation internally.
+</div>
+
+`DESeq2` fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but `DESeq()` handles all three in one call.
+
+
+```{r load-dds, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+git_root <- system("git rev-parse --show-toplevel", intern = TRUE)
+
+dds <- readRDS(file.path(git_root, "results", "rds", "dds_ecoli_MG1655.rds"))
+
+cat("✅ DDS loaded\n")
+cat("   Dimensions  :", nrow(dds), "genes ×", ncol(dds), "samples\n")
+cat("   Conditions  :", paste(levels(dds$condition), collapse = " vs "), "\n")
+```
+
+<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
+  <strong>📌 Remember:</strong> The variable of interest should be at the end of the design formula, and the control group must be the first (reference) factor level. Both were set in the QC script.
+</div>
+
+**Check the results**
+```{r run-deseq, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+dds <- DESeq(dds)
+resultsNames(dds)
+```
+
+## Extracting Results
+
+`results()` extracts the Wald test output for a given contrast. By default DESeq2 applies **independent filtering** — it removes genes with very low mean counts before multiple testing correction, which increases power to detect DE genes at a given FDR threshold.
+
+We set `alpha = 0.05` to optimise filtering for a 5% FDR cutoff.
+
+```{r extract-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res <- results(dds,
+               contrast = c("condition", "treatment", "control"),
+               alpha    = 0.05)
+
+summary(res)
+```
+
+The results table contains one row per gene with the following columns:
+
+| Column | Description |
+|---|---|
+| `baseMean` | Mean normalised count across all samples |
+| `log2FoldChange` | log2(treatment / control) |
+| `lfcSE` | Standard error of the log2FC estimate |
+| `stat` | Wald statistic |
+| `pvalue` | Raw p-value |
+| `padj` | Benjamini–Hochberg adjusted p-value |
+
+---
+
+## Log2 Fold Change Shrinkage
+
+:::boxy
+**What is this step and why do we need it?**
+
+ After running DESeq2, every gene gets a raw log2 fold change (LFC) estimate.
+ For **lowly expressed genes**, these estimates are unreliable — a gene with
+ 1 count in control and 3 in treatment looks like a 3-fold change, but this
+ is just noise from low counts.
+
+ `lfcShrink()` corrects this using **empirical Bayes shrinkage**: it pulls
+ noisy estimates (low counts, high uncertainty) toward zero, while leaving
+ well-supported fold changes (high counts, consistent signal) largely
+ unchanged. Think of it as a confidence-weighted adjustment.
+<div class="important">
+  <strong>⭐ Important:</strong> shrinkage does **not** change your p-values or which genes
+ are significant — those come from the `results()` call above. Shrunken LFCs
+ are used exclusively for **ranking and visualisation** (volcano plot, heatmap).
+</div>
+
+ **Why `apeglm`?** Three shrinkage methods exist in DESeq2:
+ - `apeglm` — most accurate for simple two-group comparisons like ours ✅
+ - `ashr` — more flexible; needed when comparing two non-reference groups
+ - `normal` — the original method, now outdated and not recommended
+
+ For a treatment vs control design in *E. coli*, `apeglm` is the right choice.
+ See [Zhu *et al.*, 2019](https://doi.org/10.1093/bioinformatics/btz585) for benchmarks.
+:::
+```{r lfc-shrink, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res_shrunk <- lfcShrink(dds,
+                        coef  = "condition_treatment_vs_control",
+                        type  = "apeglm")
+
+summary(res_shrunk)
+```
+
+---
+
+## Sorting and Filtering Significant Genes
+
+We order genes by adjusted p-value and filter to retain only those passing our significance thresholds: **padj < 0.05** and **|log2FC| ≥ 1** (i.e., at least a 2-fold change).
+
+```{r filter-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res_df <- as.data.frame(res_shrunk) %>%
+  rownames_to_column("gene") %>%
+  arrange(padj) %>%
+  filter(!is.na(padj))
+
+res_sig <- res_df %>%
+  filter(padj < 0.05, abs(log2FoldChange) >= 1)
+
+cat("Total genes tested       :", nrow(res_df), "\n")
+cat("Significant genes        :", nrow(res_sig), "\n")
+cat("  Upregulated (LFC ≥ 1)  :", sum(res_sig$log2FoldChange >= 1), "\n")
+cat("  Downregulated (LFC ≤ -1):", sum(res_sig$log2FoldChange <= -1), "\n")
+```
+
+---
+
+**Interactive Results Table**
+
+```{r results-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  res_sig %>% mutate(across(where(is.numeric), \(x) round(x, 4))),
+  rownames   = FALSE,
+  extensions = c('Buttons', 'Scroller'),
+  options    = list(
+    dom         = 'Bfrtip',
+    buttons     = c('copy', 'csv'),
+    scrollX     = TRUE,
+    scrollY     = 300,
+    scroller    = TRUE
+  ),
+  caption = 'Significant DE genes — treatment vs control (padj < 0.05, |LFC| ≥ 1)'
+)
+```
+
+
+## Visualisation
+
+**Volcano Plot**
+
+A volcano plot combines fold change (x-axis) and statistical significance (y-axis) into a single view. Genes in the upper corners are both strongly and significantly changed — these are the most biologically interesting candidates.
+
+The dashed lines mark our thresholds: |log2FC| = 1 and padj = 0.05.
+
+```{r volcano, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+cols_condition <- c("control"   = "#2c7bb6",
+                    "treatment" = "#d7191c")
+
+res_df <- res_df %>%
+  mutate(
+    significance = case_when(
+      padj < 0.05 & log2FoldChange >=  1 ~ "Up",
+      padj < 0.05 & log2FoldChange <= -1 ~ "Down",
+      TRUE                               ~ "NS"
+    )
+  )
+
+top_labels <- res_df %>%
+  filter(significance != "NS") %>%
+  slice_min(padj, n = 10)
+
+volcano <- ggplot(res_df, aes(x = log2FoldChange,
+                              y = -log10(padj),
+                              color = significance,
+                              text  = gene)) +
+  geom_point(alpha = 0.7, size = 1.8) +
+  geom_vline(xintercept = c(-1, 1),  linetype = "dashed", color = "black") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black") +
+  geom_text(data = top_labels,
+            aes(label = gene),
+            size = 2.8, vjust = -0.6, show.legend = FALSE) +
+  scale_color_manual(values = c("Up" = "#d7191c",
+                                "Down" = "#2c7bb6",
+                                "NS"   = "grey70")) +
+  theme_pubr(border = TRUE) +
+  labs(
+    title = "Volcano Plot — Treatment vs Control",
+    x     = "log2(Fold Change)",
+    y     = "-log10(adjusted p-value)",
+    color = NULL
+  )
+
+volcano
+ggplotly(volcano, tooltip = c("text", "x", "y"))
+```
+
+
+
+## MA Plot
+
+An MA plot shows log2 fold change (y-axis) against mean expression (x-axis). It helps assess whether the fold change estimates are stable across the expression range. After shrinkage, estimates for lowly expressed genes (left side) should be pulled toward zero.
+
+```{r ma-plot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+plotMA(res_shrunk,
+       alpha = 0.05,
+       main  = "MA Plot — Treatment vs Control (shrunken LFC)",
+       colSig = "#d7191c",
+       colNonSig = "grey70",
+       ylab  = "log2 Fold Change")
+abline(h = c(-1, 1), lty = 2, col = "black")
+```
+
+
+## Top Gene Count Plot
+
+Plotting raw normalised counts for the most significant gene provides a sanity check: the direction and magnitude of the fold change should be visually obvious. If it isn't, investigate further.
+
+```{r top-gene, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+top_gene <- res_sig$gene[1]
+
+plotCounts(dds,
+           gene     = top_gene,
+           intgroup = "condition",
+           main     = paste("Normalised counts —", top_gene))
+```
+
+
+## Heatmap of Significant Genes
+
+Clustering significant DE genes across samples provides a gene-level view of the expression differences. Genes should show clear block structure: high expression in treatment and low in control (or vice versa). Replicates within each condition should cluster together.
+
+```{r de-heatmap, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+vsd <- varianceStabilizingTransformation(dds, blind = FALSE)
+
+sig_genes <- res_sig %>%
+  slice_min(padj, n = min(50, nrow(res_sig))) %>%
+  pull(gene)
+
+df_anno    <- as.data.frame(colData(vsd)[, "condition", drop = FALSE])
+anno_colors <- list(condition = cols_condition)
+colsHeat   <- c("#F7F7F7", "#92C5DE", "#0571B0", "#F4A582", "#CA0020")
+
+pheatmap(
+  assay(vsd)[sig_genes, ],
+  cluster_cols             = TRUE,
+  cluster_rows             = TRUE,
+  scale                    = "row",
+  clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean",
+  annotation_col           = df_anno,
+  annotation_colors        = anno_colors,
+  show_colnames            = TRUE,
+  show_rownames            = TRUE,
+  color                    = colorRampPalette(colsHeat)(255),
+  border_color             = "#f8edeb",
+  fontsize_row             = 7,
+  main                     = "Top DE genes — Treatment vs Control (VST, row-scaled)"
+)
+```
+
+## Saving Results
+
+```{r save-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+results_dir <- file.path(git_root, "results")
+dir.create(results_dir, showWarnings = FALSE)
+
+write.table(
+  res_df,
+  file      = file.path(results_dir, "DE_treatment_vs_control_all.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+write.table(
+  res_sig,
+  file      = file.path(results_dir, "DE_treatment_vs_control_significant.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+cat("Results saved to:", results_dir, "\n")
+```
+
+---
+
+## Summary
+
+| Step | Decision made |
+|---|---|
+| Design formula | `~ condition` (treatment vs control) |
+| LFC shrinkage | `apeglm` method |
+| Significance threshold | padj < 0.05 |
+| Fold change threshold | \|log2FC\| ≥ 1 (2-fold) |
+| Annotation database | `org.EcK12.eg.db` (for enrichment, next script) |
+
+Significant genes are saved and ready for gene set enrichment analysis in the next script.
+
+---
+
+<!-- --------------------- Do not edit this and below ---------------------- -->
+
+</br>
+
+```{r session-info3, echo=TRUE, eval=TRUE, include=TRUE}
+sessionInfo()
+```
+
+```{r rendera, eval=FALSE, echo=FALSE}
+rmarkdown::render("02_differential_expression_ecoli.Rmd")
+```

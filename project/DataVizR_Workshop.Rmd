@@ -1,0 +1,2153 @@
+---
+title: "Introduction to Transcriptomics"
+subtitle: "Workshop material"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook
+---
+# Welcome
+ 
+```{r,echo=FALSE,include=FALSE}
+#  variables
+rep_org <- "Data Science Platform" 
+rep_core  <- "Juliana Assis"
+rep_core_email  <- "jasge@dtu.dk"
+rep_core2 <- "Sebastian Schulz"
+rep_core_email2 <- "sebschu@dtu.dk"
+rep_core3 <- "Alberto Pallejà Caro"
+rep_core_email3 <- "apca@dtu.dk"
+rep_ta    <- "Edir Sebastian Vidal Castro"
+rep_ta_email <- "s243564@student.dtu.dk"
+
+# Combine all responsibles into a single string
+rep_all <- paste0(
+  rep_core, " (", rep_core_email, ")<br>",
+  rep_core2, " (", rep_core_email2, ")<br>",
+  rep_core3, " (", rep_core_email3, ")"
+)
+
+rep_ta_full <- paste0(rep_ta, " (", rep_ta_email, ")")
+```
+
+<br>
+
+::: boxy
+__Organisation:__ `r rep_org`  
+__Responsibles:__ `r paste0(rep_all," ")`  
+__Teaching Assistant:__ `r rep_ta_full`  
+:::
+
+<br>
+
+
+**Welcome to the Introduction to Transcriptomics Workshop!**
+
+This workshop introduces **RNA-seq data analysis**, covering both the theory behind the technology and the full practical workflow — from raw reads to biological interpretation — using real *E. coli* data.
+
+The course is designed for people with **no or little knowledge and practical experience** in transcriptomic analysis using RNA sequencing (RNAseq).
+
+**Objectives**
+
+* Theory on Illumina short-read sequencing technology for transcriptome analysis
+* Theory and practical sessions for
+   * RNAseq data processing using the nf-core/rnaseq pipeline
+   * Statistical data analysis and visualization of RNAseq results
+   * Enrichment analysis — gaining biological insights from transcriptomic data
+   * Effective results reporting using the in-house developed software **[vuegen](https://github.com/Multiomics-Analytics-Group/vuegen)**
+
+:::boxy
+You can also explore the [DSP Transcriptomics Training repository](https://github.com/biosustain/dsp_transcriptomics_training)
+:::
+
+| Time             | Session                                                                         |
+|------------------|---------------------------------------------------------------------------------|
+| ☕ **9:00 – 9:15**   | Welcome, coffee, and setup                                                     |
+| 🔬 **9:15 – 10:00**  | Theory: Illumina sequencing & RNA-seq experimental design                      |
+| 🔄 **10:00 – 10:45** | Theory: nf-core/rnaseq pipeline overview                                       |
+| ⏸️ **10:45 – 11:00** | Break                                                                           |
+| 💻 **11:00 – 12:00** | Script 01: *nf-core/rnaseq — running the pipeline*                             |
+| 🍽️ **12:00 – 13:00** | Lunch                                                                           |
+| 🧬 **13:00 – 14:15** | Script 02: *Quality Control & Exploratory Data Analysis*                       |
+| ⏸️ **14:15 – 14:30** | Break                                                                           |
+| 📊 **14:30 – 15:30** | Script 03: *Differential Expression Analysis with DESeq2*                      |
+| ⏸️ **15:30 – 15:45** | Break                                                                           |
+| 🔍 **15:45 – 16:15** | Script 04: *Functional Enrichment Analysis (ORA & GSEA with mulea)*            |
+| 🏁 **16:15 – 16:30** | Wrap-up, Q&A, and closing                                                       |
+
+
+:::boxy
+Material for the workshop is located at:
+[dsp_transcriptomics_training](https://github.com/biosustain/dsp_transcriptomics_training)
+:::
+
+Below are two setup options for the practical activities:
+
+>Run the workshop in the cloud (no need to install anything). 
+
+**Launch the app:**
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/biosustain/dsp_transcriptomics_training)
+
+
+>Run the workshop locally on your machine. 
+
+To run it on your own machine, install the following packages:
+
+```{r, eval=FALSE}
+# Install BiocManager if needed
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# Bioconductor packages
+BiocManager::install(c(
+  "DESeq2",
+  "SummarizedExperiment",
+  "apeglm",
+  "EnhancedVolcano"
+))
+
+# CRAN packages
+packages <- c(
+  "dplyr",
+  "ggplot2",
+  "ggrepel",
+  "RColorBrewer",
+  "rmarkdown",
+  "tidyr",
+  "plotly",
+  "pheatmap",
+  "ggpubr",
+  "here",
+  "mulea"
+)
+
+install_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, repos = "https://cloud.r-project.org/")
+  } else {
+    message(pkg, " already installed.")
+  }
+}
+
+invisible(lapply(packages, install_if_missing))
+
+message("All requested R packages are installed and ready to use!")
+```
+
+
+**Local build of website**
+
+
+:::boxy
+You need to clone the repository.
+
+```{r, eval=FALSE}
+git clone https://github.com/biosustain/dsp_transcriptomics_training.git
+
+cd dsp_transcriptomics_training
+
+options(error = traceback)
+bookdown::render_book("index.Rmd", "bookdown::gitbook")
+```
+:::
+
+<!--chapter:end:index.Rmd-->
+
+# Instructions
+
+:::boxy
+Nextflow pipeline
+:::
+
+## Opening the Nextflow environment
+
+To avoid installation and configuration issues we are going to deploy an environment for you containing Nextflow and its requirements.
+
+If you want to open directly a GitHub codespace for this specific repository click here: [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/biosustain/dsp_transcriptomics_training)
+
+Don't change the configuration and accept the default option. It says pay but you're not paying...
+
+If you want to do it manually go to [course website](https://github.com/biosustain/dsp_transcriptomics_training)
+
+Click on button **Code** and click on the Codespaces tab. There click on **Create codespace**. Now your Nextflow environment will be built following the instructions in devcontainer.json file (i.e. installing Ubuntu, Docker, Nextflow, R, Python, VSCode and RStudio server)
+
+To learn more about Github codespaces go [here](https://github.com/features/codespaces)
+
+>Please remember to delete your Codespace by the end of the class so that you do not consume your free Github codespace credits! If you do not delete it it will be deleted automatically days after you created.
+
+## Initial checks
+Now, Nextflow should be ready to run in your GitHub Codespace environment! Let's check that you have a fully functional environment with Nextflow, java and Docker properly installed
+
+```{code-block} bash
+:caption: Verify java installation:
+
+java -version
+```
+
+```{code-block} bash
+:caption: Verify Nextflow installation:
+
+nextflow -v
+```
+
+```{code-block} bash
+:caption: Nextflow current version, system and runtime:
+
+nextflow info
+```
+
+```{code-block} bash
+:caption: Verify Docker installation:
+
+docker --version
+```
+
+If everything went well you have a fully functional Nextflow environment for today. Rememeber that we are going to use VS code as our editor to write code and handle our files.
+
+To check if you have access to RStudio go to the Ports tab and click on "Open in Browser", this will deploy the RStudio for the downstream analysis.
+
+
+
+
+
+<!--chapter:end:02_introduction.Rmd-->
+
+# Quality Control
+
+This report covers the quality control and exploratory analysis of bulk RNA-seq data from *Escherichia coli* K-12 MG1655.
+
+The list of contrasts of interest is:
+
+- DE between [condition A] vs [condition B]
+- DE between [condition C] vs [condition D]
+
+**Topics covered**
+
+- RNAseq Quality control analysis
+- Mapping of short reads (Salmon)
+- Quantification of gene expression
+- Exploratory data analyses
+- Differential gene expression (DESeq2)
+- Gene set enrichment analysis
+
+**Data**
+
+- Type of data: bulk RNASeq
+- Organism: *Escherichia coli* K-12 MG1655
+- Codes location: [GitHub repository](https://github.com/biosustain/dsp_transcriptomics_training)
+- Reference data used: *E. coli* K-12 MG1655 (NCBI RefSeq: NC_000913.3 / Ensembl)
+
+> **Note:** *E. coli* MG1655 is a prokaryote. Key differences to keep in mind:
+> - No introns → transcript = gene (tx2gene mapping is 1:1)
+> - Use **org.EcK12.eg.db** for annotation or **EcK12** KEGG pathways
+> - Genome size ~4.6 Mb with ~4,300 genes
+> - Enrichment analysis via KEGG or custom gene sets with **fgsea**
+
+---
+
+# Explanation of the Report 🧾
+
+This document guides you through the standard QC pipeline for prokaryotic bulk RNA-seq data processed with nf-core/rnaseq + Salmon. It is structured to be both educational and reproducible.
+
+---
+
+## Setup the Environment
+
+<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
+  <strong>💡 Tip:</strong> Install packages only once. If already installed, skip this step.
+</div>
+
+<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
+  <strong>📌 Remember:</strong> Load all libraries at the start of every session before running any analysis.
+</div>
+
+```{r libraries, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(reshape2)
+library(DESeq2)
+library(SummarizedExperiment)
+library(ggpubr)
+library(RColorBrewer)
+library(pheatmap)
+library(factoextra)
+library(plotly)
+library(knitr)
+library(kableExtra)
+library(DT)
+library(org.EcK12.eg.db)
+library(fgsea)
+library(clusterProfiler)
+```
+
+---
+
+## Getting the Metadata
+
+The metadata file describes your experimental design: which sample belongs to which condition and replicate. This information is essential for DESeq2 to model expression differences correctly.
+
+```{r load-metadata, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+git_root <- system("git rev-parse --show-toplevel", intern = TRUE)
+
+samples_info <- read.table(
+  file.path(git_root, "data", "metadata", "metadata.tsv"),
+  header      = TRUE,
+  sep         = "\t",
+  check.names = TRUE
+)
+```
+
+<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
+  <strong>💡 Tip:</strong> Use the interactive table below to verify your sample metadata before proceeding.
+</div>
+
+```{r view-metadata, echo=TRUE, include=TRUE, eval=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  data       = samples_info,
+  rownames   = FALSE,
+  extensions = c('Buttons', 'Scroller'),
+  options    = list(
+    dom         = 'Bfrtip',
+    buttons     = c('copy', 'csv'),
+    deferRender = TRUE,
+    scrollX     = TRUE,
+    scrollY     = 200,
+    scroller    = TRUE
+  ),
+  caption = 'Sample metadata — E. coli MG1655'
+)
+```
+
+---
+
+## Loading Count Data
+
+*E. coli* has no introns, so Salmon's gene-level quantification maps transcripts to genes in a 1:1 relationship. We load the `SummarizedExperiment` object produced by nf-core/rnaseq, extract the raw count matrix, and assign gene symbols as row names (falling back to gene IDs where symbols are missing).
+
+Raw counts must remain as integers — DESeq2's statistical model requires this.
+
+<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
+  <strong>💡 Tip:</strong> If you are unsure which assay name or rowData columns are available in your RDS, inspect them first with <code>assayNames(count_x)</code> and <code>names(rowData(count_x))</code>.
+</div>
+
+```{r load-counts, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+count_x <- readRDS(
+  file.path(git_root, "data", "nf-core_rnaseq",
+            "salmon.merged.gene.SummarizedExperiment.rds")
+)
+
+count_genes <- assay(count_x, assayNames(count_x)[1])
+
+gene_symbols <- rowData(count_x)$gene_name
+gene_ids     <- rowData(count_x)$gene_id
+
+gene_symbols_saved <- ifelse(
+  !is.na(gene_symbols) & nchar(gene_symbols) > 0,
+  make.unique(as.character(gene_symbols)),
+  make.unique(as.character(gene_ids))
+)
+
+count_genes           <- apply(count_genes, 2, as.integer)
+rownames(count_genes) <- gene_symbols_saved
+
+cat("Dimensions (genes × samples):", dim(count_genes), "\n")
+print(head(rownames(count_genes)))
+```
+
+---
+
+## Preparing the Data
+
+Before building the DESeq2 object we need to:
+
+1. Set factor levels so that `control` is the **reference level** (the denominator in fold-change calculations).
+2. Clean column names in the count matrix to remove whitespace or special characters.
+3. Align the sample order between the count matrix and the metadata — DESeq2 requires these to match exactly.
+
+```{r prepare-data, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+condition_levels   <- c("control", "treatment")
+samples_info$group <- factor(samples_info$group, levels = condition_levels)
+
+colnames(count_genes) <- gsub(
+  "[^[:alnum:]_]", "",
+  gsub("\\s+", "_", trimws(colnames(count_genes)))
+)
+
+if (!all(colnames(count_genes) %in% samples_info$sample)) {
+  stop("⛔ Some samples in count matrix are NOT in metadata! Check sample names.")
+}
+samples_info <- samples_info[match(colnames(count_genes), samples_info$sample), ]
+
+print(data.frame(count_col    = colnames(count_genes),
+                 metadata_row = samples_info$sample))
+```
+
+---
+
+## Creating the DESeqDataSet
+
+The `DESeqDataSet` (DDS) is DESeq2's core data container. It holds the raw count matrix, sample metadata, and the experimental design formula. The design formula tells DESeq2 which variable to test — here `~ condition` compares treatment vs control.
+
+> **Prokaryote note:** DESeq2's negative binomial model is organism-agnostic. It works identically for *E. coli* as for mouse or human data. ✅
+
+```{r make-dds, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+samples_info$condition <- factor(samples_info$group,
+                                 levels = c("control", "treatment"))
+
+dds <- DESeqDataSetFromMatrix(
+  countData = count_genes,
+  colData   = samples_info,
+  design    = ~ condition
+)
+```
+
+---
+
+# Sanity Checks
+
+## Are We Working with Raw Counts?
+
+DESeq2 requires raw, un-normalised integer counts. Feeding it normalised values (TPM, FPKM) will produce incorrect results. Always verify your input before proceeding.
+
+```{r check-raw, echo=TRUE, eval=FALSE, include=TRUE}
+head(count_genes[, 1:min(6, ncol(count_genes))])
+
+hist(
+  as.numeric(count_genes[1, ]),
+  main = paste("Raw counts —", rownames(count_genes)[1]),
+  xlab = "Raw count",
+  col  = "steelblue"
+)
+```
+
+> Raw *E. coli* RNA-seq counts are typically in the thousands to millions range (library sizes ~5–50 M reads for bacterial experiments). A highly right-skewed distribution is expected and correct at this stage.
+
+---
+
+## Pre-filtering Low-count Genes
+
+Genes with very few counts across all samples carry no statistical power and inflate the multiple testing burden. We remove genes that do not have at least 10 counts in a minimum number of samples (equal to the size of the smallest group, i.e., 3 replicates here).
+
+*E. coli* has ~4,300 genes — after filtering you should retain the majority of them.
+
+```{r prefilter, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+smallestGroupSize <- min(table(samples_info$condition))
+
+keep <- rowSums(counts(dds) >= 10) >= smallestGroupSize
+dds  <- dds[keep, ]
+
+cat("Genes before filtering:", nrow(counts(dds)) + sum(!keep), "\n")
+cat("Genes after  filtering:", nrow(dds), "\n")
+cat("Genes removed         :", sum(!keep), "\n")
+```
+
+---
+
+## Factor Order and Reference Level
+
+The first factor level is always the reference (denominator) in DESeq2 comparisons. Setting it explicitly ensures that fold changes are computed in the intended direction: **treatment vs control**, not the reverse.
+
+```{r factor-order, echo=TRUE, eval=TRUE, include=TRUE}
+dds$condition <- relevel(dds$condition, ref = "control")
+levels(dds$condition)
+```
+
+<div style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;">
+  <strong>📌 Remember:</strong> The reference level determines the direction of fold changes. A positive log2FC means higher expression in the treatment relative to control.
+</div>
+
+---
+
+# Exploratory Data Analysis
+
+In this section we do **not** perform statistical tests. The goal is quality control: check count distributions, detect technical outliers, and confirm that samples cluster as expected by condition before committing to differential expression analysis.
+
+## Estimate Size Factors
+
+Library sizes (total mapped reads) differ between samples due to technical variation in sequencing depth. DESeq2's median-of-ratios normalisation corrects for this by computing a size factor per sample. Size factors close to 1.0 indicate balanced libraries; values far from 1.0 suggest uneven sequencing depth and warrant investigation.
+
+```{r size-factors, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+dds <- estimateSizeFactors(dds)
+
+sizeFactors(dds) %>%
+  enframe(name = "sample", value = "size_factor") %>%
+  kable(digits = 3, caption = "DESeq2 size factors per sample") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+---
+
+## Distribution of Normalised Counts
+
+Boxplots of log2-normalised counts per sample provide a quick visual check that all samples have comparable expression distributions. After normalisation, boxes should overlap substantially. A sample that is a clear outlier in median or spread may indicate a failed library or mislabelled condition.
+
+<div style="background:#f8d7da;border-left:4px solid #721c24;padding:10px;margin:10px 0;">
+  <strong>📌 Remember:</strong> These normalised counts are for visualisation only. Always feed DESeq2 <strong>raw integer counts</strong>.
+</div>
+
+```{r distribution, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+cols_condition <- c("control"   = "#2c7bb6",
+                    "treatment" = "#d7191c")
+
+normalized_counts <- counts(dds, normalized = TRUE)
+
+counts_norm <- reshape2::melt(
+  normalized_counts,
+  varnames   = c("gene_id", "sample"),
+  value.name = "counts"
+)
+
+counts_norm <- inner_join(
+  counts_norm,
+  as.data.frame(colData(dds)),
+  by = "sample"
+)
+
+distribution <- ggplot(counts_norm,
+                       aes(x    = sample,
+                           y    = log2(counts + 1),
+                           fill = condition)) +
+  geom_boxplot(outlier.size = 0.3, alpha = 0.8) +
+  coord_flip() +
+  theme_pubr(border = TRUE) +
+  xlab("Sample") +
+  ylab("log2(normalised counts + 1)") +
+  ggtitle("Normalised count distribution — E. coli MG1655") +
+  scale_fill_manual(values = cols_condition)
+
+distribution
+ggplotly(distribution)
+```
+
+---
+
+## Sample Correlation Heatmap
+
+Euclidean distances between VST-transformed samples reveal how similar samples are to each other globally. Replicates from the same condition should cluster together and show small (dark) distances. A sample that is more similar to the opposite condition than to its own replicates is a red flag for a labelling error or a failed experiment.
+
+Variance-stabilising transformation (VST) is applied here because raw or normalised counts have heteroscedastic variance (high-count genes have much larger absolute variance). VST removes this mean–variance dependence, making distances meaningful across the full expression range ([Anders & Huber, 2010](https://doi.org/10.1186/gb-2010-11-10-r106)).
+
+```{r vst, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+vsd <- varianceStabilizingTransformation(dds, blind = TRUE)
+```
+
+```{r correlation-heatmap, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+sampleDists      <- dist(t(assay(vsd)))
+sampleDistMatrix <- as.matrix(sampleDists)
+
+rownames(sampleDistMatrix) <- paste(vsd$sample, vsd$condition, sep = " | ")
+colnames(sampleDistMatrix) <- rownames(sampleDistMatrix)
+
+colours <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
+
+pheatmap(
+  sampleDistMatrix,
+  col          = colours,
+  border_color = NA,
+  main         = "Sample-to-sample distances (VST) — E. coli MG1655",
+  fontsize     = 10
+)
+```
+
+---
+
+## Principal Component Analysis (PCA)
+
+PCA reduces the high-dimensional expression space (one dimension per gene) to a small number of principal components that capture the largest sources of variance in the data. In a well-controlled experiment, PC1 should separate the two conditions — this confirms that the biological effect of interest is the dominant driver of transcriptional variation.
+
+If PC1 is instead explained by a technical variable (batch, sequencing run, RNA quality), batch correction will be needed before differential expression analysis ([Leek *et al.*, 2010](https://doi.org/10.1038/nrg2825)).
+
+```{r pca, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+pca_data <- plotPCA(vsd,
+                    intgroup  = c("sample", "condition"),
+                    returnData = TRUE)
+
+pct_var <- round(100 * attr(pca_data, "percentVar"), 1)
+
+PCAPlot <- ggplot(pca_data, aes(x     = PC1,
+                                y     = PC2,
+                                color = condition,
+                                label = sample)) +
+  geom_point(size = 4) +
+  geom_text(vjust = -0.8, size = 3, show.legend = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
+  geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.3) +
+  theme_pubr(border = TRUE) +
+  theme(
+    axis.text       = element_text(size = 12),
+    axis.title      = element_text(size = 14),
+    legend.text     = element_text(size = 12),
+    legend.position = "bottom"
+  ) +
+  labs(
+    x     = paste0("PC1: ", pct_var[1], "% variance"),
+    y     = paste0("PC2: ", pct_var[2], "% variance"),
+    title = "PCA — E. coli MG1655 (VST-transformed counts)",
+    color = "Condition"
+  ) +
+  scale_color_manual(values = cols_condition)
+
+PCAPlot
+ggplotly(PCAPlot)
+```
+
+---
+
+## Detecting Outliers
+
+The PCA above uses only the top 500 most variable genes (DESeq2 default). Here we run PCA on the full VST matrix and inspect a scree plot and biplot to assess whether any single sample drives an unusual amount of variance — a common sign of a technical outlier.
+
+```{r outlier-detection, echo=TRUE, eval=FALSE, include=TRUE, message=FALSE, warning=FALSE}
+pca_full <- prcomp(t(assay(vsd)))
+
+fviz_screeplot(pca_full, addlabels = TRUE,
+               main = "Scree plot — variance per PC")
+
+fviz_pca_ind(pca_full, geom = c("point", "text"), repel = TRUE,
+             title = "PCA — sample positions (full gene matrix)")
+
+fviz_pca_biplot(pca_full, repel = TRUE,
+                title = "Biplot — genes and samples")
+```
+
+---
+
+## Top Variable Genes Heatmap
+
+Clustering the 50 most variable genes across samples provides a gene-level view of the separation between conditions. Genes that are truly differentially expressed should show clear block structure — high expression in one condition, low in the other. This heatmap also helps identify whether replicates within a condition are consistent with each other.
+
+Row-scaling (z-score per gene) is applied so that highly expressed genes do not visually dominate over lowly expressed ones.
+
+```{r topvar-heatmap, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+topVarGenes <- head(order(rowVars(assay(vsd)), decreasing = TRUE), 50)
+
+df_anno <- as.data.frame(colData(vsd)[, "condition", drop = FALSE])
+
+anno_colors <- list(condition = cols_condition)
+
+colsHeat <- c("#F7F7F7", "#92C5DE", "#0571B0", "#F4A582", "#CA0020")
+
+pheatmap(
+  assay(vsd)[topVarGenes, ],
+  cluster_cols             = TRUE,
+  cluster_rows             = TRUE,
+  scale                    = "row",
+  clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean",
+  annotation_col           = df_anno,
+  annotation_colors        = anno_colors,
+  show_colnames            = TRUE,
+  show_rownames            = TRUE,
+  color                    = colorRampPalette(colsHeat)(255),
+  border_color             = "#f8edeb",
+  fontsize_row             = 7,
+  main                     = "Top 50 variable genes — E. coli MG1655 (VST, row-scaled)"
+)
+```
+
+---
+
+# Summary
+
+Before proceeding to differential expression analysis, confirm all QC checks pass:
+
+| Check | Expected outcome |
+|---|---|
+| Size factors ≈ 1.0 across samples | Library sizes are balanced |
+| Boxplots of normalised counts overlap | No extreme outlier samples |
+| Correlation heatmap: within-group distances < between-group | Replicates are reproducible |
+| PCA PC1 separates conditions | Condition is the dominant source of variance |
+| No isolated samples in PCA or heatmap | No technical outliers |
+
+If any check fails, investigate the cause before running DESeq2. Proceeding with outlier samples or confounded designs will compromise all downstream results.
+
+```{r export-dds, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+# ── Export DDS for downstream analysis ────────────────────────────────────────
+results_dir <- file.path(git_root, "results", "rds")
+dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
+
+dds_path <- file.path(results_dir, "dds_ecoli_MG1655.rds")
+saveRDS(dds, file = dds_path)
+
+cat("✅ DDS saved to:", dds_path, "\n")
+cat("   Dimensions  :", nrow(dds), "genes ×", ncol(dds), "samples\n")
+cat("   Conditions  :", paste(levels(dds$condition), collapse = " vs "), "\n")
+```
+
+<!-- --------------------- Do not edit this and below ---------------------- -->
+
+</br>
+
+```{r session-info, echo=TRUE, eval=TRUE, include=TRUE}
+sessionInfo()
+```
+
+```{r render, eval=FALSE, echo=FALSE}
+rmarkdown::render("01_quality_control_ecoli.Rmd")
+```
+
+<!--chapter:end:03_analysis_basics.Rmd-->
+
+# Differential Expression Analysis
+
+This report covers differential expression (DE) analysis of bulk RNA-seq data from *Escherichia coli* K-12 MG1655 using DESeq2.
+
+We test one contrast:
+
+- **Treatment vs Control** — which genes change expression in response to treatment?
+
+> **Note:** This script assumes you have already run `01_quality_control_ecoli.Rmd` and that the `dds` object is available in your environment. If not, re-run the QC script first.
+
+---
+
+## Setup the Environment
+
+```{r libraries, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(DESeq2)
+library(ggpubr)
+library(plotly)
+library(pheatmap)
+library(RColorBrewer)
+library(knitr)
+library(kableExtra)
+library(DT)
+```
+
+---
+
+# Differential Expression Analysis
+
+## Running DESeq2
+
+DESeq2 fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but `DESeq()` handles all three in one call.
+
+<div style="background:#f8d7da;border-left:4px solid #721c24;padding:10px;margin:10px 0;">
+  <strong>⚠️ Warning:</strong> Always use raw integer counts as input. Do not use TPM, FPKM, or any normalised values — DESeq2 handles normalisation internally.
+</div>
+
+<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
+  <strong>📌 Remember:</strong> The variable of interest should be at the end of the design formula, and the control group must be the first (reference) factor level. Both were set in the QC script.
+</div>
+
+
+```{r load-dds, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+git_root <- system("git rev-parse --show-toplevel", intern = TRUE)
+
+dds <- readRDS(file.path(git_root, "results", "rds", "dds_ecoli_MG1655.rds"))
+
+cat("✅ DDS loaded\n")
+cat("   Dimensions  :", nrow(dds), "genes ×", ncol(dds), "samples\n")
+cat("   Conditions  :", paste(levels(dds$condition), collapse = " vs "), "\n")
+```
+
+```{r run-deseq, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+dds <- DESeq(dds)
+
+resultsNames(dds)
+```
+
+---
+
+## Extracting Results
+
+`results()` extracts the Wald test output for a given contrast. By default DESeq2 applies **independent filtering** — it removes genes with very low mean counts before multiple testing correction, which increases power to detect DE genes at a given FDR threshold.
+
+We set `alpha = 0.05` to optimise filtering for a 5% FDR cutoff.
+
+```{r extract-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res <- results(dds,
+               contrast = c("condition", "treatment", "control"),
+               alpha    = 0.05)
+
+summary(res)
+```
+
+The results table contains one row per gene with the following columns:
+
+| Column | Description |
+|---|---|
+| `baseMean` | Mean normalised count across all samples |
+| `log2FoldChange` | log2(treatment / control) |
+| `lfcSE` | Standard error of the log2FC estimate |
+| `stat` | Wald statistic |
+| `pvalue` | Raw p-value |
+| `padj` | Benjamini–Hochberg adjusted p-value |
+
+---
+
+## Log2 Fold Change Shrinkage
+
+> **What is this step and why do we need it?**
+>
+> After running DESeq2, every gene gets a raw log2 fold change (LFC) estimate.
+> For **lowly expressed genes**, these estimates are unreliable — a gene with
+> 1 count in control and 3 in treatment looks like a 3-fold change, but this
+> is just noise from low counts.
+>
+> `lfcShrink()` corrects this using **empirical Bayes shrinkage**: it pulls
+> noisy estimates (low counts, high uncertainty) toward zero, while leaving
+> well-supported fold changes (high counts, consistent signal) largely
+> unchanged. Think of it as a confidence-weighted adjustment.
+>
+> ⚠️ **Important:** shrinkage does **not** change your p-values or which genes
+> are significant — those come from the `results()` call above. Shrunken LFCs
+> are used exclusively for **ranking and visualisation** (volcano plot, heatmap).
+>
+> **Why `apeglm`?** Three shrinkage methods exist in DESeq2:
+> - `apeglm` — most accurate for simple two-group comparisons like ours ✅
+> - `ashr` — more flexible; needed when comparing two non-reference groups
+> - `normal` — the original method, now outdated and not recommended
+>
+> For a treatment vs control design in *E. coli*, `apeglm` is the right choice.
+> See [Zhu *et al.*, 2019](https://doi.org/10.1093/bioinformatics/btz585) for benchmarks.
+```{r lfc-shrink, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res_shrunk <- lfcShrink(dds,
+                        coef  = "condition_treatment_vs_control",
+                        type  = "apeglm")
+
+summary(res_shrunk)
+```
+
+---
+
+## Sorting and Filtering Significant Genes
+
+We order genes by adjusted p-value and filter to retain only those passing our significance thresholds: **padj < 0.05** and **|log2FC| ≥ 1** (i.e., at least a 2-fold change).
+
+```{r filter-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res_df <- as.data.frame(res_shrunk) %>%
+  rownames_to_column("gene") %>%
+  arrange(padj) %>%
+  filter(!is.na(padj))
+
+res_sig <- res_df %>%
+  filter(padj < 0.05, abs(log2FoldChange) >= 1)
+
+cat("Total genes tested       :", nrow(res_df), "\n")
+cat("Significant genes        :", nrow(res_sig), "\n")
+cat("  Upregulated (LFC ≥ 1)  :", sum(res_sig$log2FoldChange >= 1), "\n")
+cat("  Downregulated (LFC ≤ -1):", sum(res_sig$log2FoldChange <= -1), "\n")
+```
+
+---
+
+## Interactive Results Table
+
+```{r results-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  res_sig %>% mutate(across(where(is.numeric), \(x) round(x, 4))),
+  rownames   = FALSE,
+  extensions = c('Buttons', 'Scroller'),
+  options    = list(
+    dom         = 'Bfrtip',
+    buttons     = c('copy', 'csv'),
+    scrollX     = TRUE,
+    scrollY     = 300,
+    scroller    = TRUE
+  ),
+  caption = 'Significant DE genes — treatment vs control (padj < 0.05, |LFC| ≥ 1)'
+)
+```
+
+---
+
+# Visualisation
+
+## Volcano Plot
+
+A volcano plot combines fold change (x-axis) and statistical significance (y-axis) into a single view. Genes in the upper corners are both strongly and significantly changed — these are the most biologically interesting candidates.
+
+The dashed lines mark our thresholds: |log2FC| = 1 and padj = 0.05.
+
+```{r volcano, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+cols_condition <- c("control"   = "#2c7bb6",
+                    "treatment" = "#d7191c")
+
+res_df <- res_df %>%
+  mutate(
+    significance = case_when(
+      padj < 0.05 & log2FoldChange >=  1 ~ "Up",
+      padj < 0.05 & log2FoldChange <= -1 ~ "Down",
+      TRUE                               ~ "NS"
+    )
+  )
+
+top_labels <- res_df %>%
+  filter(significance != "NS") %>%
+  slice_min(padj, n = 10)
+
+volcano <- ggplot(res_df, aes(x = log2FoldChange,
+                              y = -log10(padj),
+                              color = significance,
+                              text  = gene)) +
+  geom_point(alpha = 0.7, size = 1.8) +
+  geom_vline(xintercept = c(-1, 1),  linetype = "dashed", color = "black") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black") +
+  geom_text(data = top_labels,
+            aes(label = gene),
+            size = 2.8, vjust = -0.6, show.legend = FALSE) +
+  scale_color_manual(values = c("Up" = "#d7191c",
+                                "Down" = "#2c7bb6",
+                                "NS"   = "grey70")) +
+  theme_pubr(border = TRUE) +
+  labs(
+    title = "Volcano Plot — Treatment vs Control",
+    x     = "log2(Fold Change)",
+    y     = "-log10(adjusted p-value)",
+    color = NULL
+  )
+
+volcano
+ggplotly(volcano, tooltip = c("text", "x", "y"))
+```
+
+---
+
+## MA Plot
+
+An MA plot shows log2 fold change (y-axis) against mean expression (x-axis). It helps assess whether the fold change estimates are stable across the expression range. After shrinkage, estimates for lowly expressed genes (left side) should be pulled toward zero.
+
+```{r ma-plot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+plotMA(res_shrunk,
+       alpha = 0.05,
+       main  = "MA Plot — Treatment vs Control (shrunken LFC)",
+       colSig = "#d7191c",
+       colNonSig = "grey70",
+       ylab  = "log2 Fold Change")
+abline(h = c(-1, 1), lty = 2, col = "black")
+```
+
+---
+
+## Top Gene Count Plot
+
+Plotting raw normalised counts for the most significant gene provides a sanity check: the direction and magnitude of the fold change should be visually obvious. If it isn't, investigate further.
+
+```{r top-gene, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+top_gene <- res_sig$gene[1]
+
+plotCounts(dds,
+           gene     = top_gene,
+           intgroup = "condition",
+           main     = paste("Normalised counts —", top_gene))
+```
+
+---
+
+## Heatmap of Significant Genes
+
+Clustering significant DE genes across samples provides a gene-level view of the expression differences. Genes should show clear block structure: high expression in treatment and low in control (or vice versa). Replicates within each condition should cluster together.
+
+```{r de-heatmap, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+vsd <- varianceStabilizingTransformation(dds, blind = FALSE)
+
+sig_genes <- res_sig %>%
+  slice_min(padj, n = min(50, nrow(res_sig))) %>%
+  pull(gene)
+
+df_anno    <- as.data.frame(colData(vsd)[, "condition", drop = FALSE])
+anno_colors <- list(condition = cols_condition)
+colsHeat   <- c("#F7F7F7", "#92C5DE", "#0571B0", "#F4A582", "#CA0020")
+
+pheatmap(
+  assay(vsd)[sig_genes, ],
+  cluster_cols             = TRUE,
+  cluster_rows             = TRUE,
+  scale                    = "row",
+  clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean",
+  annotation_col           = df_anno,
+  annotation_colors        = anno_colors,
+  show_colnames            = TRUE,
+  show_rownames            = TRUE,
+  color                    = colorRampPalette(colsHeat)(255),
+  border_color             = "#f8edeb",
+  fontsize_row             = 7,
+  main                     = "Top DE genes — Treatment vs Control (VST, row-scaled)"
+)
+```
+
+---
+
+# Saving Results
+
+```{r save-resultsb, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+results_dir <- file.path(git_root, "results")
+dir.create(results_dir, showWarnings = FALSE)
+
+write.table(
+  res_df,
+  file      = file.path(results_dir, "DE_treatment_vs_control_all.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+write.table(
+  res_sig,
+  file      = file.path(results_dir, "DE_treatment_vs_control_significant.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+cat("Results saved to:", results_dir, "\n")
+```
+
+---
+
+# Summary
+
+| Step | Decision made |
+|---|---|
+| Design formula | `~ condition` (treatment vs control) |
+| LFC shrinkage | `apeglm` method |
+| Significance threshold | padj < 0.05 |
+| Fold change threshold | \|log2FC\| ≥ 1 (2-fold) |
+| Annotation database | `org.EcK12.eg.db` (for enrichment, next script) |
+
+Significant genes are saved and ready for gene set enrichment analysis in the next script.
+
+---
+
+<!-- --------------------- Do not edit this and below ---------------------- -->
+
+</br>
+
+```{r session-info, echo=TRUE, eval=TRUE, include=TRUE}
+sessionInfo()
+```
+
+```{r , eval=FALSE, echo=FALSE}
+rmarkdown::render("02_differential_expression_ecoli.Rmd")
+```
+
+<!--chapter:end:04_viz_practice.Rmd-->
+
+# Gene Functional Enrichment Analysis
+
+This report covers functional enrichment analysis of differentially expressed genes from *Escherichia coli* K-12 MG1655 after saccharin treatment ([Dedios *et al.*, 2025](https://link.springer.com/article/10.1038/s44321-025-00219-1)).
+
+We apply two complementary approaches:
+
+- **ORA** (Over-Representation Analysis) using [`mulea`](https://github.com/ELTEbioinformatics/mulea) — tests whether significant DE genes are enriched in KEGG pathways more than expected by chance, with empirical FDR correction
+- **GSEA** (Gene Set Enrichment Analysis) using [`fgsea`](https://bioconductor.org/packages/fgsea/) — uses the full ranked gene list to detect coordinated pathway-level shifts, including subtle changes below the significance threshold
+
+Both analyses use KEGG pathway gene sets retrieved via `KEGGREST` for *E. coli* K-12 MG1655.
+
+> **Why two packages?**
+> `mulea` provides excellent empirical FDR correction for ORA but its built-in GSEA
+> function does not compute NES (Normalised Enrichment Scores). `fgsea` is the gold
+> standard for preranked GSEA with proper NES and permutation-based p-values.
+> Using the best tool for each task gives the most reliable results.
+
+> **Why KEGG?**
+> The original Dedios 2025 paper used KEGG pathway analysis for *E. coli* MG1655, making
+> this the biologically appropriate and directly comparable gene set database.
+
+---
+
+# Setup
+
+## Load Libraries
+
+```{r libraries, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(mulea)
+library(fgsea)
+library(KEGGREST)
+library(knitr)
+library(kableExtra)
+library(DT)
+library(plotly)
+```
+
+---
+
+## Load Results from Differential Expression Analysis
+
+This script reads the DE results produced by `02_differential_expression_ecoli.Rmd`.
+Make sure you have run that script first — it saves two files to `results/`:
+
+- `results/DE_treatment_vs_control_all.tsv` — all tested genes with shrunken LFC
+- `results/DE_treatment_vs_control_significant.tsv` — significant DE genes (padj < 0.05, |LFC| >= 1)
+
+```{r load-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+git_root <- system("git rev-parse --show-toplevel", intern = TRUE)
+
+res_df <- read.table(
+  file.path(git_root, "results", "DE_treatment_vs_control_all.tsv"),
+  header      = TRUE,
+  sep         = "\t",
+  check.names = TRUE
+)
+
+res_sig <- read.table(
+  file.path(git_root, "results", "DE_treatment_vs_control_significant.tsv"),
+  header      = TRUE,
+  sep         = "\t",
+  check.names = TRUE
+)
+
+cat("All tested genes     :", nrow(res_df), "\n")
+cat("Significant DE genes :", nrow(res_sig), "\n")
+cat("  Upregulated        :", sum(res_sig$log2FoldChange >= 1), "\n")
+cat("  Downregulated      :", sum(res_sig$log2FoldChange <= -1), "\n")
+```
+
+---
+
+## Build and Cache KEGG GMT
+
+We retrieve KEGG pathway gene sets for *E. coli* K-12 MG1655 from the KEGG API using
+`KEGGREST`. Both the GMT and the locus tag to gene symbol mapping table are cached locally
+as RDS files so this step only runs once.
+
+> **Why do we need a mapping step?**
+> The nf-core/rnaseq pipeline uses locus tags (`b0001`, `b0002`...) as gene identifiers
+> when no `gene_name` field is present in the reference GTF, which is common for
+> prokaryotic genomes. The KEGG pathway GMT uses gene symbols (`aceE`, `recA`...).
+> We build a locus tag to gene symbol map directly from KEGG and convert before analysis.
+
+<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
+  <strong>Tip:</strong> The first time you run this chunk it queries the KEGG API (~2-3 min).
+  After that both RDS files load instantly. Do not delete the files in
+  <code>data/databases/</code>.
+</div>
+
+```{r build-kegg-gmt, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+gmt_path <- file.path(git_root, "data", "databases",
+                      "KEGG_Pathways_Ecoli_MG1655_GeneSymbol.rds")
+map_path <- file.path(git_root, "data", "databases",
+                      "KEGG_locus_to_symbol_Ecoli_MG1655.rds")
+
+if (file.exists(gmt_path) && file.exists(map_path)) {
+
+  kegg_gmt <- readRDS(gmt_path)
+  id_map   <- readRDS(map_path)
+  cat("Loaded cached GMT    :", nrow(kegg_gmt), "pathways\n")
+  cat("Loaded cached ID map :", nrow(id_map), "entries\n")
+
+} else {
+
+  cat("Fetching KEGG data for E. coli MG1655 — ~2-3 min...\n")
+
+  ecoli_pathways <- keggList("pathway", "eco")
+  pathway_ids    <- names(ecoli_pathways)
+  pathway_names  <- gsub(" - Escherichia coli K-12 MG1655$", "",
+                         as.character(ecoli_pathways))
+
+  cat("Total pathways found:", length(pathway_ids), "\n")
+
+  batches         <- split(pathway_ids, ceiling(seq_along(pathway_ids) / 10))
+  pathway_genes   <- list()
+  locus_to_symbol <- list()
+
+  for (i in seq_along(batches)) {
+    cat("  Batch", i, "of", length(batches), "\n")
+    for (pid in batches[[i]]) {
+      tryCatch({
+        result <- keggGet(pid)[[1]]
+        if (!is.null(result$GENE) && length(result$GENE) >= 2) {
+          locus  <- result$GENE[seq(1, length(result$GENE), by = 2)]
+          symbl  <- trimws(sub(";.*", "", result$GENE[seq(2, length(result$GENE), by = 2)]))
+          pathway_genes[[pid]] <- symbl
+          for (j in seq_along(locus)) locus_to_symbol[[locus[j]]] <- symbl[j]
+        }
+      }, error = function(e) cat("  Skipped:", pid, "\n"))
+    }
+    Sys.sleep(0.3)
+  }
+
+  kegg_gmt <- data.frame(
+    ontology_id    = names(pathway_genes),
+    ontology_name  = pathway_names[match(names(pathway_genes), pathway_ids)],
+    list_of_values = I(pathway_genes),
+    stringsAsFactors = FALSE
+  )
+
+  id_map <- data.frame(
+    locus_tag   = names(locus_to_symbol),
+    gene_symbol = unlist(locus_to_symbol),
+    stringsAsFactors = FALSE
+  )
+
+  dir.create(dirname(gmt_path), recursive = TRUE, showWarnings = FALSE)
+  saveRDS(kegg_gmt, gmt_path)
+  saveRDS(id_map,   map_path)
+  cat("GMT saved    :", nrow(kegg_gmt), "pathways\n")
+  cat("ID map saved :", nrow(id_map), "entries\n")
+}
+
+cat("\nExample pathways:\n")
+head(kegg_gmt$ontology_name, 6)
+```
+
+---
+
+## Convert Locus Tags to Gene Symbols
+
+```{r id-conversion, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res_df_sym <- res_df %>%
+  left_join(id_map, by = c("gene" = "locus_tag")) %>%
+  mutate(gene = ifelse(!is.na(gene_symbol), gene_symbol, gene)) %>%
+  select(-gene_symbol)
+
+res_sig_sym <- res_sig %>%
+  left_join(id_map, by = c("gene" = "locus_tag")) %>%
+  mutate(gene = ifelse(!is.na(gene_symbol), gene_symbol, gene)) %>%
+  select(-gene_symbol)
+
+cat("Genes mapped to symbols  :", sum(res_df$gene %in% id_map$locus_tag),
+    "of", nrow(res_df), "\n")
+cat("Remaining as locus tags  :", sum(!res_df_sym$gene %in% id_map$gene_symbol),
+    "(unannotated in KEGG - expected)\n")
+cat("\nExample converted gene names:\n")
+head(res_sig_sym$gene, 10)
+```
+
+<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
+  <strong>Note:</strong> Genes remaining as locus tags are not annotated in any KEGG
+  pathway. They are included in the ORA background but will not match any gene set.
+  This is expected — not all <em>E. coli</em> genes are assigned to KEGG pathways.
+</div>
+
+---
+
+# Part 1 — Over-Representation Analysis (ORA)
+
+## What is ORA?
+
+ORA asks: *"Are my significant DE genes enriched in any pathway more than expected by chance?"*
+
+It uses a **hypergeometric test** (equivalent to a one-sided Fisher's exact test):
+
+- **Query set** — significant DE genes (padj < 0.05, |LFC| >= 1), converted to gene symbols
+- **Background** — all genes tested by DESeq2, converted to gene symbols
+- **Gene sets** — KEGG pathways
+- **FDR correction** — empirical FDR (eFDR) via resampling, which accounts for interdependence between gene sets
+
+> **Key assumption:** ORA treats all significant genes equally — it ignores magnitude or
+> direction of fold change. This is why we also run GSEA (Part 2), which uses the full
+> ranked list.
+
+---
+
+## Prepare Input
+
+```{r ora-input, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+sig_genes <- res_sig_sym$gene
+all_genes  <- res_df_sym$gene
+
+cat("Query set (significant genes) :", length(sig_genes), "\n")
+cat("Pool (all tested genes)        :", length(all_genes), "\n")
+cat("Overlap with first pathway     :",
+    length(intersect(sig_genes, kegg_gmt$list_of_values[[1]])), "genes\n")
+```
+
+<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
+  <strong>Tip:</strong> Always use all <em>tested</em> genes as the background, not the full
+  genome. DESeq2 already filtered to expressed genes, so <code>res_df_sym</code> is the
+  correct pool. Using the full genome inflates the background and produces over-optimistic
+  p-values.
+</div>
+
+---
+
+## Run ORA
+
+```{r ora-run, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+set.seed(42)
+
+ora_model <- ora(
+  gmt                       = kegg_gmt,
+  element_names             = sig_genes,
+  background_element_names  = all_genes,
+  p_value_adjustment_method = "eFDR",
+  number_of_permutations    = 1000
+)
+
+ora_results <- mulea::run_test(ora_model)
+
+cat("Pathways tested          :", nrow(ora_results), "\n")
+cat("Significant (eFDR < 0.05):", sum(ora_results$eFDR < 0.05, na.rm = TRUE), "\n")
+```
+
+---
+
+## Filter and Inspect Significant Pathways
+
+```{r ora-filter, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_sig <- ora_results %>%
+  filter(eFDR < 0.05) %>%
+  arrange(eFDR)
+
+cat("Significant ORA pathways:", nrow(ora_sig), "\n")
+```
+
+```{r ora-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  ora_sig %>%
+    select(ontology_id, ontology_name, nr_common_with_tested_elements,
+           nr_common_with_background_elements, p_value, eFDR) %>%
+    mutate(across(where(is.numeric), \(x) round(x, 4))),
+  rownames   = FALSE,
+  colnames   = c("KEGG ID", "Pathway", "Hits in query",
+                 "Hits in background", "p-value", "eFDR"),
+  extensions = c("Buttons", "Scroller"),
+  options    = list(
+    dom      = "Bfrtip",
+    buttons  = c("copy", "csv"),
+    scrollX  = TRUE,
+    scrollY  = 300,
+    scroller = TRUE
+  ),
+  caption = "Significant ORA pathways — treatment vs control (eFDR < 0.05)"
+)
+```
+
+---
+
+## Visualise ORA Results
+
+### Bar Plot — Enriched Pathways
+
+```{r ora-barplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_bar <- ora_sig %>%
+  slice_min(eFDR, n = 20) %>%
+  mutate(ontology_name = fct_reorder(ontology_name, -log10(eFDR)))
+
+ora_barplot <- ggplot(ora_bar,
+                      aes(x    = -log10(eFDR),
+                          y    = ontology_name,
+                          fill = -log10(eFDR))) +
+  geom_col(width = 0.7) +
+  geom_vline(xintercept = -log10(0.05), linetype = "dashed",
+             color = "black", linewidth = 0.5) +
+  scale_fill_gradient(low = "#92C5DE", high = "#CA0020") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  labs(
+    title    = "ORA — Enriched KEGG Pathways (eFDR < 0.05)",
+    subtitle = "Treatment vs Control | E. coli MG1655",
+    x        = "-log10(eFDR)",
+    y        = NULL
+  )
+
+ora_barplot
+ggplotly(ora_barplot)
+```
+
+### Lollipop Plot — Gene Hits per Pathway
+
+```{r ora-lollipop, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_lollipop <- ggplot(ora_bar,
+                       aes(x     = nr_common_with_tested_elements,
+                           y     = ontology_name,
+                           color = eFDR)) +
+  geom_segment(aes(x    = 0,
+                   xend = nr_common_with_tested_elements,
+                   yend = ontology_name),
+               linewidth = 0.8, color = "grey70") +
+  geom_point(size = 4) +
+  scale_color_gradient(low = "#CA0020", high = "#92C5DE", name = "eFDR") +
+  theme_bw() +
+  labs(
+    title    = "ORA — Gene Hits per Pathway",
+    subtitle = "Point colour = eFDR",
+    x        = "Number of DE genes in pathway",
+    y        = NULL
+  )
+
+ora_lollipop
+ggplotly(ora_lollipop)
+```
+
+---
+
+# Part 2 — Gene Set Enrichment Analysis (GSEA)
+
+## What is GSEA?
+
+GSEA asks: *"Are genes in a pathway coordinately shifting up or down across my full ranked list?"*
+
+Unlike ORA, GSEA:
+
+- Uses **all tested genes** — capturing coordinated but subtle pathway-level changes
+- **Ranks genes** by a metric encoding both significance and direction
+- Returns a **Normalised Enrichment Score (NES)**: positive NES = pathway upregulated in treatment; negative NES = pathway downregulated
+
+> **Why signed log p-value for ranking?**
+>
+> `rank = sign(LFC) x -log10(pvalue)`
+>
+> Genes at the top are significantly upregulated; genes at the bottom are significantly
+> downregulated. This is more robust than ranking on LFC alone, which can place noisy
+> high-fold-change genes from lowly expressed genes at the extremes.
+>
+> **Note:** Genes with `pvalue = 0` (below machine precision in DESeq2) are excluded
+> because `-log10(0) = Inf` is not a valid ranking score. These are the most extremely
+> significant genes and their exclusion has minimal impact on pathway-level results.
+
+---
+
+## Prepare the Ranked Gene List
+
+```{r gsea-rank, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ranked_df <- res_df_sym %>%
+  filter(!is.na(pvalue), !is.na(log2FoldChange)) %>%
+  filter(pvalue > 0) %>%                    # exclude p=0 -> log10(0) = Inf
+  mutate(rank_metric = sign(log2FoldChange) * -log10(pvalue)) %>%
+  arrange(desc(rank_metric)) %>%
+  distinct(gene, .keep_all = TRUE)
+
+rank_vector        <- ranked_df$rank_metric
+names(rank_vector) <- ranked_df$gene
+
+cat("Genes in ranked list :", length(rank_vector), "\n")
+cat("Infinite values      :", sum(!is.finite(rank_vector)), "\n")
+cat("Top 5 (upregulated)  :", paste(head(names(rank_vector), 5), collapse = ", "), "\n")
+cat("Bottom 5 (downreg.)  :", paste(tail(names(rank_vector), 5), collapse = ", "), "\n")
+```
+
+---
+
+## Convert GMT to fgsea Format
+
+`fgsea` requires a named list of gene vectors — one entry per pathway.
+
+```{r gsea-pathways, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+pathways_list <- setNames(
+  kegg_gmt$list_of_values,
+  kegg_gmt$ontology_name
+)
+
+cat("Pathways in list:", length(pathways_list), "\n")
+cat("Example entry   :", pathways_list[[1]][1:5], "\n")
+```
+
+---
+
+## Run GSEA
+
+```{r gsea-run, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+set.seed(42)
+
+gsea_results <- fgsea(
+  pathways    = pathways_list,
+  stats       = rank_vector,
+  minSize     = 10,
+  maxSize     = 500,
+  nPermSimple = 10000
+)
+
+cat("Pathways tested          :", nrow(gsea_results), "\n")
+cat("Significant (padj < 0.05):", sum(gsea_results$padj < 0.05, na.rm = TRUE), "\n")
+cat("Nominal (pval < 0.05)    :", sum(gsea_results$pval < 0.05, na.rm = TRUE), "\n")
+```
+
+---
+
+## Filter and Inspect Significant Pathways
+
+```{r gsea-filter, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+gsea_sig <- gsea_results %>%
+  as.data.frame() %>%
+  filter(padj < 0.05) %>%
+  arrange(padj)
+
+cat("Significant GSEA pathways:", nrow(gsea_sig), "\n")
+cat("  Activated (NES > 0)    :", sum(gsea_sig$NES > 0), "\n")
+cat("  Suppressed (NES < 0)   :", sum(gsea_sig$NES < 0), "\n")
+```
+
+```{r gsea-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  gsea_sig %>%
+    select(pathway, NES, pval, padj, size) %>%
+    mutate(
+      direction = ifelse(NES > 0, "Activated", "Suppressed"),
+      across(where(is.numeric), \(x) round(x, 4))
+    ) %>%
+    arrange(desc(abs(NES))),
+  rownames   = FALSE,
+  colnames   = c("Pathway", "NES", "p-value", "padj", "Size", "Direction"),
+  extensions = c("Buttons", "Scroller"),
+  options    = list(
+    dom      = "Bfrtip",
+    buttons  = c("copy", "csv"),
+    scrollX  = TRUE,
+    scrollY  = 300,
+    scroller = TRUE
+  ),
+  caption = "Significant GSEA pathways — treatment vs control (padj < 0.05)"
+)
+```
+
+---
+
+## Visualise GSEA Results
+
+### NES Bar Plot — Activated and Suppressed Pathways
+
+```{r gsea-nes-barplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+cols_direction <- c("Activated" = "#d7191c", "Suppressed" = "#2c7bb6")
+
+# Use top 20 by |NES| if more than 20 significant, otherwise show all
+gsea_bar <- gsea_results %>%
+  as.data.frame() %>%
+  filter(pval < 0.05) %>%
+  slice_max(abs(NES), n = 20) %>%
+  mutate(
+    direction = ifelse(NES > 0, "Activated", "Suppressed"),
+    pathway   = fct_reorder(pathway, NES)
+  )
+
+gsea_nesplot <- ggplot(gsea_bar,
+                       aes(x    = NES,
+                           y    = pathway,
+                           fill = direction)) +
+  geom_col(width = 0.7, alpha = 0.9) +
+  geom_vline(xintercept = 0, color = "black", linewidth = 0.5) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed",
+             color = "grey50", linewidth = 0.4) +
+  scale_fill_manual(values = cols_direction) +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  labs(
+    title    = "GSEA — Normalised Enrichment Scores (pval < 0.05)",
+    subtitle = "Treatment vs Control | E. coli MG1655",
+    x        = "Normalised Enrichment Score (NES)",
+    y        = NULL,
+    fill     = NULL
+  )
+
+gsea_nesplot
+ggplotly(gsea_nesplot)
+```
+
+### Dot Plot — NES, padj and Gene Set Size
+
+```{r gsea-dotplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+gsea_dotplot <- ggplot(gsea_bar,
+                       aes(x     = NES,
+                           y     = pathway,
+                           size  = size,
+                           color = padj)) +
+  geom_point(alpha = 0.85) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  scale_color_gradient(low = "#CA0020", high = "#92C5DE", name = "padj") +
+  scale_size_continuous(name = "Genes in set", range = c(3, 10)) +
+  theme_bw() +
+  theme(legend.position = "right") +
+  labs(
+    title    = "GSEA — Pathway Dot Plot",
+    subtitle = "Point size = genes in set | Colour = padj",
+    x        = "NES",
+    y        = NULL
+  )
+
+gsea_dotplot
+ggplotly(gsea_dotplot)
+```
+
+### Enrichment Plot — Top Pathways
+
+The enrichment plot shows the running sum of the enrichment score for a single pathway
+across the ranked gene list. The peak of the curve is the enrichment score. Genes from
+the pathway are shown as vertical bars (the "rug") at the bottom.
+
+```{r gsea-enrichment-plots, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+# Top activated pathway
+top_up <- gsea_results %>%
+  as.data.frame() %>%
+  filter(NES > 0) %>%
+  slice_min(pval, n = 1) %>%
+  pull(pathway)
+
+# Top suppressed pathway
+top_down <- gsea_results %>%
+  as.data.frame() %>%
+  filter(NES < 0) %>%
+  slice_min(pval, n = 1) %>%
+  pull(pathway)
+
+if (length(top_up) > 0) {
+  plotEnrichment(pathways_list[[top_up]], rank_vector) +
+    labs(title = paste("Top activated:", top_up))
+}
+
+if (length(top_down) > 0) {
+  plotEnrichment(pathways_list[[top_down]], rank_vector) +
+    labs(title = paste("Top suppressed:", top_down))
+}
+```
+
+---
+
+# Part 3 — Comparing ORA and GSEA
+
+ORA and GSEA are complementary — they answer different questions and will not always agree.
+
+```{r compare, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_hits  <- ora_sig$ontology_name
+gsea_hits <- gsea_sig$pathway
+
+both      <- intersect(ora_hits, gsea_hits)
+ora_only  <- setdiff(ora_hits, gsea_hits)
+gsea_only <- setdiff(gsea_hits, ora_hits)
+
+cat("Pathways significant in BOTH :", length(both), "\n")
+cat("Pathways in ORA only         :", length(ora_only), "\n")
+cat("Pathways in GSEA only        :", length(gsea_only), "\n")
+
+if (length(both) > 0) {
+  cat("\nPathways found by both methods:\n")
+  cat(paste(" -", both), sep = "\n")
+}
+```
+
+<div style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;">
+  <strong>Interpretation guide:</strong>
+  <ul>
+    <li><strong>Both significant</strong> — high confidence; strong pathway-level change
+    driven by many DE genes</li>
+    <li><strong>ORA only</strong> — genes crossing the significance threshold cluster in
+    this pathway, but the overall coordinated shift may be modest</li>
+    <li><strong>GSEA only</strong> — coordinated but subtle change below the LFC/padj
+    threshold; genes shift together without individual genes being significant</li>
+  </ul>
+</div>
+
+---
+
+# Saving Results
+
+```{r save-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+results_dir <- file.path(git_root, "results")
+dir.create(results_dir, showWarnings = FALSE)
+
+write.table(
+  ora_results,
+  file      = file.path(results_dir, "ORA_KEGG_treatment_vs_control.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+write.table(
+  as.data.frame(gsea_results) %>% select(-leadingEdge),
+  file      = file.path(results_dir, "GSEA_KEGG_treatment_vs_control.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+cat("Results saved to:", results_dir, "\n")
+cat("  ORA  -> ORA_KEGG_treatment_vs_control.tsv\n")
+cat("  GSEA -> GSEA_KEGG_treatment_vs_control.tsv\n")
+```
+
+---
+
+# Summary
+
+| Step | Choice made | Rationale |
+|---|---|---|
+| ORA package | `mulea` | Empirical FDR correction; accounts for gene set interdependence |
+| GSEA package | `fgsea` | Gold standard for preranked GSEA; proper NES and permutation p-values |
+| Gene sets | KEGG pathways | Matches Dedios 2025; biologically interpretable for bacteria |
+| GMT source | `KEGGREST` API + local RDS cache | No pre-built KEGG GMT for *E. coli*; built from API and cached |
+| ID conversion | Locus tag to gene symbol via KEGGREST | nf-core uses locus tags when GTF lacks gene_name; KEGG GMT uses symbols |
+| ORA background | All DESeq2-tested genes | Correct statistical background — not the full genome |
+| GSEA rank metric | sign(LFC) x -log10(pvalue) | Encodes direction and significance; robust to lowly expressed gene noise |
+| ORA FDR | Empirical FDR (eFDR) | Accounts for gene set interdependence |
+| GSEA FDR | Benjamini-Hochberg (fgsea default) | Standard for preranked GSEA |
+| Significance threshold | 0.05 | Standard; consistent with DE analysis |
+
+Enrichment results are saved and ready for biological interpretation and reporting.
+
+---
+
+<!-- --------------------- Do not edit this and below ---------------------- -->
+
+</br>
+
+```{r session-info, echo=TRUE, eval=TRUE, include=TRUE}
+sessionInfo()
+```
+
+```{r render, eval=FALSE, echo=FALSE}
+rmarkdown::render("03_gene_functional_ecoli.Rmd")
+```
+
+<!--chapter:end:05_wrapup.Rmd-->
+
+# Challenge
+
+Try to reproduce the plots from [Figure 2 of Rong, Frey et al. (2024)](https://www.nature.com/articles/s41467-024-53381-4).
+
+You can load the tables from `data-01/reproducing_plots/` using `read_csv()`. The relevant files are:
+
+- `figure2a_data.csv`
+- `figure2b_data.csv`
+- `figure2c_data.csv`
+- `figure2d_data.csv`
+
+
+**Sometimes the csv tables can be messy, try using `tidyverse` to tidy them up!**
+
+## Solution for Figure 2a
+
+```{r, message = FALSE}
+library(tidyverse)
+```
+
+<br/>
+First, read in the data and pivot it to a long format to make it tidy.
+
+**fig2a_data**
+
+``` {r, echo=TRUE, eval=FALSE}
+fig2a_data <- read_csv("data-01/reproducing_plots/figure_2a_data.csv", show_col_types = FALSE)
+```
+
+``` {r, echo=FALSE, eval=TRUE}
+fig2a_data <- read_csv("../data-01/reproducing_plots/figure_2a_data.csv", show_col_types = FALSE)
+```
+
+```{r, message = FALSE}
+fig2a_long <- fig2a_data %>%
+  pivot_longer(
+    cols = -`time (h)`,
+    names_to = c("replicate", "condition"),
+    names_sep = "_",
+    values_to = "values"
+  ) %>% 
+  mutate(condition = str_to_title(condition)) %>% 
+  # By transforming condition into a factor, we can control the order of the variables in the plot.
+  mutate(condition = factor(condition, levels = c("Induced", "Uninduced")))
+```
+
+<br/>
+Next, summarize the data to get the mean and standard deviation for each time point and condition.
+
+
+```{r}
+fig2a_summary <- fig2a_long %>%
+  group_by(`time (h)`, condition) %>%
+  summarize(
+    mean = mean(values),
+    sd = sd(values),
+    .groups = 'drop'
+  )
+```
+
+<br/>
+Now we can create the plot using `ggplot2`.
+
+
+```{r}
+
+# Define colors for the conditions.
+colors = c("Uninduced" = "#bce7fe", "Induced" = "#5884de")
+
+p_fig2a <- ggplot(fig2a_summary, aes(x = `time (h)`, y = mean, color = condition)) +
+  geom_line(linewidth = 1.5) +
+  geom_point() +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+                color = "black", width = 0.5, linewidth = 0.7) +
+  # Arrow pointing down at x = 1
+  annotate("segment", x = 1, xend = 1, y = 1.1, yend = 0.3,
+    arrow = grid::arrow(length = unit(0.25, "cm"), type = "closed"),
+    color = "black", linewidth = 0.9
+  ) +
+  # Number "1" above the arrow
+  annotate("text", x = 1, y = 1.25, label = "1", size = 6, fontface = "bold") +
+  scale_color_manual(values = colors) +
+  # Change x and y axis titles and limits
+  labs(x = "Time (h)", y = expression(OD[600])) +
+  scale_y_continuous(breaks = c(1, 2, 3, 4), expand = c(0, 0), limits = c(0, 4.5)) +
+  scale_x_continuous(breaks = seq(5, 30, by = 5), expand = c(0, 0), limits = c(0, 31)) +
+  # Apply a basic theme and customize it
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    axis.ticks = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length = unit(0.3, "cm"),
+    axis.text = element_text(size = 15, face = "bold"),
+    axis.title = element_text(size = 16),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),
+    legend.position = c(0.1, 0.95)
+  )
+```
+
+<br/>
+Finally, display the plot.
+
+
+```{r}
+p_fig2a
+```
+
+## Solution for Figure 2b
+
+<br/>
+First, read in the data and pivot it to a long format to make it tidy.
+
+**fig2b_data**
+
+``` {r, echo=TRUE, eval=FALSE}
+fig2b_data <- read_csv("data-01/reproducing_plots/figure_2b_data.csv", show_col_types = FALSE)
+```
+
+``` {r, echo=FALSE, eval=TRUE}
+fig2b_data <- read_csv("../data-01/reproducing_plots/figure_2b_data.csv", show_col_types = FALSE)
+```
+
+```{r message= FALSE}
+
+fig2b_long <- fig2b_data %>%
+  pivot_longer(
+    cols = -`timepoint (h)`,
+    names_to = c("condition", "replicate"),
+    names_sep = "_",
+    values_to = "values"
+  ) %>%
+  mutate(condition = str_to_title(condition)) %>%
+  # By transforming condition into a factor, we can control the order of the variables in the plot.
+  mutate(condition = factor(condition, levels = c("Induced", "Uninduced"))) %>% 
+      mutate("time_interval" = case_when(
+    `timepoint (h)` >= 2 & `timepoint (h)` < 12 ~ "2-12",
+    `timepoint (h)` >= 12 & `timepoint (h)` < 16 ~ "12-16",
+    `timepoint (h)` >= 16 & `timepoint (h)` <= 30 ~ "16-30"
+  )) %>% 
+  mutate(time_interval = factor(time_interval, levels = c("2-12", "12-16", "16-30")))
+```
+
+<br/>
+Next, summarize the data to get the mean and standard deviation for each time interval and condition.
+
+```{r}
+fig2b_summary <- fig2b_long %>%
+  group_by(condition, time_interval) %>%
+  summarize(
+    mean = mean(values),
+    sd = sd(values),
+    .groups = 'drop')
+```
+
+<br/>
+Now we can create the plot using `ggplot2`.
+
+```{r}
+p_fig2b <- ggplot(fig2b_summary, aes(x = time_interval, y = mean, fill = condition)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+                position = position_dodge(0.9), width = 0.25, linewidth = 0.7) +
+  geom_point(
+    data = fig2b_long %>% distinct(condition, time_interval, replicate, values),
+    aes(x = time_interval, y = values, group = condition),
+    color = "black", shape = 1,
+    position = position_dodge(width = 0.9),
+    size = 2.5,
+    show.legend = FALSE
+  ) +
+  # Include brackets and asterisks for significance. Sometimes it's easier to do this in a graphic editor.
+  annotate("segment", x = 0.8, xend = 1.2, y = 2.5, yend = 2.5, linewidth = 1) +
+  annotate("segment", x = 0.8, xend = 0.8, y = 2.5, yend = 2.4, linewidth = 1) +
+  annotate("segment", x = 1.2, xend = 1.2, y = 2.5, yend = 2.4, linewidth = 1) +
+  annotate("text", x = 1, y = 2.6, label = "*", size = 6, fontface = "bold") +
+  annotate("segment", x = 2.8, xend = 3.2, y = 2.85, yend = 2.85, linewidth = 1) +
+  annotate("segment", x = 2.8, xend = 2.8, y = 2.85, yend = 2.75, linewidth = 1) +
+  annotate("segment", x = 3.2, xend = 3.2, y = 2.85, yend = 2.75, linewidth = 1) +
+  annotate("text", x = 3, y = 2.95, label = "*", size = 6, fontface = "bold") +
+  # Use the same colors as in Fig 2a and adjust axes.
+  scale_fill_manual(values = colors) +
+  scale_y_continuous(breaks = c(1, 2), expand = c(0, 0), limits = c(0, 3.2)) +
+  labs(
+    x = "Time interval (h)",
+    y = "Yield (mol mol-¹)"
+  ) +
+  # Set a basic theme and customize it
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    axis.ticks = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length = unit(0.3, "cm"),
+    axis.text = element_text(size = 15, face = "bold"),
+    axis.title = element_text(size = 16),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),
+    legend.position = c(0.1, 0.95)
+  )
+```
+
+<br/>
+Finally, display the plot.
+
+```{r}
+p_fig2b
+```
+
+## Solution for Figure 2c
+
+<br/>
+This table is more complex because it's a bit messy for R. We need to do some cleaning first.
+
+We put "|" in the column names to separate condition and measure later using `separate()` (od600 or sd).
+
+**fig2c_data**
+
+``` {r, echo=TRUE, eval=FALSE}
+fig2c_data <- read_csv("data-01/reproducing_plots/figure_2c_data.csv", show_col_types = FALSE)
+```
+
+``` {r, echo=FALSE, eval=TRUE}
+fig2c_data <- read_csv("../data-01/reproducing_plots/figure_2c_data.csv", show_col_types = FALSE)
+```
+
+```{r, message = FALSE}
+fig2c_data_clean <- fig2c_data %>% 
+  # rename the problematic column names added by R (with "..." suffixes)
+  rename(
+    "10_mM_glucose|od600" = "10 mM glucose...2",
+    "10_mM_glucose|sd" = "10 mM glucose...3",
+    "25_mM_acetate|od600" = "25 mM acetate...4",
+    "25_mM_acetate|sd" = "25 mM acetate...5",
+    "10_mM_glucose_25_mM_acetate|od600" = "10 mM glucose + 25 mM acetate...6",
+    "10_mM_glucose_25_mM_acetate|sd" = "10 mM glucose + 25 mM acetate...7"
+  ) %>%
+  # remove header/extra rows if present, rename the time column and ensure it's numeric
+  slice(-1, -2) %>%
+  rename("time_h" = "condition") %>%
+  mutate(across(where(is.character), as.numeric)) %>% 
+  # convert to long format
+  pivot_longer(
+    cols = -time_h,
+    names_to = c("condition_measure"),
+    values_to = "values"
+  ) %>% 
+  # separate condition and measure into different columns
+  separate(condition_measure, into = c("condition", "measure"), sep = "\\|") %>% 
+  # convert back to wide format
+  pivot_wider(
+    names_from = measure,
+    values_from = values
+  ) %>% 
+  # clean up condition names
+  mutate(condition = case_when(
+    condition == "10_mM_glucose" ~ "10 mM Glucose",
+    condition == "25_mM_acetate" ~ "25 mM Acetate",
+    condition == "10_mM_glucose_25_mM_acetate" ~ "10 mM Glucose + 25 mM Acetate")
+  ) %>% 
+  # transform condition values to factors for plotting order
+  mutate(condition = factor(condition, levels = c("10 mM Glucose", "25 mM Acetate", "10 mM Glucose + 25 mM Acetate")))
+
+```
+
+<br/>
+Now we can create the plot using `ggplot2`.
+
+```{r}
+
+# Define colors for the metabolites.
+metabolite_colors <- c("10 mM Glucose" = "#bcbcbc", 
+                       "25 mM Acetate" = "#595959", 
+                       "10 mM Glucose + 25 mM Acetate" = "#eecc62")
+
+p_fig2c <- fig2c_data_clean %>% 
+  ggplot(aes(x = time_h, y = od600, color = condition, fill = condition)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  # geom_ribbon for the shaded standard deviation area.
+  geom_ribbon(aes(ymin = od600 - sd, ymax = od600 + sd, fill = condition), alpha = 0.2, color = NA, show.legend = FALSE) +
+    scale_color_manual(values = metabolite_colors) +
+    scale_fill_manual(values = metabolite_colors) +
+  # Put titles to the axes and adjust limits.
+  labs(
+    x = "Time (h)",
+    y = expression(OD[630])
+  ) +
+  scale_y_continuous(breaks = seq(0.1, 0.7, by = 0.1), expand = c(0, 0), limits = c(0, 0.8)) +
+  scale_x_continuous(breaks = seq(5, 20, by = 5), expand = c(0, 0), limits = c(0, 25)) +
+  # Apply a basic theme and customize it
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    axis.ticks = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length = unit(0.3, "cm"),
+    axis.text = element_text(size = 15, face = "bold"),
+    axis.title = element_text(size = 16),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),
+    legend.position = c(0.17, 0.93)
+  )
+
+```
+
+<br/>
+Display the plot.
+
+```{r, fig.width=12, fig.height=8}
+p_fig2c
+```
+
+## Solution for Figure 2d
+
+<br/>
+This table is also a bit messy. We need to do some cleaning first.
+
+**fig2d_data**
+
+``` {r, echo=TRUE, eval=FALSE}
+fig2d_data <- read_csv("data-01/reproducing_plots/figure_2d_data.csv", show_col_types = FALSE)
+```
+
+
+``` {r, echo=FALSE, eval=TRUE}
+fig2d_data <- read_csv("../data-01/reproducing_plots/figure_2d_data.csv", show_col_types = FALSE)
+```
+
+
+```{r, message = FALSE}
+fig2d_data_clean <- fig2d_data %>% 
+  # rename the problematic column names added by R (with "..." suffixes)
+  rename(
+    od600_1        = `IBA strain - OD600...2`,
+    od600_2        = `IBA strain - OD600...3`,
+    od600_3        = `IBA strain - OD600...4`,
+    glucose_1      = `Glucose (mM)...5`,
+    glucose_2      = `Glucose (mM)...6`,
+    glucose_3      = `Glucose (mM)...7`,
+    acetate_1      = `Acetate (mM)...8`,
+    acetate_2      = `Acetate (mM)...9`,
+    acetate_3      = `Acetate (mM)...10`,
+    ibamM_1       = `IBA (mM)...11`,
+    ibamM_2       = `IBA (mM)...12`,
+    ibamM_3       = `IBA (mM)...13`,
+    time_h         = condition,
+  ) %>% 
+  # remove header/extra rows if present and ensure numeric columns
+  slice(-1) %>%
+  # fix column types transforming them from character to numeric
+  mutate(across(where(is.character), as.numeric)) %>% 
+  # convert to long format, separate measure and replicate and remove NAs
+  pivot_longer(
+    cols = -time_h,
+    names_to = c("measure_replicate"),
+    values_to = "values"
+  ) %>% 
+  separate(measure_replicate, into = c("measure", "replicate"), sep = "_") %>% 
+  filter(!is.na(values))
+```
+
+<br/>
+Next, summarize the data to get the mean and standard deviation for each time point and measure.
+
+```{r}
+fig2d_summary <- fig2d_data_clean %>%
+  group_by(time_h, measure) %>%
+  summarize(
+    mean = mean(values),
+    sd = sd(values),
+    .groups = 'drop'
+  )
+```
+
+<br/>
+We have to separate the data for OD600 and concentrations to plot them with different y-axes.
+
+```{r}
+df_od <- fig2d_summary %>% 
+  filter(measure == "od600") %>% 
+  mutate(measure = "OD600")
+
+df_conc <- fig2d_summary %>% 
+  filter(measure %in% c("glucose", "acetate", "ibamM")) %>% 
+  mutate(measure = case_when(
+    measure == "glucose" ~ "Glucose",
+    measure == "acetate" ~ "Acetate",
+    measure == "ibamM" ~ "IBA"
+  )) %>% 
+  mutate(measure = factor(measure, levels = c("Acetate", "IBA", "Glucose")))
+
+```
+
+<br/>
+
+Since `ggplot2` does not support dual y-axes directly, we need to scale one of the variables so that they fit well together.
+
+`ggplot2`only supports a second y-axis that is a linear transformation of the first y-axis. Therefore, we need to find a function that maps the concentration values to the OD600 scale.
+
+```{r}
+
+scale_factor <- max(df_conc$mean, na.rm = TRUE) / max(df_od$mean, na.rm = TRUE)
+```
+
+<br/>
+
+Now we can create the plot using `ggplot2`.
+
+```{r}
+# Define colors for the variables.
+variable_colors = c(
+  "OD600" = "black",
+  "Glucose" = "#eecc5d",
+  "Acetate" = "#ff8949",
+  "IBA" = "#bcbcbc"
+)
+
+# There is no global mapping inside ggplot() since we have two different datasets.
+# We need to specify the aes() mappings inside each geom_...() function.
+p_fig2d <- ggplot() +
+  geom_line(data = df_od, aes(x = time_h, y = mean, color = "OD600"), linewidth = 1.2) +
+  geom_point(data = df_od, aes(x = time_h, y = mean, color = "OD600"), size = 2.5) +
+  geom_errorbar(data = df_od, aes(x = time_h, y = mean, ymin = mean - sd, ymax = mean + sd),
+    color = "black", width = 0.5, linewidth = 0.7) +
+  geom_line(data = df_conc, aes(x = time_h, y = mean / scale_factor, color = measure), linewidth = 1.2) +
+  geom_point(data = df_conc, aes(x = time_h, y = mean / scale_factor, color = measure), size = 2.5) +
+  geom_errorbar(data = df_conc, aes(x = time_h, y = mean / scale_factor, ymin = (mean - sd) / scale_factor, ymax = (mean + sd) / scale_factor),
+    color = "black", width = 0.5, linewidth = 0.7) +
+  labs(x = "Time (h)") +
+  # sec.axis() defines the secondary y-axis and how to transform the primary y-axis values to the secondary axis values.
+  # Here we can set limits and breaks for both y-axes.
+  scale_y_continuous(name = "OD600", sec.axis = sec_axis(~ . * scale_factor, name = "Concentration (mM)",
+    breaks = seq(20, 120, by = 20)),
+        breaks = seq(1, 8, by = 1)) +
+  scale_color_manual(values = variable_colors) +
+  # Apply a basic theme and customize it
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    axis.ticks = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length = unit(0.3, "cm"),
+    axis.text = element_text(size = 18, face = "bold"),
+    axis.title = element_text(size = 16),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 14),
+    legend.direction = "horizontal",
+    legend.position = c(0.47, 0.99)
+  )
+```
+
+
+<br/>
+Display the plot.
+
+```{r, fig.width=13, fig.height=8}
+p_fig2d
+```
+
+<div class="question">
+  <strong>❓ Question:</strong> can you put the arrow from the original plot?
+</div>
+
+<!--chapter:end:06_challenge.Rmd-->
+

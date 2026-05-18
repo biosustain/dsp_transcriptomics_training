@@ -1,0 +1,24 @@
+book_filename: "Introduction to Transcriptomics"
+output_dir: "docs"
+delete_merged_file: true
+
+rmd_files:
+  - "index.Rmd"
+  - "02_introduction.Rmd"
+  - "02_a_nf-core.Rmd"
+  - "03_analysis_basics.Rmd"
+  - "04_viz_practice.Rmd"
+  - "05_wrapup.Rmd"
+
+
+
+output:
+  bookdown::gitbook:
+    split_by: "chapter"       # or "section" if you want every # header to be a sidebar entry
+    css: "assets/report.css"
+    config:
+      toc:
+        collapse: section
+    includes:
+      before_body: "assets/_header-lab.Rmd"
+      after_body: "assets/_footer-lab.Rmd"

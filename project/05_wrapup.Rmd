@@ -1,0 +1,701 @@
+# Gene Functional Enrichment Analysis
+
+This report covers functional enrichment analysis of differentially expressed genes from *Escherichia coli* K-12 MG1655 after saccharin treatment ([Dedios *et al.*, 2025](https://link.springer.com/article/10.1038/s44321-025-00219-1)).
+
+We apply two complementary approaches:
+
+- **ORA** (Over-Representation Analysis) using [`mulea`](https://github.com/ELTEbioinformatics/mulea) — tests whether significant DE genes are enriched in KEGG pathways more than expected by chance, with empirical FDR correction
+- **GSEA** (Gene Set Enrichment Analysis) using [`fgsea`](https://bioconductor.org/packages/fgsea/) — uses the full ranked gene list to detect coordinated pathway-level shifts, including subtle changes below the significance threshold
+
+Both analyses use KEGG pathway gene sets retrieved via `KEGGREST` for *E. coli* K-12 MG1655.
+
+### **Why two packages?**
+
+:::boxy
+ `mulea` provides excellent empirical FDR correction for ORA but its built-in GSEA
+ function does not compute NES (Normalised Enrichment Scores). `fgsea` is the gold
+ standard for preranked GSEA with proper NES and permutation-based p-values.
+ Using the best tool for each task gives the most reliable results.
+:::
+
+### **Why KEGG?**
+
+:::boxy
+The original Dedios 2025 paper used KEGG pathway analysis for *E. coli* MG1655, making
+this the biologically appropriate and directly comparable gene set database.
+:::
+
+### Load Libraries
+
+```{r libraries-5, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(mulea)
+library(fgsea)
+library(KEGGREST)
+library(knitr)
+library(kableExtra)
+library(DT)
+library(plotly)
+```
+
+
+## Load Results from Differential Expression Analysis
+
+This script reads the DE results produced by `02_differential_expression_ecoli.Rmd`.
+Make sure you have run that script first — it saves two files to `results/`:
+
+:::boxy
+- `results/DE_treatment_vs_control_all.tsv` — all tested genes with shrunken LFC
+- `results/DE_treatment_vs_control_significant.tsv` — significant DE genes (padj < 0.05, |LFC| >= 1)
+:::
+
+```{r load-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+git_root <- system("git rev-parse --show-toplevel", intern = TRUE)
+
+res_df <- read.table(
+  file.path(git_root, "results", "DE_treatment_vs_control_all.tsv"),
+  header      = TRUE,
+  sep         = "\t",
+  check.names = TRUE
+)
+
+res_sig <- read.table(
+  file.path(git_root, "results", "DE_treatment_vs_control_significant.tsv"),
+  header      = TRUE,
+  sep         = "\t",
+  check.names = TRUE
+)
+
+cat("All tested genes     :", nrow(res_df), "\n")
+cat("Significant DE genes :", nrow(res_sig), "\n")
+cat("  Upregulated        :", sum(res_sig$log2FoldChange >= 1), "\n")
+cat("  Downregulated      :", sum(res_sig$log2FoldChange <= -1), "\n")
+```
+
+
+## Build and Cache KEGG GMT
+
+We retrieve KEGG pathway gene sets for *E. coli* K-12 MG1655 from the KEGG API using
+`KEGGREST`. Both the GMT and the locus tag to gene symbol mapping table are cached locally
+as RDS files so this step only runs once.
+
+:::boxy
+ **Why do we need a mapping step?**
+ The nf-core/rnaseq pipeline uses locus tags (`b0001`, `b0002`...) as gene identifiers
+ when no `gene_name` field is present in the reference GTF, which is common for
+ prokaryotic genomes. The KEGG pathway GMT uses gene symbols (`aceE`, `recA`...).
+ We build a locus tag to gene symbol map directly from KEGG and convert before analysis.
+:::
+
+<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
+  <strong>Tip:</strong> The first time you run this chunk it queries the KEGG API (~2-3 min).
+  After that both RDS files load instantly. Do not delete the files in
+  <code>data/databases/</code>.
+</div>
+
+```{r build-kegg-gmt, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+gmt_path <- file.path(git_root, "data", "databases",
+                      "KEGG_Pathways_Ecoli_MG1655_GeneSymbol.rds")
+map_path <- file.path(git_root, "data", "databases",
+                      "KEGG_locus_to_symbol_Ecoli_MG1655.rds")
+
+if (file.exists(gmt_path) && file.exists(map_path)) {
+
+  kegg_gmt <- readRDS(gmt_path)
+  id_map   <- readRDS(map_path)
+  cat("Loaded cached GMT    :", nrow(kegg_gmt), "pathways\n")
+  cat("Loaded cached ID map :", nrow(id_map), "entries\n")
+
+} else {
+
+  cat("Fetching KEGG data for E. coli MG1655 — ~2-3 min...\n")
+
+  ecoli_pathways <- keggList("pathway", "eco")
+  pathway_ids    <- names(ecoli_pathways)
+  pathway_names  <- gsub(" - Escherichia coli K-12 MG1655$", "",
+                         as.character(ecoli_pathways))
+
+  cat("Total pathways found:", length(pathway_ids), "\n")
+
+  batches         <- split(pathway_ids, ceiling(seq_along(pathway_ids) / 10))
+  pathway_genes   <- list()
+  locus_to_symbol <- list()
+
+  for (i in seq_along(batches)) {
+    cat("  Batch", i, "of", length(batches), "\n")
+    for (pid in batches[[i]]) {
+      tryCatch({
+        result <- keggGet(pid)[[1]]
+        if (!is.null(result$GENE) && length(result$GENE) >= 2) {
+          locus  <- result$GENE[seq(1, length(result$GENE), by = 2)]
+          symbl  <- trimws(sub(";.*", "", result$GENE[seq(2, length(result$GENE), by = 2)]))
+          pathway_genes[[pid]] <- symbl
+          for (j in seq_along(locus)) locus_to_symbol[[locus[j]]] <- symbl[j]
+        }
+      }, error = function(e) cat("  Skipped:", pid, "\n"))
+    }
+    Sys.sleep(0.3)
+  }
+
+  kegg_gmt <- data.frame(
+    ontology_id    = names(pathway_genes),
+    ontology_name  = pathway_names[match(names(pathway_genes), pathway_ids)],
+    list_of_values = I(pathway_genes),
+    stringsAsFactors = FALSE
+  )
+
+  id_map <- data.frame(
+    locus_tag   = names(locus_to_symbol),
+    gene_symbol = unlist(locus_to_symbol),
+    stringsAsFactors = FALSE
+  )
+
+  dir.create(dirname(gmt_path), recursive = TRUE, showWarnings = FALSE)
+  saveRDS(kegg_gmt, gmt_path)
+  saveRDS(id_map,   map_path)
+  cat("GMT saved    :", nrow(kegg_gmt), "pathways\n")
+  cat("ID map saved :", nrow(id_map), "entries\n")
+}
+
+cat("\nExample pathways:\n")
+head(kegg_gmt$ontology_name, 6)
+```
+
+
+### Convert Locus Tags to Gene Symbols
+
+```{r id-conversion, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+res_df_sym <- res_df %>%
+  left_join(id_map, by = c("gene" = "locus_tag")) %>%
+  mutate(gene = ifelse(!is.na(gene_symbol), gene_symbol, gene)) %>%
+  select(-gene_symbol)
+
+res_sig_sym <- res_sig %>%
+  left_join(id_map, by = c("gene" = "locus_tag")) %>%
+  mutate(gene = ifelse(!is.na(gene_symbol), gene_symbol, gene)) %>%
+  select(-gene_symbol)
+
+cat("Genes mapped to symbols  :", sum(res_df$gene %in% id_map$locus_tag),
+    "of", nrow(res_df), "\n")
+cat("Remaining as locus tags  :", sum(!res_df_sym$gene %in% id_map$gene_symbol),
+    "(unannotated in KEGG - expected)\n")
+cat("\nExample converted gene names:\n")
+head(res_sig_sym$gene, 10)
+```
+
+<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
+  <strong>Note:</strong> Genes remaining as locus tags are not annotated in any KEGG
+  pathway. They are included in the ORA background but will not match any gene set.
+  This is expected — not all <em>E. coli</em> genes are assigned to KEGG pathways.
+</div>
+
+## Part 1 — Over-Representation Analysis (ORA)
+
+**What is ORA?**
+
+ORA asks: *"Are my significant DE genes enriched in any pathway more than expected by chance?"*
+
+It uses a **hypergeometric test** (equivalent to a one-sided Fisher's exact test):
+
+- **Query set** — significant DE genes (padj < 0.05, |LFC| >= 1), converted to gene symbols
+- **Background** — all genes tested by DESeq2, converted to gene symbols
+- **Gene sets** — KEGG pathways
+- **FDR correction** — empirical FDR (eFDR) via resampling, which accounts for interdependence between gene sets
+
+:::boxy
+ **Key assumption:** ORA treats all significant genes equally — it ignores magnitude or
+ direction of fold change. This is why we also run GSEA (Part 2), which uses the full
+ ranked list.
+:::
+
+
+### Prepare Input
+
+```{r ora-input, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+sig_genes <- res_sig_sym$gene
+all_genes  <- res_df_sym$gene
+
+cat("Query set (significant genes) :", length(sig_genes), "\n")
+cat("Pool (all tested genes)        :", length(all_genes), "\n")
+cat("Overlap with first pathway     :",
+    length(intersect(sig_genes, kegg_gmt$list_of_values[[1]])), "genes\n")
+```
+
+<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
+  <strong>Tip:</strong> Always use all <em>tested</em> genes as the background, not the full
+  genome. DESeq2 already filtered to expressed genes, so <code>res_df_sym</code> is the
+  correct pool. Using the full genome inflates the background and produces over-optimistic
+  p-values.
+</div>
+
+### Run ORA
+
+```{r ora-run, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+set.seed(42)
+
+ora_model <- ora(
+  gmt                       = kegg_gmt,
+  element_names             = sig_genes,
+  background_element_names  = all_genes,
+  p_value_adjustment_method = "eFDR",
+  number_of_permutations    = 1000
+)
+
+ora_results <- mulea::run_test(ora_model)
+
+cat("Pathways tested          :", nrow(ora_results), "\n")
+cat("Significant (eFDR < 0.05):", sum(ora_results$eFDR < 0.05, na.rm = TRUE), "\n")
+```
+
+### Filter and Inspect Significant Pathways
+
+```{r ora-filter, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_sig <- ora_results %>%
+  filter(eFDR < 0.05) %>%
+  arrange(eFDR)
+
+cat("Significant ORA pathways:", nrow(ora_sig), "\n")
+```
+
+```{r ora-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  ora_sig %>%
+    select(ontology_id, ontology_name, nr_common_with_tested_elements,
+           nr_common_with_background_elements, p_value, eFDR) %>%
+    mutate(across(where(is.numeric), \(x) round(x, 4))),
+  rownames   = FALSE,
+  colnames   = c("KEGG ID", "Pathway", "Hits in query",
+                 "Hits in background", "p-value", "eFDR"),
+  extensions = c("Buttons", "Scroller"),
+  options    = list(
+    dom      = "Bfrtip",
+    buttons  = c("copy", "csv"),
+    scrollX  = TRUE,
+    scrollY  = 300,
+    scroller = TRUE
+  ),
+  caption = "Significant ORA pathways — treatment vs control (eFDR < 0.05)"
+)
+```
+
+**Visualise ORA Results**
+
+### Bar Plot — Enriched Pathways
+
+```{r ora-barplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_bar <- ora_sig %>%
+  mutate(
+    eFDR          = ifelse(eFDR == 0, 1e-10, eFDR),
+    ontology_name = fct_reorder(ontology_name, -log10(eFDR))
+  )
+
+ora_barplot <- ggplot(ora_bar,
+                      aes(x    = -log10(eFDR),
+                          y    = ontology_name,
+                          fill = -log10(eFDR))) +
+  geom_col(width = 0.7) +
+  geom_vline(xintercept = -log10(0.05), linetype = "dashed",
+             color = "black", linewidth = 0.5) +
+  scale_fill_gradient(low = "#92C5DE", high = "#1A5276") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  labs(
+    title    = "ORA — Enriched KEGG Pathways (eFDR < 0.05)",
+    subtitle = "Treatment vs Control | E. coli MG1655",
+    x        = "-log10(eFDR)",
+    y        = NULL
+  )
+
+ora_barplot
+suppressMessages(ggplotly(ora_barplot))
+```
+
+### Lollipop Plot — Gene Hits per Pathway
+
+```{r ora-lollipop, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_lollipop <- ggplot(ora_bar,
+                       aes(x     = nr_common_with_tested_elements,
+                           y     = ontology_name,
+                           color = eFDR)) +
+  geom_segment(aes(x    = 0,
+                   xend = nr_common_with_tested_elements,
+                   yend = ontology_name),
+               linewidth = 0.8, color = "grey70") +
+  geom_point(size = 4) +
+  scale_color_gradient(low = "#CA0020", high = "#92C5DE", name = "eFDR") +
+  theme_bw() +
+  labs(
+    title    = "ORA — Gene Hits per Pathway",
+    subtitle = "Point colour = eFDR",
+    x        = "Number of DE genes in pathway",
+    y        = NULL
+  )
+
+ora_lollipop
+suppressMessages(ggplotly(ora_lollipop))
+```
+
+### Critical Interpretation — Spurious Hits
+
+:::boxy
+**Always ask: does this pathway make biological sense for your organism?**
+
+Two pathways in our results deserve scrutiny:
+
+- **Pinene, camphor and geraniol degradation** (`eco00907`) — a plant terpenoid pathway.
+  It appears here because KEGG annotates a handful of *E. coli* enzymes with broad
+  substrate specificity to this pathway. The perfect overlap (6 hits in query, 6 in
+  background, eFDR = 0) is a red flag: a tiny gene set where every background gene
+  is DE will always score as maximally significant, regardless of biological relevance.
+
+- **Caprolactam degradation** (`eco00930`) — same issue: only 3 genes in the background,
+  all 3 in the query. Perfect overlap in a tiny set is statistically inevitable, not
+  biologically meaningful.
+
+**Thinking strategy:**
+1. Check the gene set size — very small sets (< 5 genes) are prone to spurious enrichment
+2. Check the overlap — 100% overlap is suspicious, not impressive
+3. Ask whether the pathway is plausible for your organism and condition
+4. Cross-reference with GSEA — if it does not appear there, treat it with scepticism
+:::
+
+```{r ora-filter-clean, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+# Remove biologically spurious pathways before downstream use
+ora_sig_clean <- ora_sig %>%
+  filter(!grepl("Pine|camphor|Caprolactam", ontology_name, ignore.case = TRUE))
+
+cat("Pathways after removing spurious hits:", nrow(ora_sig_clean), "\n")
+```
+
+```{r ora-barplot-clean, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_bar_clean <- ora_sig_clean %>%
+  mutate(
+    eFDR          = ifelse(eFDR == 0, 1e-10, eFDR),
+    ontology_name = fct_reorder(ontology_name, -log10(eFDR))
+  )
+
+ora_barplot_clean <- ggplot(ora_bar_clean,
+                            aes(x    = -log10(eFDR),
+                                y    = ontology_name,
+                                fill = -log10(eFDR))) +
+  geom_col(width = 0.7) +
+  geom_vline(xintercept = -log10(0.05), linetype = "dashed",
+             color = "black", linewidth = 0.5) +
+  scale_fill_gradient(low = "#92C5DE", high = "#1A5276") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  labs(
+    title    = "ORA — Enriched KEGG Pathways (eFDR < 0.05)",
+    subtitle = "After removing spurious hits | E. coli MG1655",
+    x        = "-log10(eFDR)",
+    y        = NULL
+  )
+
+ora_barplot_clean
+suppressMessages(ggplotly(ora_barplot_clean))
+```
+
+## Part 2 — Gene Set Enrichment Analysis (GSEA)
+
+**What is GSEA?**
+
+GSEA asks: *"Are genes in a pathway coordinately shifting up or down across my full ranked list?"*
+
+Unlike ORA, GSEA:
+
+- Uses **all tested genes** — capturing coordinated but subtle pathway-level changes
+- **Ranks genes** by a metric encoding both significance and direction
+- Returns a **Normalised Enrichment Score (NES)**: positive NES = pathway upregulated in treatment; negative NES = pathway downregulated
+
+:::boxy
+ **Why signed log p-value for ranking?**
+
+ `rank = sign(LFC) x -log10(pvalue)`
+
+ Genes at the top are significantly upregulated; genes at the bottom are significantly
+ downregulated. This is more robust than ranking on LFC alone, which can place noisy
+ high-fold-change genes from lowly expressed genes at the extremes.
+
+<div class="note">
+<strong>📘 Note:</strong> Genes with `pvalue = 0` (below machine precision in DESeq2) are excluded
+ because `-log10(0) = Inf` is not a valid ranking score. These are the most extremely
+ significant genes and their exclusion has minimal impact on pathway-level results.
+</div>
+:::
+
+### Prepare the Ranked Gene List
+
+```{r gsea-rank, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ranked_df <- res_df_sym %>%
+  filter(!is.na(pvalue), !is.na(log2FoldChange)) %>%
+  filter(pvalue > 0) %>%                    # exclude p=0 -> log10(0) = Inf
+  mutate(rank_metric = sign(log2FoldChange) * -log10(pvalue)) %>%
+  arrange(desc(rank_metric)) %>%
+  distinct(gene, .keep_all = TRUE)
+
+rank_vector        <- ranked_df$rank_metric
+names(rank_vector) <- ranked_df$gene
+
+cat("Genes in ranked list :", length(rank_vector), "\n")
+cat("Infinite values      :", sum(!is.finite(rank_vector)), "\n")
+cat("Top 5 (upregulated)  :", paste(head(names(rank_vector), 5), collapse = ", "), "\n")
+cat("Bottom 5 (downreg.)  :", paste(tail(names(rank_vector), 5), collapse = ", "), "\n")
+```
+
+### Convert GMT to fgsea Format
+
+`fgsea` requires a named list of gene vectors — one entry per pathway.
+
+```{r gsea-pathways, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+pathways_list <- setNames(
+  kegg_gmt$list_of_values,
+  kegg_gmt$ontology_name
+)
+
+cat("Pathways in list:", length(pathways_list), "\n")
+cat("Example entry   :", pathways_list[[1]][1:5], "\n")
+```
+
+### Run GSEA
+
+```{r gsea-run, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+set.seed(42)
+
+gsea_results <- fgsea(
+  pathways    = pathways_list,
+  stats       = rank_vector,
+  minSize     = 10,
+  maxSize     = 500,
+  nPermSimple = 10000
+)
+
+cat("Pathways tested          :", nrow(gsea_results), "\n")
+cat("Significant (padj < 0.05):", sum(gsea_results$padj < 0.05, na.rm = TRUE), "\n")
+cat("Nominal (pval < 0.05)    :", sum(gsea_results$pval < 0.05, na.rm = TRUE), "\n")
+```
+
+### Filter and Inspect Significant Pathways
+
+```{r gsea-filter, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+gsea_sig <- gsea_results %>%
+  as.data.frame() %>%
+  filter(padj < 0.05) %>%
+  arrange(padj)
+
+cat("Significant GSEA pathways:", nrow(gsea_sig), "\n")
+cat("  Activated (NES > 0)    :", sum(gsea_sig$NES > 0), "\n")
+cat("  Suppressed (NES < 0)   :", sum(gsea_sig$NES < 0), "\n")
+```
+
+```{r gsea-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  gsea_sig %>%
+    select(pathway, NES, pval, padj, size) %>%
+    mutate(
+      direction = ifelse(NES > 0, "Activated", "Suppressed"),
+      across(where(is.numeric), \(x) round(x, 4))
+    ) %>%
+    arrange(desc(abs(NES))),
+  rownames   = FALSE,
+  colnames   = c("Pathway", "NES", "p-value", "padj", "Size", "Direction"),
+  extensions = c("Buttons", "Scroller"),
+  options    = list(
+    dom      = "Bfrtip",
+    buttons  = c("copy", "csv"),
+    scrollX  = TRUE,
+    scrollY  = 300,
+    scroller = TRUE
+  ),
+  caption = "Significant GSEA pathways — treatment vs control (padj < 0.05)"
+)
+```
+
+**Visualise GSEA Results**
+
+### NES Bar Plot — Activated and Suppressed Pathways
+
+```{r gsea-nes-barplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+cols_direction <- c("Activated" = "#d7191c", "Suppressed" = "#2c7bb6")
+
+# Use top 20 by |NES| if more than 20 significant, otherwise show all
+gsea_bar <- gsea_results %>%
+  as.data.frame() %>%
+  filter(pval < 0.05) %>%
+  slice_max(abs(NES), n = 20) %>%
+  mutate(
+    direction = ifelse(NES > 0, "Activated", "Suppressed"),
+    pathway   = fct_reorder(pathway, NES)
+  )
+
+gsea_nesplot <- ggplot(gsea_bar,
+                       aes(x    = NES,
+                           y    = pathway,
+                           fill = direction)) +
+  geom_col(width = 0.7, alpha = 0.9) +
+  geom_vline(xintercept = 0, color = "black", linewidth = 0.5) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed",
+             color = "grey50", linewidth = 0.4) +
+  scale_fill_manual(values = cols_direction) +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  labs(
+    title    = "GSEA — Normalised Enrichment Scores (pval < 0.05)",
+    subtitle = "Treatment vs Control | E. coli MG1655",
+    x        = "Normalised Enrichment Score (NES)",
+    y        = NULL,
+    fill     = NULL
+  )
+
+gsea_nesplot
+ggplotly(gsea_nesplot)
+```
+
+### Dot Plot — NES, padj and Gene Set Size
+
+```{r gsea-dotplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+gsea_dotplot <- ggplot(gsea_bar,
+                       aes(x     = NES,
+                           y     = pathway,
+                           size  = size,
+                           color = padj)) +
+  geom_point(alpha = 0.85) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  scale_color_gradient(low = "#CA0020", high = "#92C5DE", name = "padj") +
+  scale_size_continuous(name = "Genes in set", range = c(3, 10)) +
+  theme_bw() +
+  theme(legend.position = "right") +
+  labs(
+    title    = "GSEA — Pathway Dot Plot",
+    subtitle = "Point size = genes in set | Colour = padj",
+    x        = "NES",
+    y        = NULL
+  )
+
+gsea_dotplot
+ggplotly(gsea_dotplot)
+```
+
+### Enrichment Plot — Top Pathways
+
+The enrichment plot shows the running sum of the enrichment score for a single pathway
+across the ranked gene list. The peak of the curve is the enrichment score. Genes from
+the pathway are shown as vertical bars (the "rug") at the bottom.
+
+```{r gsea-enrichment-plots, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+# Top activated pathway
+top_up <- gsea_results %>%
+  as.data.frame() %>%
+  filter(NES > 0) %>%
+  slice_min(pval, n = 1) %>%
+  pull(pathway)
+
+# Top suppressed pathway
+top_down <- gsea_results %>%
+  as.data.frame() %>%
+  filter(NES < 0) %>%
+  slice_min(pval, n = 1) %>%
+  pull(pathway)
+
+if (length(top_up) > 0) {
+  plotEnrichment(pathways_list[[top_up]], rank_vector) +
+    labs(title = paste("Top activated:", top_up))
+}
+
+if (length(top_down) > 0) {
+  plotEnrichment(pathways_list[[top_down]], rank_vector) +
+    labs(title = paste("Top suppressed:", top_down))
+}
+```
+
+
+## Part 3 — Comparing ORA and GSEA
+
+ORA and GSEA are complementary — they answer different questions and will not always agree.
+
+```{r compare, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_hits  <- ora_sig$ontology_name
+gsea_hits <- gsea_sig$pathway
+
+both      <- intersect(ora_hits, gsea_hits)
+ora_only  <- setdiff(ora_hits, gsea_hits)
+gsea_only <- setdiff(gsea_hits, ora_hits)
+
+cat("Pathways significant in BOTH :", length(both), "\n")
+cat("Pathways in ORA only         :", length(ora_only), "\n")
+cat("Pathways in GSEA only        :", length(gsea_only), "\n")
+
+if (length(both) > 0) {
+  cat("\nPathways found by both methods:\n")
+  cat(paste(" -", both), sep = "\n")
+}
+```
+
+<div style="background:#d4edda;border-left:4px solid #28a745;padding:10px;margin:10px 0;">
+  <strong>Interpretation guide:</strong>
+  <ul>
+    <li><strong>Both significant</strong> — high confidence; strong pathway-level change
+    driven by many DE genes</li>
+    <li><strong>ORA only</strong> — genes crossing the significance threshold cluster in
+    this pathway, but the overall coordinated shift may be modest</li>
+    <li><strong>GSEA only</strong> — coordinated but subtle change below the LFC/padj
+    threshold; genes shift together without individual genes being significant</li>
+  </ul>
+</div>
+
+
+
+## Saving Results
+
+```{r save-results-5, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+results_dir <- file.path(git_root, "results")
+dir.create(results_dir, showWarnings = FALSE)
+
+write.table(
+  ora_results,
+  file      = file.path(results_dir, "ORA_KEGG_treatment_vs_control.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+write.table(
+  as.data.frame(gsea_results) %>% select(-leadingEdge),
+  file      = file.path(results_dir, "GSEA_KEGG_treatment_vs_control.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+
+cat("Results saved to:", results_dir, "\n")
+cat("  ORA  -> ORA_KEGG_treatment_vs_control.tsv\n")
+cat("  GSEA -> GSEA_KEGG_treatment_vs_control.tsv\n")
+```
+
+## Summary
+
+| Step | Choice made | Rationale |
+|---|---|---|
+| ORA package | `mulea` | Empirical FDR correction; accounts for gene set interdependence |
+| GSEA package | `fgsea` | Gold standard for preranked GSEA; proper NES and permutation p-values |
+| Gene sets | KEGG pathways | Matches Dedios 2025; biologically interpretable for bacteria |
+| GMT source | `KEGGREST` API + local RDS cache | No pre-built KEGG GMT for *E. coli*; built from API and cached |
+| ID conversion | Locus tag to gene symbol via KEGGREST | nf-core uses locus tags when GTF lacks gene_name; KEGG GMT uses symbols |
+| ORA background | All DESeq2-tested genes | Correct statistical background — not the full genome |
+| GSEA rank metric | sign(LFC) x -log10(pvalue) | Encodes direction and significance; robust to lowly expressed gene noise |
+| ORA FDR | Empirical FDR (eFDR) | Accounts for gene set interdependence |
+| GSEA FDR | Benjamini-Hochberg (fgsea default) | Standard for preranked GSEA |
+| Significance threshold | 0.05 | Standard; consistent with DE analysis |
+
+Enrichment results are saved and ready for biological interpretation and reporting.
+
+
+<!-- --------------------- Do not edit this and below ---------------------- -->
+</br>
+
+```{r session-info6, echo=TRUE, eval=TRUE, include=TRUE}
+sessionInfo()
+```
+
+```{r , eval=FALSE, echo=FALSE}
+rmarkdown::render("03_gene_functional_ecoli.Rmd")
+```

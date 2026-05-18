@@ -1,0 +1,136 @@
+---
+title: "Introduction to Transcriptomics"
+subtitle: "Workshop material"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook
+---
+# Welcome
+ 
+```{r,echo=FALSE,include=FALSE}
+#  variables
+rep_org <- "Data Science Platform" 
+rep_core  <- "Juliana Assis"
+rep_core_email  <- "jasge@dtu.dk"
+rep_core2 <- "Sebastian Schulz"
+rep_core_email2 <- "sebschu@dtu.dk"
+rep_core3 <- "Alberto Pallejà Caro"
+rep_core_email3 <- "apca@dtu.dk"
+rep_ta    <- "Edir Sebastian Vidal Castro"
+rep_ta_email <- "s243564@student.dtu.dk"
+
+# Combine all responsibles into a single string
+rep_all <- paste0(
+  rep_core, " (", rep_core_email, ")<br>",
+  rep_core2, " (", rep_core_email2, ")<br>",
+  rep_core3, " (", rep_core_email3, ")"
+)
+
+rep_ta_full <- paste0(rep_ta, " (", rep_ta_email, ")")
+```
+
+<br>
+
+::: boxy
+__Organisation:__ `r rep_org`  
+__Responsibles:__ `r paste0(rep_all," ")`  
+__Teaching Assistant:__ `r rep_ta_full`  
+:::
+
+<br>
+
+
+**Welcome to the Introduction to Transcriptomics Workshop!**
+
+This workshop introduces **RNA-seq data analysis**, covering both the theory behind the technology and the full practical workflow — from raw reads to biological interpretation — using real *E. coli* data.
+
+The course is designed for people with **no or little knowledge and practical experience** in transcriptomic analysis using RNA sequencing (RNAseq).
+
+**Objectives**
+
+* Theory on Illumina short-read sequencing technology for transcriptome analysis
+* Theory and practical sessions for
+   * RNAseq data processing using the nf-core/rnaseq pipeline
+   * Statistical data analysis and visualization of RNAseq results
+   * Enrichment analysis — gaining biological insights from transcriptomic data
+   * Effective results reporting using the in-house developed software **[vuegen](https://github.com/Multiomics-Analytics-Group/vuegen)**
+
+:::boxy
+You can also explore the [DSP Transcriptomics Training repository](https://github.com/biosustain/dsp_transcriptomics_training)
+:::
+
+| Time | Session |
+|---|---|
+| ☕ **9:00–9:15** | Welcome, coffee, and setup |
+| 🔬 **9:15–10:00** | Theory: Illumina sequencing & RNA-seq experimental design |
+| 🔄 **10:00–10:45** | Theory: nf-core/rnaseq pipeline overview |
+| ⏸️ **10:45–11:00** | Break |
+| 💻 **11:00–12:00** | Script 01: *nf-core/rnaseq — running the pipeline* |
+| 🍽️ **12:00–13:00** | Lunch |
+| 🧬 **13:00–14:15** | Script 02: *Quality Control & Exploratory Data Analysis* |
+| ⏸️ **14:15–14:30** | Break |
+| 📊 **14:30–15:30** | Script 03: *Differential Expression Analysis with DESeq2* |
+| ⏸️ **15:30–15:45** | Break |
+| 🔍 **15:45–16:15** | Script 04: *Functional Enrichment Analysis (ORA & GSEA with mulea)* |
+| 🏁 **16:15–16:30** | Wrap-up, Q&A, and closing |
+
+
+:::boxy
+Material for the workshop is located at:
+[dsp_transcriptomics_training](https://github.com/biosustain/dsp_transcriptomics_training)
+:::
+
+Below are two setup options for the practical activities:
+
+>Run the workshop in the cloud (no need to install anything). 
+
+**Launch the app:**
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/biosustain/dsp_transcriptomics_training)
+
+
+>Run the workshop locally on your machine. 
+
+To run it on your own machine, install the following packages:
+
+```{r, eval=FALSE}
+# Install BiocManager if needed
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# Bioconductor packages
+BiocManager::install(c(
+  "DESeq2",
+  "SummarizedExperiment",
+  "apeglm",
+  "EnhancedVolcano"
+))
+
+# CRAN packages
+packages <- c(
+  "dplyr",
+  "ggplot2",
+  "ggrepel",
+  "RColorBrewer",
+  "rmarkdown",
+  "tidyr",
+  "plotly",
+  "pheatmap",
+  "ggpubr",
+  "here",
+  "mulea"
+)
+
+install_if_missing <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, repos = "https://cloud.r-project.org/")
+  } else {
+    message(pkg, " already installed.")
+  }
+}
+
+invisible(lapply(packages, install_if_missing))
+
+message("All requested R packages are installed and ready to use!")
+```
