@@ -1,0 +1,41 @@
+{
+    "study_name": "MG1655",
+    "study_type": "rnaseq",
+    "study_abundance_type": "counts",
+    "report_title": "MG1655",
+    "report_contributors": "E.coli",
+
+    "input": "/workspaces/dsp_transcriptomics_training/data/nf-core_rnaseq/metadata/samplesheet_deDios_2025_PRJNA1158806-seq_DEG.csv",
+    "contrasts": "/workspaces/dsp_transcriptomics_training/data/nf-core_rnaseq/metadata/contrast.csv",
+    "matrix": "/workspaces/dsp_transcriptomics_training/data/nf-core_rnaseq/salmon.merged.gene_counts.tsv",
+    "transcript_length_matrix": "/workspaces/dsp_transcriptomics_training/data/nf-core_rnaseq/salmon.merged.gene_lengths.tsv",
+    "gtf": "/workspaces/dsp_transcriptomics_training/data/genome_files/GCF_000005845.2_ASM584v2_genomic.gtf.gz",
+
+    "features_id_col": "gene_id",
+    "features_name_col": "gene_name",
+    "features_type": "gene",
+    "features_metadata_cols": "gene_id,gene_name,gene_biotype,gene_symbol",
+    "features_gtf_feature_type": "transcript",
+    "features_gtf_table_first_field": "gene_id",
+
+    "observations_id_col": "sample",
+    "observations_type": "sample",
+
+    "filtering_min_abundance": 10,
+    "filtering_min_samples": 2,
+    "filtering_min_proportion": 0,
+    "filtering_min_samples_not_na": 0.1,
+    "filtering_min_proportion_not_na": 0.5,
+    "filtering_grouping_var": "group",
+
+    "deseq2_fit_type": "local",
+
+    "differential_min_fold_change": 1.5,
+
+    "gprofiler2_run": false,
+    "gsea_run": false,
+
+    "max_memory": "8.GB",
+    "max_cpus": 4,
+    "max_time": "24.h"
+}
