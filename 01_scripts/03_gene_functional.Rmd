@@ -15,7 +15,7 @@ output:
 
 <!-- ----------------------- Do not edit above this ----------------------- -->
 
-# Background
+# Gene Functional Enrichment Analysis
 
 This report covers functional enrichment analysis of differentially expressed genes from *Escherichia coli* K-12 MG1655 after saccharin treatment ([Dedios *et al.*, 2025](https://link.springer.com/article/10.1038/s44321-025-00219-1)).
 
@@ -44,7 +44,7 @@ this the biologically appropriate and directly comparable gene set database.
 
 ### Load Libraries
 
-```{r libraries, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+```{r libraries-5, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(mulea)
 library(fgsea)
@@ -210,32 +210,36 @@ head(res_sig_sym$gene, 10)
 
 **What is ORA?**
 
-ORA asks: *"Are my significant DE genes enriched in any pathway more than expected by chance?"*
+**ORA asks: *"Are my significant DE genes enriched in any pathway more than expected by chance?"***
 
 It uses a **hypergeometric test** (equivalent to a one-sided Fisher's exact test):
 
-- **Query set** — significant DE genes (padj < 0.05, |LFC| >= 1), converted to gene symbols
+- **Query set** — significant DE genes (padj < 0.05, |LFC| >= 1), converted to gene symbols,
+  split by direction (up- and down-regulated)
 - **Background** — all genes tested by DESeq2, converted to gene symbols
 - **Gene sets** — KEGG pathways
 - **FDR correction** — empirical FDR (eFDR) via resampling, which accounts for interdependence between gene sets
 
 :::boxy
- **Key assumption:** ORA treats all significant genes equally — it ignores magnitude or
- direction of fold change. This is why we also run GSEA (Part 2), which uses the full
- ranked list.
+**Key assumption:** ORA treats all significant genes equally — it ignores magnitude or
+direction of fold change. Running ORA separately on up- and down-regulated genes partially
+addresses this, and is why we split the query set below. For a fully ranked approach,
+see Part 2 (GSEA).
 :::
-
 
 ### Prepare Input
 
-```{r ora-input, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
-sig_genes <- res_sig_sym$gene
-all_genes  <- res_df_sym$gene
+We split significant genes by direction before running ORA. The background remains all
+genes tested by DESeq2, regardless of direction.
 
-cat("Query set (significant genes) :", length(sig_genes), "\n")
-cat("Pool (all tested genes)        :", length(all_genes), "\n")
-cat("Overlap with first pathway     :",
-    length(intersect(sig_genes, kegg_gmt$list_of_values[[1]])), "genes\n")
+```{r ora-input, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+sig_up   <- res_sig_sym %>% filter(log2FoldChange >= 1)  %>% pull(gene)
+sig_down <- res_sig_sym %>% filter(log2FoldChange <= -1) %>% pull(gene)
+all_genes <- res_df_sym$gene
+
+cat("Up-regulated genes      :", length(sig_up),    "\n")
+cat("Down-regulated genes    :", length(sig_down),  "\n")
+cat("Background (all tested) :", length(all_genes), "\n")
 ```
 
 <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
@@ -247,36 +251,47 @@ cat("Overlap with first pathway     :",
 
 ### Run ORA
 
+ORA is run twice — once for up-regulated genes and once for down-regulated genes — using
+a helper function to avoid code duplication.
+
 ```{r ora-run, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 set.seed(42)
 
-ora_model <- ora(
-  gmt                       = kegg_gmt,
-  element_names             = sig_genes,
-  background_element_names  = all_genes,
-  p_value_adjustment_method = "eFDR",
-  number_of_permutations    = 1000
-)
+run_ora_mulea <- function(query, background, gmt) {
+  model <- ora(
+    gmt                       = gmt,
+    element_names             = query,
+    background_element_names  = background,
+    p_value_adjustment_method = "eFDR",
+    number_of_permutations    = 1000
+  )
+  mulea::run_test(model)
+}
 
-ora_results <- mulea::run_test(ora_model)
+ora_up   <- run_ora_mulea(sig_up,   all_genes, kegg_gmt)
+ora_down <- run_ora_mulea(sig_down, all_genes, kegg_gmt)
 
-cat("Pathways tested          :", nrow(ora_results), "\n")
-cat("Significant (eFDR < 0.05):", sum(ora_results$eFDR < 0.05, na.rm = TRUE), "\n")
+cat("Up   — pathways tested:", nrow(ora_up),
+    "| significant:", sum(ora_up$eFDR   < 0.05, na.rm = TRUE), "\n")
+cat("Down — pathways tested:", nrow(ora_down),
+    "| significant:", sum(ora_down$eFDR < 0.05, na.rm = TRUE), "\n")
 ```
 
 ### Filter and Inspect Significant Pathways
 
 ```{r ora-filter, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
-ora_sig <- ora_results %>%
-  filter(eFDR < 0.05) %>%
-  arrange(eFDR)
+ora_up_sig   <- ora_up   %>% filter(eFDR < 0.05) %>% arrange(eFDR)
+ora_down_sig <- ora_down %>% filter(eFDR < 0.05) %>% arrange(eFDR)
 
-cat("Significant ORA pathways:", nrow(ora_sig), "\n")
+cat("Significant up pathways  :", nrow(ora_up_sig),   "\n")
+cat("Significant down pathways:", nrow(ora_down_sig), "\n")
 ```
 
-```{r ora-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+**Up-regulated genes — enriched pathways**
+
+```{r ora-table-up, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 DT::datatable(
-  ora_sig %>%
+  ora_up_sig %>%
     select(ontology_id, ontology_name, nr_common_with_tested_elements,
            nr_common_with_background_elements, p_value, eFDR) %>%
     mutate(across(where(is.numeric), \(x) round(x, 4))),
@@ -284,74 +299,74 @@ DT::datatable(
   colnames   = c("KEGG ID", "Pathway", "Hits in query",
                  "Hits in background", "p-value", "eFDR"),
   extensions = c("Buttons", "Scroller"),
-  options    = list(
-    dom      = "Bfrtip",
-    buttons  = c("copy", "csv"),
-    scrollX  = TRUE,
-    scrollY  = 300,
-    scroller = TRUE
-  ),
-  caption = "Significant ORA pathways — treatment vs control (eFDR < 0.05)"
+  options    = list(dom = "Bfrtip", buttons = c("copy", "csv"),
+                    scrollX = TRUE, scrollY = 300, scroller = TRUE),
+  caption = "Significant ORA pathways — UP-regulated genes (eFDR < 0.05)"
 )
 ```
 
-**Visualise ORA Results**
+**Down-regulated genes — enriched pathways**
 
-### Bar Plot — Enriched Pathways
+```{r ora-table-down, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+DT::datatable(
+  ora_down_sig %>%
+    select(ontology_id, ontology_name, nr_common_with_tested_elements,
+           nr_common_with_background_elements, p_value, eFDR) %>%
+    mutate(across(where(is.numeric), \(x) round(x, 4))),
+  rownames   = FALSE,
+  colnames   = c("KEGG ID", "Pathway", "Hits in query",
+                 "Hits in background", "p-value", "eFDR"),
+  extensions = c("Buttons", "Scroller"),
+  options    = list(dom = "Bfrtip", buttons = c("copy", "csv"),
+                    scrollX = TRUE, scrollY = 300, scroller = TRUE),
+  caption = "Significant ORA pathways — DOWN-regulated genes (eFDR < 0.05)"
+)
+```
 
-```{r ora-barplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
-ora_bar <- ora_sig %>%
+
+### Visualization
+
+```{r ora-barplot-all, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_combined_all <- bind_rows(
+    ora_up_sig   %>% mutate(direction = "Up-regulated"),
+    ora_down_sig %>% mutate(direction = "Down-regulated")
+  ) %>%
   mutate(
     eFDR          = ifelse(eFDR == 0, 1e-10, eFDR),
-    ontology_name = fct_reorder(ontology_name, -log10(eFDR))
+    significance  = -log10(eFDR),
+    direction     = factor(direction, levels = c("Up-regulated", "Down-regulated")),
+    ontology_name = reorder(paste(ontology_name, direction, sep = "___"), significance)
   )
 
-ora_barplot <- ggplot(ora_bar,
-                      aes(x    = -log10(eFDR),
-                          y    = ontology_name,
-                          fill = -log10(eFDR))) +
-  geom_col(width = 0.7) +
+ora_barplot_all <- ggplot(ora_combined_all,
+                          aes(x = significance, y = ontology_name, fill = direction)) +
+  geom_col(width = 0.7, show.legend = FALSE) +
+  geom_text(aes(label = nr_common_with_tested_elements),
+            hjust = -0.2, size = 3.4, fontface = "bold") +
   geom_vline(xintercept = -log10(0.05), linetype = "dashed",
              color = "black", linewidth = 0.5) +
-  scale_fill_gradient(low = "#92C5DE", high = "#1A5276") +
+  facet_grid(direction ~ ., scales = "free_y", space = "free_y", switch = "y") +
+  scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+  scale_fill_manual(values = c("Up-regulated"   = "#C1666B",
+                               "Down-regulated" = "#406E8E")) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.16))) +
   theme_bw() +
-  theme(legend.position = "none") +
+  theme(
+    strip.background   = element_blank(),
+    strip.placement    = "outside",
+    strip.text.y.left  = element_text(angle = 0, face = "bold", size = 11),
+    panel.grid.major.y = element_blank()
+  ) +
   labs(
-    title    = "ORA — Enriched KEGG Pathways (eFDR < 0.05)",
+    title    = "ORA — All Significant KEGG Pathways by Direction (eFDR < 0.05)",
     subtitle = "Treatment vs Control | E. coli MG1655",
     x        = "-log10(eFDR)",
     y        = NULL
   )
 
-ora_barplot
-suppressMessages(ggplotly(ora_barplot))
+ora_barplot_all
+suppressMessages(ggplotly(ora_barplot_all))
 ```
-
-### Lollipop Plot — Gene Hits per Pathway
-
-```{r ora-lollipop, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
-ora_lollipop <- ggplot(ora_bar,
-                       aes(x     = nr_common_with_tested_elements,
-                           y     = ontology_name,
-                           color = eFDR)) +
-  geom_segment(aes(x    = 0,
-                   xend = nr_common_with_tested_elements,
-                   yend = ontology_name),
-               linewidth = 0.8, color = "grey70") +
-  geom_point(size = 4) +
-  scale_color_gradient(low = "#CA0020", high = "#92C5DE", name = "eFDR") +
-  theme_bw() +
-  labs(
-    title    = "ORA — Gene Hits per Pathway",
-    subtitle = "Point colour = eFDR",
-    x        = "Number of DE genes in pathway",
-    y        = NULL
-  )
-
-ora_lollipop
-suppressMessages(ggplotly(ora_lollipop))
-```
-
 ### Critical Interpretation — Spurious Hits
 
 :::boxy
@@ -376,47 +391,113 @@ Two pathways in our results deserve scrutiny:
 4. Cross-reference with GSEA — if it does not appear there, treat it with scepticism
 :::
 
-```{r ora-filter-clean, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
-# Remove biologically spurious pathways before downstream use
-ora_sig_clean <- ora_sig %>%
-  filter(!grepl("Pine|camphor|Caprolactam", ontology_name, ignore.case = TRUE))
+Spurious hits are removed from both directional result tables before visualisation.
 
-cat("Pathways after removing spurious hits:", nrow(ora_sig_clean), "\n")
+```{r ora-filter-clean, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+clean_ora <- function(ora_results, direction_label) {
+  ora_results %>%
+    filter(!grepl("Pine|camphor|Caprolactam", ontology_name, ignore.case = TRUE)) %>%
+    mutate(direction = direction_label)
+}
+
+ora_up_clean   <- clean_ora(ora_up_sig,   "Up-regulated")
+ora_down_clean <- clean_ora(ora_down_sig, "Down-regulated")
+
+cat("Up pathways after cleaning  :", nrow(ora_up_clean),   "\n")
+cat("Down pathways after cleaning:", nrow(ora_down_clean), "\n")
 ```
 
-```{r ora-barplot-clean, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
-ora_bar_clean <- ora_sig_clean %>%
+**Visualise ORA Results**
+
+### Faceted Bar Plot — Enriched Pathways by Direction
+
+Up- and down-regulated results are shown in separate facets, each ordered independently
+by significance. The gene count (number of DE genes hitting each pathway) is printed at
+the end of each bar.
+
+```{r ora-barplot, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_combined <- bind_rows(
+    ora_up_clean   %>% slice_head(n = 6),
+    ora_down_clean %>% slice_head(n = 6)
+  ) %>%
   mutate(
-    eFDR          = ifelse(eFDR == 0, 1e-10, eFDR),
-    ontology_name = fct_reorder(ontology_name, -log10(eFDR))
+    eFDR         = ifelse(eFDR == 0, 1e-10, eFDR),
+    significance = -log10(eFDR),
+    direction    = factor(direction, levels = c("Up-regulated", "Down-regulated")),
+    ontology_name = reorder(paste(ontology_name, direction, sep = "___"), significance)
   )
 
-ora_barplot_clean <- ggplot(ora_bar_clean,
-                            aes(x    = -log10(eFDR),
-                                y    = ontology_name,
-                                fill = -log10(eFDR))) +
-  geom_col(width = 0.7) +
+ora_barplot <- ggplot(ora_combined,
+                      aes(x = significance, y = ontology_name, fill = direction)) +
+  geom_col(width = 0.7, show.legend = FALSE) +
+  geom_text(aes(label = nr_common_with_tested_elements),
+            hjust = -0.2, size = 3.4, fontface = "bold") +
   geom_vline(xintercept = -log10(0.05), linetype = "dashed",
              color = "black", linewidth = 0.5) +
-  scale_fill_gradient(low = "#92C5DE", high = "#1A5276") +
+  facet_grid(direction ~ ., scales = "free_y", space = "free_y", switch = "y") +
+  scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+  scale_fill_manual(values = c("Up-regulated"   = "#C1666B",
+                               "Down-regulated" = "#406E8E")) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.16))) +
   theme_bw() +
-  theme(legend.position = "none") +
+  theme(
+    strip.background      = element_blank(),
+    strip.placement       = "outside",
+    strip.text.y.left     = element_text(angle = 0, face = "bold", size = 11),
+    panel.grid.major.y    = element_blank()
+  ) +
   labs(
-    title    = "ORA — Enriched KEGG Pathways (eFDR < 0.05)",
-    subtitle = "After removing spurious hits | E. coli MG1655",
+    title    = "ORA — Enriched KEGG Pathways by Direction (eFDR < 0.05)",
+    subtitle = "Treatment vs Control | E. coli MG1655",
     x        = "-log10(eFDR)",
     y        = NULL
   )
 
-ora_barplot_clean
-suppressMessages(ggplotly(ora_barplot_clean))
+ora_barplot
+suppressMessages(ggplotly(ora_barplot))
+```
+
+### Lollipop Plot — Gene Hits per Pathway
+
+Point colour encodes eFDR; position on x encodes how many DE genes from the query set
+hit each pathway. Facets separate the two directions.
+
+```{r ora-lollipop, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+ora_lollipop <- ggplot(ora_combined,
+                       aes(x     = nr_common_with_tested_elements,
+                           y     = ontology_name,
+                           color = eFDR)) +
+  geom_segment(aes(x    = 0,
+                   xend = nr_common_with_tested_elements,
+                   yend = ontology_name),
+               linewidth = 0.8, color = "grey70") +
+  geom_point(size = 4) +
+  facet_grid(direction ~ ., scales = "free_y", space = "free_y", switch = "y") +
+  scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
+  scale_color_gradient(low = "#CA0020", high = "#92C5DE", name = "eFDR") +
+  theme_bw() +
+  theme(
+    strip.background   = element_blank(),
+    strip.placement    = "outside",
+    strip.text.y.left  = element_text(angle = 0, face = "bold", size = 11),
+    panel.grid.major.y = element_blank()
+  ) +
+  labs(
+    title    = "ORA — Gene Hits per Pathway",
+    subtitle = "Point colour = eFDR | Treatment vs Control | E. coli MG1655",
+    x        = "Number of DE genes in pathway",
+    y        = NULL
+  )
+
+ora_lollipop
+suppressMessages(ggplotly(ora_lollipop))
 ```
 
 ## Part 2 — Gene Set Enrichment Analysis (GSEA)
 
 **What is GSEA?**
 
-GSEA asks: *"Are genes in a pathway coordinately shifting up or down across my full ranked list?"*
+**GSEA asks: *"Are genes in a pathway coordinately shifting up or down across my full ranked list?"***
 
 Unlike ORA, GSEA:
 
@@ -630,7 +711,7 @@ if (length(top_down) > 0) {
 ORA and GSEA are complementary — they answer different questions and will not always agree.
 
 ```{r compare, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
-ora_hits  <- ora_sig$ontology_name
+ora_hits  <- bind_rows(ora_up_clean, ora_down_clean) %>% pull(ontology_name)
 gsea_hits <- gsea_sig$pathway
 
 both      <- intersect(ora_hits, gsea_hits)
@@ -663,12 +744,12 @@ if (length(both) > 0) {
 
 ## Saving Results
 
-```{r save-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+```{r save-results-5, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 results_dir <- file.path(git_root, "results")
 dir.create(results_dir, showWarnings = FALSE)
 
 write.table(
-  ora_results,
+  bind_rows(ora_up, ora_down),
   file      = file.path(results_dir, "ORA_KEGG_treatment_vs_control.tsv"),
   sep       = "\t",
   quote     = FALSE,

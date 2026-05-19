@@ -45,16 +45,55 @@ library(DT)
 
 ## Differential Expression Analysis
 
-`DESeq2` fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but `DESeq()` handles all three in one call.
-
 <div style="background:#f8d7da;border-left:4px solid #721c24;padding:10px;margin:10px 0;">
   <strong>⚠️ Warning:</strong> Always use raw integer counts as input. Do not use TPM, FPKM, or any normalised values — DESeq2 handles normalisation internally.
 </div>
 
-<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
-  <strong>📌 Remember:</strong> The variable of interest should be at the end of the design formula, and the control group must be the first (reference) factor level. Both were set in the QC script.
-</div>
+`DESeq2` fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but `DESeq()` handles all three in one call.
 
+:::boxy
+**What DESeq2 does internally — three steps:**
+
+**1. Size factor estimation (normalisation)**
+
+Each sample gets a size factor that accounts for differences in sequencing depth.
+DESeq2 uses the **median-of-ratios** method: for each gene, it computes the ratio 
+of each sample's count to the geometric mean count across all samples, then takes 
+the median ratio across all genes as the size factor. This is more robust than 
+simply dividing by total counts because it is not affected by a small number of 
+highly expressed genes dominating the library.
+
+**2. Dispersion estimation**
+
+RNA-seq count data is overdispersed — the variance is greater than the mean 
+(unlike a Poisson distribution which assumes variance = mean). DESeq2 models 
+this with a **negative binomial distribution** and estimates a dispersion 
+parameter per gene, which describes how much counts vary between replicates 
+beyond what is expected by chance. Genes with few replicates get their 
+dispersion estimates shrunk toward a fitted trend across all genes 
+(**empirical Bayes shrinkage**) — this stabilises estimates for genes with 
+low counts.
+
+**3. Wald test**
+
+For each gene, DESeq2 fits the negative binomial model and tests whether the 
+log2 fold change between conditions is significantly different from zero using 
+a **Wald test**. The resulting p-values are then corrected for multiple testing 
+using the **Benjamini-Hochberg** procedure to control the false discovery rate (FDR).
+
+---
+
+**Why does the order matter?**
+
+`resultsNames(dds)` shows `condition_treatment_vs_control` — this means the 
+fold change is calculated as **treatment / control**:
+
+- **Positive LFC** → gene is upregulated in treatment
+- **Negative LFC** → gene is downregulated in treatment
+
+If control were not set as the reference level, the fold change would be 
+inverted and your biological interpretation would be backwards.
+:::
 
 ```{r load-dds, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 git_root <- system("git rev-parse --show-toplevel", intern = TRUE)
@@ -66,9 +105,13 @@ cat("   Dimensions  :", nrow(dds), "genes ×", ncol(dds), "samples\n")
 cat("   Conditions  :", paste(levels(dds$condition), collapse = " vs "), "\n")
 ```
 
+<div style="background:#d1ecf1;border-left:4px solid #0c5460;padding:10px;margin:10px 0;">
+  <strong>📌 Remember:</strong> The variable of interest should be at the end of the design formula, and the control group must be the first (reference) factor level. Both were set in the QC script.
+</div>
+
+**Check the results**
 ```{r run-deseq, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 dds <- DESeq(dds)
-
 resultsNames(dds)
 ```
 
@@ -101,29 +144,32 @@ The results table contains one row per gene with the following columns:
 
 ## Log2 Fold Change Shrinkage
 
-> **What is this step and why do we need it?**
->
-> After running DESeq2, every gene gets a raw log2 fold change (LFC) estimate.
-> For **lowly expressed genes**, these estimates are unreliable — a gene with
-> 1 count in control and 3 in treatment looks like a 3-fold change, but this
-> is just noise from low counts.
->
-> `lfcShrink()` corrects this using **empirical Bayes shrinkage**: it pulls
-> noisy estimates (low counts, high uncertainty) toward zero, while leaving
-> well-supported fold changes (high counts, consistent signal) largely
-> unchanged. Think of it as a confidence-weighted adjustment.
->
-> ⚠️ **Important:** shrinkage does **not** change your p-values or which genes
-> are significant — those come from the `results()` call above. Shrunken LFCs
-> are used exclusively for **ranking and visualisation** (volcano plot, heatmap).
->
-> **Why `apeglm`?** Three shrinkage methods exist in DESeq2:
-> - `apeglm` — most accurate for simple two-group comparisons like ours ✅
-> - `ashr` — more flexible; needed when comparing two non-reference groups
-> - `normal` — the original method, now outdated and not recommended
->
-> For a treatment vs control design in *E. coli*, `apeglm` is the right choice.
-> See [Zhu *et al.*, 2019](https://doi.org/10.1093/bioinformatics/btz585) for benchmarks.
+:::boxy
+**What is this step and why do we need it?**
+
+ After running DESeq2, every gene gets a raw log2 fold change (LFC) estimate.
+ For **lowly expressed genes**, these estimates are unreliable — a gene with
+ 1 count in control and 3 in treatment looks like a 3-fold change, but this
+ is just noise from low counts.
+
+ `lfcShrink()` corrects this using **empirical Bayes shrinkage**: it pulls
+ noisy estimates (low counts, high uncertainty) toward zero, while leaving
+ well-supported fold changes (high counts, consistent signal) largely
+ unchanged. Think of it as a confidence-weighted adjustment.
+<div class="important">
+  <strong>⭐ Important:</strong> shrinkage does **not** change your p-values or which genes
+ are significant — those come from the `results()` call above. Shrunken LFCs
+ are used exclusively for **ranking and visualisation** (volcano plot, heatmap).
+</div>
+
+ **Why `apeglm`?** Three shrinkage methods exist in DESeq2:
+ - `apeglm` — most accurate for simple two-group comparisons like ours ✅
+ - `ashr` — more flexible; needed when comparing two non-reference groups
+ - `normal` — the original method, now outdated and not recommended
+
+ For a treatment vs control design in *E. coli*, `apeglm` is the right choice.
+ See [Zhu *et al.*, 2019](https://doi.org/10.1093/bioinformatics/btz585) for benchmarks.
+:::
 ```{r lfc-shrink, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 res_shrunk <- lfcShrink(dds,
                         coef  = "condition_treatment_vs_control",
@@ -155,7 +201,7 @@ cat("  Downregulated (LFC ≤ -1):", sum(res_sig$log2FoldChange <= -1), "\n")
 
 ---
 
-## Interactive Results Table
+**Interactive Results Table**
 
 ```{r results-table, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 DT::datatable(
@@ -173,11 +219,10 @@ DT::datatable(
 )
 ```
 
----
 
-# Visualisation
+## Visualisation
 
-## Volcano Plot
+**Volcano Plot**
 
 A volcano plot combines fold change (x-axis) and statistical significance (y-axis) into a single view. Genes in the upper corners are both strongly and significantly changed — these are the most biologically interesting candidates.
 
@@ -225,7 +270,7 @@ volcano
 ggplotly(volcano, tooltip = c("text", "x", "y"))
 ```
 
----
+
 
 ## MA Plot
 
@@ -241,7 +286,6 @@ plotMA(res_shrunk,
 abline(h = c(-1, 1), lty = 2, col = "black")
 ```
 
----
 
 ## Top Gene Count Plot
 
@@ -256,7 +300,6 @@ plotCounts(dds,
            main     = paste("Normalised counts —", top_gene))
 ```
 
----
 
 ## Heatmap of Significant Genes
 
@@ -291,9 +334,7 @@ pheatmap(
 )
 ```
 
----
-
-# Saving Results
+## Saving Results
 
 ```{r save-results, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
 results_dir <- file.path(git_root, "results")
@@ -320,7 +361,7 @@ cat("Results saved to:", results_dir, "\n")
 
 ---
 
-# Summary
+## Summary
 
 | Step | Decision made |
 |---|---|
@@ -331,8 +372,6 @@ cat("Results saved to:", results_dir, "\n")
 | Annotation database | `org.EcK12.eg.db` (for enrichment, next script) |
 
 Significant genes are saved and ready for gene set enrichment analysis in the next script.
-
----
 
 <!-- --------------------- Do not edit this and below ---------------------- -->
 

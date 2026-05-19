@@ -231,9 +231,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3.1" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#prepare-input"><i class="fa fa-check"></i><b>6.3.1</b> Prepare Input</a></li>
 <li class="chapter" data-level="6.3.2" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#run-ora"><i class="fa fa-check"></i><b>6.3.2</b> Run ORA</a></li>
 <li class="chapter" data-level="6.3.3" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#filter-and-inspect-significant-pathways"><i class="fa fa-check"></i><b>6.3.3</b> Filter and Inspect Significant Pathways</a></li>
-<li class="chapter" data-level="6.3.4" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#bar-plot-enriched-pathways"><i class="fa fa-check"></i><b>6.3.4</b> Bar Plot — Enriched Pathways</a></li>
-<li class="chapter" data-level="6.3.5" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#lollipop-plot-gene-hits-per-pathway"><i class="fa fa-check"></i><b>6.3.5</b> Lollipop Plot — Gene Hits per Pathway</a></li>
-<li class="chapter" data-level="6.3.6" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#critical-interpretation-spurious-hits"><i class="fa fa-check"></i><b>6.3.6</b> Critical Interpretation — Spurious Hits</a></li>
+<li class="chapter" data-level="6.3.4" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#visualization"><i class="fa fa-check"></i><b>6.3.4</b> Visualization</a></li>
+<li class="chapter" data-level="6.3.5" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#critical-interpretation-spurious-hits"><i class="fa fa-check"></i><b>6.3.5</b> Critical Interpretation — Spurious Hits</a></li>
+<li class="chapter" data-level="6.3.6" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#faceted-bar-plot-enriched-pathways-by-direction"><i class="fa fa-check"></i><b>6.3.6</b> Faceted Bar Plot — Enriched Pathways by Direction</a></li>
+<li class="chapter" data-level="6.3.7" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#lollipop-plot-gene-hits-per-pathway"><i class="fa fa-check"></i><b>6.3.7</b> Lollipop Plot — Gene Hits per Pathway</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html"><i class="fa fa-check"></i><b>6.4</b> Part 2 — Gene Set Enrichment Analysis (GSEA)</a>
 <ul>
@@ -277,6 +278,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong>⚠️ Warning:</strong> Always use raw integer counts as input. Do not use TPM, FPKM, or any normalised values — DESeq2 handles normalisation internally.</p>
 </div>
 <p><code>DESeq2</code> fits a negative binomial model to the raw counts and performs a Wald test for each gene. Internally it runs three steps in sequence: size factor estimation (normalisation), dispersion estimation, and the Wald test. These can also be run separately, but <code>DESeq()</code> handles all three in one call.</p>
+<div class="boxy">
+<p><strong>What DESeq2 does internally — three steps:</strong></p>
+<p><strong>1. Size factor estimation (normalisation)</strong></p>
+<p>Each sample gets a size factor that accounts for differences in sequencing depth.
+DESeq2 uses the <strong>median-of-ratios</strong> method: for each gene, it computes the ratio
+of each sample’s count to the geometric mean count across all samples, then takes
+the median ratio across all genes as the size factor. This is more robust than
+simply dividing by total counts because it is not affected by a small number of
+highly expressed genes dominating the library.</p>
+<p><strong>2. Dispersion estimation</strong></p>
+<p>RNA-seq count data is overdispersed — the variance is greater than the mean
+(unlike a Poisson distribution which assumes variance = mean). DESeq2 models
+this with a <strong>negative binomial distribution</strong> and estimates a dispersion
+parameter per gene, which describes how much counts vary between replicates
+beyond what is expected by chance. Genes with few replicates get their
+dispersion estimates shrunk toward a fitted trend across all genes
+(<strong>empirical Bayes shrinkage</strong>) — this stabilises estimates for genes with
+low counts.</p>
+<p><strong>3. Wald test</strong></p>
+<p>For each gene, DESeq2 fits the negative binomial model and tests whether the
+log2 fold change between conditions is significantly different from zero using
+a <strong>Wald test</strong>. The resulting p-values are then corrected for multiple testing
+using the <strong>Benjamini-Hochberg</strong> procedure to control the false discovery rate (FDR).</p>
+<hr />
+<p><strong>Why does the order matter?</strong></p>
+<p><code>resultsNames(dds)</code> shows <code>condition_treatment_vs_control</code> — this means the
+fold change is calculated as <strong>treatment / control</strong>:</p>
+<ul>
+<li><strong>Positive LFC</strong> → gene is upregulated in treatment</li>
+<li><strong>Negative LFC</strong> → gene is downregulated in treatment</li>
+</ul>
+<p>If control were not set as the reference level, the fold change would be
+inverted and your biological interpretation would be backwards.</p>
+</div>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="differential-expression-analysis-1.html#cb51-1" tabindex="-1"></a>git_root <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="st">&quot;git rev-parse --show-toplevel&quot;</span>, <span class="at">intern =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb51-2"><a href="differential-expression-analysis-1.html#cb51-2" tabindex="-1"></a></span>
 <span id="cb51-3"><a href="differential-expression-analysis-1.html#cb51-3" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;rds&quot;</span>, <span class="st">&quot;dds_ecoli_MG1655.rds&quot;</span>))</span>

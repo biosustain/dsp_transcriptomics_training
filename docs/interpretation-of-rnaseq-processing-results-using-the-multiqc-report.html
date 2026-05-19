@@ -231,9 +231,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3.1" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#prepare-input"><i class="fa fa-check"></i><b>6.3.1</b> Prepare Input</a></li>
 <li class="chapter" data-level="6.3.2" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#run-ora"><i class="fa fa-check"></i><b>6.3.2</b> Run ORA</a></li>
 <li class="chapter" data-level="6.3.3" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#filter-and-inspect-significant-pathways"><i class="fa fa-check"></i><b>6.3.3</b> Filter and Inspect Significant Pathways</a></li>
-<li class="chapter" data-level="6.3.4" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#bar-plot-enriched-pathways"><i class="fa fa-check"></i><b>6.3.4</b> Bar Plot — Enriched Pathways</a></li>
-<li class="chapter" data-level="6.3.5" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#lollipop-plot-gene-hits-per-pathway"><i class="fa fa-check"></i><b>6.3.5</b> Lollipop Plot — Gene Hits per Pathway</a></li>
-<li class="chapter" data-level="6.3.6" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#critical-interpretation-spurious-hits"><i class="fa fa-check"></i><b>6.3.6</b> Critical Interpretation — Spurious Hits</a></li>
+<li class="chapter" data-level="6.3.4" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#visualization"><i class="fa fa-check"></i><b>6.3.4</b> Visualization</a></li>
+<li class="chapter" data-level="6.3.5" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#critical-interpretation-spurious-hits"><i class="fa fa-check"></i><b>6.3.5</b> Critical Interpretation — Spurious Hits</a></li>
+<li class="chapter" data-level="6.3.6" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#faceted-bar-plot-enriched-pathways-by-direction"><i class="fa fa-check"></i><b>6.3.6</b> Faceted Bar Plot — Enriched Pathways by Direction</a></li>
+<li class="chapter" data-level="6.3.7" data-path="part-1-over-representation-analysis-ora.html"><a href="part-1-over-representation-analysis-ora.html#lollipop-plot-gene-hits-per-pathway"><i class="fa fa-check"></i><b>6.3.7</b> Lollipop Plot — Gene Hits per Pathway</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="part-2-gene-set-enrichment-analysis-gsea.html"><a href="part-2-gene-set-enrichment-analysis-gsea.html"><i class="fa fa-check"></i><b>6.4</b> Part 2 — Gene Set Enrichment Analysis (GSEA)</a>
 <ul>
@@ -282,38 +283,10 @@ We will be analyzing the <a href="https://github.com/biosustain/dsp_transcriptom
 <li>PCA plot and Euclidean distance heatmap</li>
 <li>Versions of the software tools used (see the end of the report)</li>
 </ul>
-<p>Please take a few minutes to inspect the multiQC report, list your observations and questions, and try to find explanations for the observations made. You can use the left panel for navigating the report. We will discuss your findings and questions afterwards.</p>
+<p>Please take a few minutes to inspect the multiQC report. You can use the left panel for navigating the report. We will discuss details and your questions afterwards.</p>
 <div class="boxy">
 <p>The three control samples are <code>C1</code>, <code>C2</code> and <code>C3</code>.<br />
 The three saccharin treatment samples are <code>sac1</code>, <code>sac2</code>and <code>sac3</code>.</p>
-</div>
-<p>For example, you could pay attention to the details of the following:</p>
-<div class="question">
-<p><strong>❓ Question:</strong> How is are the per base quality scores?</p>
-</div>
-<ul>
-<li>see <code>Sequence Quality Histograms before and after trimming</code></li>
-</ul>
-<div class="question">
-<p><strong>❓ Question:</strong> There is a maximum of 85% aligned reads? What could be the reason(s)?</p>
-</div>
-<ul>
-<li>see the <code>General Statistics</code> section</li>
-</ul>
-<div class="question">
-<p><strong>❓ Question:</strong> Why is the percentage of aligned reads lower in C1 and C2 compared o all other samples?</p>
-</div>
-<ul>
-<li>see the <code>General Statistics</code> section, <code>Per Sequence GC Content before and after trimming</code> and <code>Top overrepresented sequences</code>and <code>Adaptor content</code></li>
-</ul>
-<div class="question">
-<p><strong>❓ Question:</strong> Insepct the duplication level of reads. What could duplication stem from and how to treat it?</p>
-</div>
-<ul>
-<li>see the <code>General Statistics</code> section, <code>Fastq Sequence Counts</code>, <code>Picard Mark duplicates</code></li>
-</ul>
-<div class="question">
-<p><strong>❓ Question:</strong> - How do the samples cluster? (see <code>BOWTIE2_SALMON DESeq2 PCA plot and sample similarity</code>)</p>
 </div>
 
 </div>

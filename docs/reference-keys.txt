@@ -48,9 +48,10 @@ part-1-over-representation-analysis-ora
 prepare-input
 run-ora
 filter-and-inspect-significant-pathways
-bar-plot-enriched-pathways
-lollipop-plot-gene-hits-per-pathway
+visualization
 critical-interpretation-spurious-hits
+faceted-bar-plot-enriched-pathways-by-direction
+lollipop-plot-gene-hits-per-pathway
 part-2-gene-set-enrichment-analysis-gsea
 prepare-the-ranked-gene-list
 convert-gmt-to-fgsea-format
