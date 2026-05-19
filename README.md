@@ -28,18 +28,19 @@ A draft agenda is already available in the repository. Check back closer to the 
 
 | Time             | Session                                                                         |
 |------------------|---------------------------------------------------------------------------------|
-| ☕ **9:00 – 9:15**   | Welcome, coffee, and setup                                                     |
-| 🔬 **9:15 – 10:00**  | Theory: Illumina sequencing & RNA-seq experimental design                      |
-| 🔄 **10:00 – 10:45** | Theory: nf-core/rnaseq pipeline overview                                       |
-| ⏸️ **10:45 – 11:00** | Break                                                                           |
-| 💻 **11:00 – 12:00** | Script 01: *nf-core/rnaseq — running the pipeline*                             |
-| 🍽️ **12:00 – 13:00** | Lunch                                                                           |
-| 🧬 **13:00 – 14:15** | Script 02: *Quality Control & Exploratory Data Analysis*                       |
-| ⏸️ **14:15 – 14:30** | Break                                                                           |
-| 📊 **14:30 – 15:30** | Script 03: *Differential Expression Analysis with DESeq2*                      |
-| ⏸️ **15:30 – 15:45** | Break                                                                           |
-| 🔍 **15:45 – 16:15** | Script 04: *Functional Enrichment Analysis (ORA & GSEA with mulea)*            |
-| 🏁 **16:15 – 16:30** | Wrap-up, Q&A, and closing                                                       |
+| ☕ **9:00 – 9:15**   | Welcome, coffee, and setup                                                   |
+| 🔬 **9:15 – 10:00**  | Theory: Illumina sequencing & RNA-seq                                       |
+| 🔄 **10:00 – 10:30** | Theory: nf-core/rnaseq pipeline overview                                    |
+| ⏸️ **10:30 – 10:45** | Break                                                                       |
+| 💻 **10:45 – 12:15** | Script 01: *nf-core/rnaseq — running the pipeline*                          |
+|                      | Theory: RNAseq data analysis                                                |
+| 🍽️ **12:15 – 13:00** | Lunch                                                                       |
+| 🧬 **13:00 – 14:15** | Script 02: *Quality Control & Exploratory Data Analysis*                    |
+| ⏸️ **14:15 – 14:30** | Break                                                                       |
+| 📊 **14:30 – 15:30** | Script 03: *Differential Expression Analysis with DESeq2*                   |
+| ⏸️ **15:30 – 15:45** | Break                                                                       |
+| 🔍 **15:45 – 16:15** | Script 04: *Functional Enrichment Analysis (ORA & GSEA with mulea)*         |
+| 🏁 **16:15 – 16:30** | Wrap-up, Q&A, and closing                                                   |
 
 
 ---
