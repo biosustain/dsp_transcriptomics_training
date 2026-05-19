@@ -200,7 +200,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>4.8</b> Sample Correlation Heatmap</a></li>
 <li class="chapter" data-level="4.9" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>4.9</b> Principal Component Analysis (PCA)</a></li>
 <li class="chapter" data-level="4.10" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>4.10</b> Detecting Outliers</a></li>
-<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a></li>
+<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html#add-gene-names"><i class="fa fa-check"></i><b>4.11.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="4.12" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>4.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>5</b> Differential Expression Analysis</a>
@@ -212,7 +215,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="visualisation.html"><a href="visualisation.html"><i class="fa fa-check"></i><b>5.5</b> Visualisation</a></li>
 <li class="chapter" data-level="5.6" data-path="ma-plot.html"><a href="ma-plot.html"><i class="fa fa-check"></i><b>5.6</b> MA Plot</a></li>
 <li class="chapter" data-level="5.7" data-path="top-gene-count-plot.html"><a href="top-gene-count-plot.html"><i class="fa fa-check"></i><b>5.7</b> Top Gene Count Plot</a></li>
-<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a></li>
+<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a>
+<ul>
+<li class="chapter" data-level="5.8.1" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html#add-gene-names-1"><i class="fa fa-check"></i><b>5.8.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="5.9" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>5.9</b> Saving Results</a></li>
 <li class="chapter" data-level="5.10" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>5.10</b> Summary</a></li>
 </ul></li>
@@ -275,33 +281,69 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="heatmap-of-significant-genes" class="section level2 hasAnchor" number="5.8">
 <h2><span class="header-section-number">5.8</span> Heatmap of Significant Genes<a href="heatmap-of-significant-genes.html#heatmap-of-significant-genes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Clustering significant DE genes across samples provides a gene-level view of the expression differences. Genes should show clear block structure: high expression in treatment and low in control (or vice versa). Replicates within each condition should cluster together.</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="heatmap-of-significant-genes.html#cb77-1" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> <span class="fu">varianceStabilizingTransformation</span>(dds, <span class="at">blind =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb77-2"><a href="heatmap-of-significant-genes.html#cb77-2" tabindex="-1"></a></span>
-<span id="cb77-3"><a href="heatmap-of-significant-genes.html#cb77-3" tabindex="-1"></a>sig_genes <span class="ot">&lt;-</span> res_sig <span class="sc">%&gt;%</span></span>
-<span id="cb77-4"><a href="heatmap-of-significant-genes.html#cb77-4" tabindex="-1"></a>  <span class="fu">slice_min</span>(padj, <span class="at">n =</span> <span class="fu">min</span>(<span class="dv">50</span>, <span class="fu">nrow</span>(res_sig))) <span class="sc">%&gt;%</span></span>
-<span id="cb77-5"><a href="heatmap-of-significant-genes.html#cb77-5" tabindex="-1"></a>  <span class="fu">pull</span>(gene)</span>
-<span id="cb77-6"><a href="heatmap-of-significant-genes.html#cb77-6" tabindex="-1"></a></span>
-<span id="cb77-7"><a href="heatmap-of-significant-genes.html#cb77-7" tabindex="-1"></a>df_anno    <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(vsd)[, <span class="st">&quot;condition&quot;</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
-<span id="cb77-8"><a href="heatmap-of-significant-genes.html#cb77-8" tabindex="-1"></a>anno_colors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">condition =</span> cols_condition)</span>
-<span id="cb77-9"><a href="heatmap-of-significant-genes.html#cb77-9" tabindex="-1"></a>colsHeat   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#F7F7F7&quot;</span>, <span class="st">&quot;#92C5DE&quot;</span>, <span class="st">&quot;#0571B0&quot;</span>, <span class="st">&quot;#F4A582&quot;</span>, <span class="st">&quot;#CA0020&quot;</span>)</span>
-<span id="cb77-10"><a href="heatmap-of-significant-genes.html#cb77-10" tabindex="-1"></a></span>
-<span id="cb77-11"><a href="heatmap-of-significant-genes.html#cb77-11" tabindex="-1"></a><span class="fu">pheatmap</span>(</span>
-<span id="cb77-12"><a href="heatmap-of-significant-genes.html#cb77-12" tabindex="-1"></a>  <span class="fu">assay</span>(vsd)[sig_genes, ],</span>
-<span id="cb77-13"><a href="heatmap-of-significant-genes.html#cb77-13" tabindex="-1"></a>  <span class="at">cluster_cols             =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb77-14"><a href="heatmap-of-significant-genes.html#cb77-14" tabindex="-1"></a>  <span class="at">cluster_rows             =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb77-15"><a href="heatmap-of-significant-genes.html#cb77-15" tabindex="-1"></a>  <span class="at">scale                    =</span> <span class="st">&quot;row&quot;</span>,</span>
-<span id="cb77-16"><a href="heatmap-of-significant-genes.html#cb77-16" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
-<span id="cb77-17"><a href="heatmap-of-significant-genes.html#cb77-17" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
-<span id="cb77-18"><a href="heatmap-of-significant-genes.html#cb77-18" tabindex="-1"></a>  <span class="at">annotation_col           =</span> df_anno,</span>
-<span id="cb77-19"><a href="heatmap-of-significant-genes.html#cb77-19" tabindex="-1"></a>  <span class="at">annotation_colors        =</span> anno_colors,</span>
-<span id="cb77-20"><a href="heatmap-of-significant-genes.html#cb77-20" tabindex="-1"></a>  <span class="at">show_colnames            =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb77-21"><a href="heatmap-of-significant-genes.html#cb77-21" tabindex="-1"></a>  <span class="at">show_rownames            =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb77-22"><a href="heatmap-of-significant-genes.html#cb77-22" tabindex="-1"></a>  <span class="at">color                    =</span> <span class="fu">colorRampPalette</span>(colsHeat)(<span class="dv">255</span>),</span>
-<span id="cb77-23"><a href="heatmap-of-significant-genes.html#cb77-23" tabindex="-1"></a>  <span class="at">border_color             =</span> <span class="st">&quot;#f8edeb&quot;</span>,</span>
-<span id="cb77-24"><a href="heatmap-of-significant-genes.html#cb77-24" tabindex="-1"></a>  <span class="at">fontsize_row             =</span> <span class="dv">7</span>,</span>
-<span id="cb77-25"><a href="heatmap-of-significant-genes.html#cb77-25" tabindex="-1"></a>  <span class="at">main                     =</span> <span class="st">&quot;Top DE genes — Treatment vs Control (VST, row-scaled)&quot;</span></span>
-<span id="cb77-26"><a href="heatmap-of-significant-genes.html#cb77-26" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="Introduction-to-Transcriptomics_files/figure-html/de-heatmap-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="heatmap-of-significant-genes.html#cb81-1" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> <span class="fu">varianceStabilizingTransformation</span>(dds, <span class="at">blind =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb81-2"><a href="heatmap-of-significant-genes.html#cb81-2" tabindex="-1"></a></span>
+<span id="cb81-3"><a href="heatmap-of-significant-genes.html#cb81-3" tabindex="-1"></a>sig_genes <span class="ot">&lt;-</span> res_sig <span class="sc">%&gt;%</span></span>
+<span id="cb81-4"><a href="heatmap-of-significant-genes.html#cb81-4" tabindex="-1"></a>  <span class="fu">slice_min</span>(padj, <span class="at">n =</span> <span class="fu">min</span>(<span class="dv">50</span>, <span class="fu">nrow</span>(res_sig))) <span class="sc">%&gt;%</span></span>
+<span id="cb81-5"><a href="heatmap-of-significant-genes.html#cb81-5" tabindex="-1"></a>  <span class="fu">pull</span>(gene)</span>
+<span id="cb81-6"><a href="heatmap-of-significant-genes.html#cb81-6" tabindex="-1"></a></span>
+<span id="cb81-7"><a href="heatmap-of-significant-genes.html#cb81-7" tabindex="-1"></a>df_anno    <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(vsd)[, <span class="st">&quot;condition&quot;</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
+<span id="cb81-8"><a href="heatmap-of-significant-genes.html#cb81-8" tabindex="-1"></a>anno_colors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">condition =</span> cols_condition)</span>
+<span id="cb81-9"><a href="heatmap-of-significant-genes.html#cb81-9" tabindex="-1"></a>colsHeat   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#F7F7F7&quot;</span>, <span class="st">&quot;#92C5DE&quot;</span>, <span class="st">&quot;#0571B0&quot;</span>, <span class="st">&quot;#F4A582&quot;</span>, <span class="st">&quot;#CA0020&quot;</span>)</span>
+<span id="cb81-10"><a href="heatmap-of-significant-genes.html#cb81-10" tabindex="-1"></a></span>
+<span id="cb81-11"><a href="heatmap-of-significant-genes.html#cb81-11" tabindex="-1"></a><span class="fu">pheatmap</span>(</span>
+<span id="cb81-12"><a href="heatmap-of-significant-genes.html#cb81-12" tabindex="-1"></a>  <span class="fu">assay</span>(vsd)[sig_genes, ],</span>
+<span id="cb81-13"><a href="heatmap-of-significant-genes.html#cb81-13" tabindex="-1"></a>  <span class="at">cluster_cols             =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb81-14"><a href="heatmap-of-significant-genes.html#cb81-14" tabindex="-1"></a>  <span class="at">cluster_rows             =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb81-15"><a href="heatmap-of-significant-genes.html#cb81-15" tabindex="-1"></a>  <span class="at">scale                    =</span> <span class="st">&quot;row&quot;</span>,</span>
+<span id="cb81-16"><a href="heatmap-of-significant-genes.html#cb81-16" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
+<span id="cb81-17"><a href="heatmap-of-significant-genes.html#cb81-17" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
+<span id="cb81-18"><a href="heatmap-of-significant-genes.html#cb81-18" tabindex="-1"></a>  <span class="at">annotation_col           =</span> df_anno,</span>
+<span id="cb81-19"><a href="heatmap-of-significant-genes.html#cb81-19" tabindex="-1"></a>  <span class="at">annotation_colors        =</span> anno_colors,</span>
+<span id="cb81-20"><a href="heatmap-of-significant-genes.html#cb81-20" tabindex="-1"></a>  <span class="at">show_colnames            =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb81-21"><a href="heatmap-of-significant-genes.html#cb81-21" tabindex="-1"></a>  <span class="at">show_rownames            =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb81-22"><a href="heatmap-of-significant-genes.html#cb81-22" tabindex="-1"></a>  <span class="at">color                    =</span> <span class="fu">colorRampPalette</span>(colsHeat)(<span class="dv">255</span>),</span>
+<span id="cb81-23"><a href="heatmap-of-significant-genes.html#cb81-23" tabindex="-1"></a>  <span class="at">border_color             =</span> <span class="st">&quot;#f8edeb&quot;</span>,</span>
+<span id="cb81-24"><a href="heatmap-of-significant-genes.html#cb81-24" tabindex="-1"></a>  <span class="at">fontsize_row             =</span> <span class="dv">7</span>,</span>
+<span id="cb81-25"><a href="heatmap-of-significant-genes.html#cb81-25" tabindex="-1"></a>  <span class="at">main                     =</span> <span class="st">&quot;Top DE genes — Treatment vs Control (VST, row-scaled)&quot;</span></span>
+<span id="cb81-26"><a href="heatmap-of-significant-genes.html#cb81-26" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="Introduction-to-Transcriptomics_files/figure-html/de-heatmap-1.png" alt="" width="768" /></p>
+<div id="add-gene-names-1" class="section level3 hasAnchor" number="5.8.1">
+<h3><span class="header-section-number">5.8.1</span> Add gene names<a href="heatmap-of-significant-genes.html#add-gene-names-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="heatmap-of-significant-genes.html#cb82-1" tabindex="-1"></a>gtf_map <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;gtf_map.rds&quot;</span>))</span>
+<span id="cb82-2"><a href="heatmap-of-significant-genes.html#cb82-2" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> <span class="fu">varianceStabilizingTransformation</span>(dds, <span class="at">blind =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb82-3"><a href="heatmap-of-significant-genes.html#cb82-3" tabindex="-1"></a></span>
+<span id="cb82-4"><a href="heatmap-of-significant-genes.html#cb82-4" tabindex="-1"></a>sig_genes <span class="ot">&lt;-</span> res_sig <span class="sc">%&gt;%</span></span>
+<span id="cb82-5"><a href="heatmap-of-significant-genes.html#cb82-5" tabindex="-1"></a>  <span class="fu">slice_min</span>(padj, <span class="at">n =</span> <span class="fu">min</span>(<span class="dv">50</span>, <span class="fu">nrow</span>(res_sig))) <span class="sc">%&gt;%</span></span>
+<span id="cb82-6"><a href="heatmap-of-significant-genes.html#cb82-6" tabindex="-1"></a>  <span class="fu">pull</span>(gene)</span>
+<span id="cb82-7"><a href="heatmap-of-significant-genes.html#cb82-7" tabindex="-1"></a></span>
+<span id="cb82-8"><a href="heatmap-of-significant-genes.html#cb82-8" tabindex="-1"></a><span class="co"># Replace locus tags with gene names for display</span></span>
+<span id="cb82-9"><a href="heatmap-of-significant-genes.html#cb82-9" tabindex="-1"></a>heat_mat   <span class="ot">&lt;-</span> <span class="fu">assay</span>(vsd)[sig_genes, ]</span>
+<span id="cb82-10"><a href="heatmap-of-significant-genes.html#cb82-10" tabindex="-1"></a>row_labels <span class="ot">&lt;-</span> gtf_map<span class="sc">$</span>label[<span class="fu">match</span>(<span class="fu">rownames</span>(heat_mat), gtf_map<span class="sc">$</span>locus_tag)]</span>
+<span id="cb82-11"><a href="heatmap-of-significant-genes.html#cb82-11" tabindex="-1"></a><span class="fu">rownames</span>(heat_mat) <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(row_labels), <span class="fu">rownames</span>(heat_mat), row_labels)</span>
+<span id="cb82-12"><a href="heatmap-of-significant-genes.html#cb82-12" tabindex="-1"></a></span>
+<span id="cb82-13"><a href="heatmap-of-significant-genes.html#cb82-13" tabindex="-1"></a>df_anno     <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(vsd)[, <span class="st">&quot;condition&quot;</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
+<span id="cb82-14"><a href="heatmap-of-significant-genes.html#cb82-14" tabindex="-1"></a>anno_colors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">condition =</span> cols_condition)</span>
+<span id="cb82-15"><a href="heatmap-of-significant-genes.html#cb82-15" tabindex="-1"></a>colsHeat    <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#F7F7F7&quot;</span>, <span class="st">&quot;#92C5DE&quot;</span>, <span class="st">&quot;#0571B0&quot;</span>, <span class="st">&quot;#F4A582&quot;</span>, <span class="st">&quot;#CA0020&quot;</span>)</span>
+<span id="cb82-16"><a href="heatmap-of-significant-genes.html#cb82-16" tabindex="-1"></a></span>
+<span id="cb82-17"><a href="heatmap-of-significant-genes.html#cb82-17" tabindex="-1"></a><span class="fu">pheatmap</span>(</span>
+<span id="cb82-18"><a href="heatmap-of-significant-genes.html#cb82-18" tabindex="-1"></a>  heat_mat,</span>
+<span id="cb82-19"><a href="heatmap-of-significant-genes.html#cb82-19" tabindex="-1"></a>  <span class="at">cluster_cols             =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-20"><a href="heatmap-of-significant-genes.html#cb82-20" tabindex="-1"></a>  <span class="at">cluster_rows             =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-21"><a href="heatmap-of-significant-genes.html#cb82-21" tabindex="-1"></a>  <span class="at">scale                    =</span> <span class="st">&quot;row&quot;</span>,</span>
+<span id="cb82-22"><a href="heatmap-of-significant-genes.html#cb82-22" tabindex="-1"></a>  <span class="at">clustering_distance_rows =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
+<span id="cb82-23"><a href="heatmap-of-significant-genes.html#cb82-23" tabindex="-1"></a>  <span class="at">clustering_distance_cols =</span> <span class="st">&quot;euclidean&quot;</span>,</span>
+<span id="cb82-24"><a href="heatmap-of-significant-genes.html#cb82-24" tabindex="-1"></a>  <span class="at">annotation_col           =</span> df_anno,</span>
+<span id="cb82-25"><a href="heatmap-of-significant-genes.html#cb82-25" tabindex="-1"></a>  <span class="at">annotation_colors        =</span> anno_colors,</span>
+<span id="cb82-26"><a href="heatmap-of-significant-genes.html#cb82-26" tabindex="-1"></a>  <span class="at">show_colnames            =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-27"><a href="heatmap-of-significant-genes.html#cb82-27" tabindex="-1"></a>  <span class="at">show_rownames            =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-28"><a href="heatmap-of-significant-genes.html#cb82-28" tabindex="-1"></a>  <span class="at">color                    =</span> <span class="fu">colorRampPalette</span>(colsHeat)(<span class="dv">255</span>),</span>
+<span id="cb82-29"><a href="heatmap-of-significant-genes.html#cb82-29" tabindex="-1"></a>  <span class="at">border_color             =</span> <span class="st">&quot;#f8edeb&quot;</span>,</span>
+<span id="cb82-30"><a href="heatmap-of-significant-genes.html#cb82-30" tabindex="-1"></a>  <span class="at">fontsize_row             =</span> <span class="dv">7</span>,</span>
+<span id="cb82-31"><a href="heatmap-of-significant-genes.html#cb82-31" tabindex="-1"></a>  <span class="at">main                     =</span> <span class="st">&quot;Top DE genes — Treatment vs Control (VST, row-scaled)&quot;</span></span>
+<span id="cb82-32"><a href="heatmap-of-significant-genes.html#cb82-32" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="Introduction-to-Transcriptomics_files/figure-html/de-heatmap-names-1.png" alt="" width="768" /></p>
+</div>
 </div>
             </section>
 

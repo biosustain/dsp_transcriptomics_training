@@ -25,6 +25,7 @@ sample-correlation-heatmap
 principal-component-analysis-pca
 detecting-outliers
 top-variable-genes-heatmap
+add-gene-names
 summary
 differential-expression-analysis
 differential-expression-analysis-1
@@ -35,6 +36,7 @@ visualisation
 ma-plot
 top-gene-count-plot
 heatmap-of-significant-genes
+add-gene-names-1
 saving-results
 summary-1
 gene-functional-enrichment-analysis

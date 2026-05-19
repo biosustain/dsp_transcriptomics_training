@@ -200,7 +200,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>4.8</b> Sample Correlation Heatmap</a></li>
 <li class="chapter" data-level="4.9" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>4.9</b> Principal Component Analysis (PCA)</a></li>
 <li class="chapter" data-level="4.10" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>4.10</b> Detecting Outliers</a></li>
-<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a></li>
+<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html#add-gene-names"><i class="fa fa-check"></i><b>4.11.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="4.12" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>4.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>5</b> Differential Expression Analysis</a>
@@ -212,7 +215,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="visualisation.html"><a href="visualisation.html"><i class="fa fa-check"></i><b>5.5</b> Visualisation</a></li>
 <li class="chapter" data-level="5.6" data-path="ma-plot.html"><a href="ma-plot.html"><i class="fa fa-check"></i><b>5.6</b> MA Plot</a></li>
 <li class="chapter" data-level="5.7" data-path="top-gene-count-plot.html"><a href="top-gene-count-plot.html"><i class="fa fa-check"></i><b>5.7</b> Top Gene Count Plot</a></li>
-<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a></li>
+<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a>
+<ul>
+<li class="chapter" data-level="5.8.1" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html#add-gene-names-1"><i class="fa fa-check"></i><b>5.8.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="5.9" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>5.9</b> Saving Results</a></li>
 <li class="chapter" data-level="5.10" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>5.10</b> Summary</a></li>
 </ul></li>
@@ -285,15 +291,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong>⭐ Important:</strong> This script assumes you have already run <code>01_quality_control_ecoli.Rmd</code> and that the <code>dds</code> object is available in your environment. If not, re-run the QC script first.</p>
 </div>
 <p><strong>Setup the Environment</strong></p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="differential-expression-analysis.html#cb51-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb51-2"><a href="differential-expression-analysis.html#cb51-2" tabindex="-1"></a><span class="fu">library</span>(DESeq2)</span>
-<span id="cb51-3"><a href="differential-expression-analysis.html#cb51-3" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
-<span id="cb51-4"><a href="differential-expression-analysis.html#cb51-4" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
-<span id="cb51-5"><a href="differential-expression-analysis.html#cb51-5" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
-<span id="cb51-6"><a href="differential-expression-analysis.html#cb51-6" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
-<span id="cb51-7"><a href="differential-expression-analysis.html#cb51-7" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb51-8"><a href="differential-expression-analysis.html#cb51-8" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb51-9"><a href="differential-expression-analysis.html#cb51-9" tabindex="-1"></a><span class="fu">library</span>(DT)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="differential-expression-analysis.html#cb55-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb55-2"><a href="differential-expression-analysis.html#cb55-2" tabindex="-1"></a><span class="fu">library</span>(DESeq2)</span>
+<span id="cb55-3"><a href="differential-expression-analysis.html#cb55-3" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb55-4"><a href="differential-expression-analysis.html#cb55-4" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb55-5"><a href="differential-expression-analysis.html#cb55-5" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
+<span id="cb55-6"><a href="differential-expression-analysis.html#cb55-6" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb55-7"><a href="differential-expression-analysis.html#cb55-7" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb55-8"><a href="differential-expression-analysis.html#cb55-8" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb55-9"><a href="differential-expression-analysis.html#cb55-9" tabindex="-1"></a><span class="fu">library</span>(DT)</span></code></pre></div>
 </div>
             </section>
 

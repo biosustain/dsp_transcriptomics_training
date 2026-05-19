@@ -200,7 +200,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>4.8</b> Sample Correlation Heatmap</a></li>
 <li class="chapter" data-level="4.9" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>4.9</b> Principal Component Analysis (PCA)</a></li>
 <li class="chapter" data-level="4.10" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>4.10</b> Detecting Outliers</a></li>
-<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a></li>
+<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html#add-gene-names"><i class="fa fa-check"></i><b>4.11.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="4.12" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>4.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>5</b> Differential Expression Analysis</a>
@@ -212,7 +215,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="visualisation.html"><a href="visualisation.html"><i class="fa fa-check"></i><b>5.5</b> Visualisation</a></li>
 <li class="chapter" data-level="5.6" data-path="ma-plot.html"><a href="ma-plot.html"><i class="fa fa-check"></i><b>5.6</b> MA Plot</a></li>
 <li class="chapter" data-level="5.7" data-path="top-gene-count-plot.html"><a href="top-gene-count-plot.html"><i class="fa fa-check"></i><b>5.7</b> Top Gene Count Plot</a></li>
-<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a></li>
+<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a>
+<ul>
+<li class="chapter" data-level="5.8.1" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html#add-gene-names-1"><i class="fa fa-check"></i><b>5.8.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="5.9" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>5.9</b> Saving Results</a></li>
 <li class="chapter" data-level="5.10" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>5.10</b> Summary</a></li>
 </ul></li>
@@ -343,7 +349,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Enrichment results are saved and ready for biological interpretation and reporting.</p>
 <!-- --------------------- Do not edit this and below ---------------------- -->
 <p></br></p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="summary-2.html#cb175-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="summary-2.html#cb180-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.4.1 (2024-06-14)
 ## Platform: aarch64-apple-darwin20
 ## Running under: macOS Sonoma 14.3
@@ -365,67 +371,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## other attached packages:
 ##  [1] heatmaply_1.6.0             viridis_0.6.5              
 ##  [3] viridisLite_0.4.3           KEGGREST_1.46.0            
-##  [5] mulea_1.1.1                 clusterProfiler_4.14.6     
-##  [7] fgsea_1.32.4                DT_0.34.0                  
+##  [5] fgsea_1.32.4                mulea_1.1.1                
+##  [7] plotly_4.12.0               DT_0.34.0                  
 ##  [9] kableExtra_1.4.0            knitr_1.51                 
-## [11] plotly_4.12.0               factoextra_2.0.0           
-## [13] pheatmap_1.0.13             RColorBrewer_1.1-3         
-## [15] ggpubr_0.6.3                DESeq2_1.46.0              
-## [17] SummarizedExperiment_1.36.0 Biobase_2.66.0             
-## [19] MatrixGenerics_1.18.1       matrixStats_1.5.0          
-## [21] GenomicRanges_1.58.0        GenomeInfoDb_1.42.3        
-## [23] IRanges_2.40.1              S4Vectors_0.44.0           
-## [25] BiocGenerics_0.52.0         reshape2_1.4.5             
-## [27] lubridate_1.9.5             forcats_1.0.1              
-## [29] stringr_1.6.0               dplyr_1.2.1                
-## [31] purrr_1.2.2                 readr_2.2.0                
-## [33] tidyr_1.3.2                 tibble_3.3.1               
-## [35] ggplot2_4.0.3               tidyverse_2.0.0            
+## [11] factoextra_2.0.0            pheatmap_1.0.13            
+## [13] RColorBrewer_1.1-3          ggpubr_0.6.3               
+## [15] DESeq2_1.46.0               SummarizedExperiment_1.36.0
+## [17] Biobase_2.66.0              MatrixGenerics_1.18.1      
+## [19] matrixStats_1.5.0           GenomicRanges_1.58.0       
+## [21] GenomeInfoDb_1.42.3         IRanges_2.40.1             
+## [23] S4Vectors_0.44.0            BiocGenerics_0.52.0        
+## [25] reshape2_1.4.5              lubridate_1.9.5            
+## [27] forcats_1.0.1               stringr_1.6.0              
+## [29] dplyr_1.2.1                 purrr_1.2.2                
+## [31] readr_2.2.0                 tidyr_1.3.2                
+## [33] tibble_3.3.1                ggplot2_4.0.3              
+## [35] tidyverse_2.0.0            
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] splines_4.4.1           ggplotify_0.1.3         R.oo_1.27.1            
-##   [4] lifecycle_1.0.5         rstatix_0.7.3           lattice_0.22-9         
-##   [7] MASS_7.3-65             crosstalk_1.2.2         dendextend_1.19.1      
-##  [10] backports_1.5.1         magrittr_2.0.5          sass_0.4.10            
-##  [13] rmarkdown_2.31          jquerylib_0.1.4         yaml_2.3.12            
-##  [16] otel_0.2.0              ggtangle_0.1.2          cowplot_1.2.0          
-##  [19] DBI_1.3.0               abind_1.4-8             zlibbioc_1.52.0        
-##  [22] R.utils_2.13.0          yulab.utils_0.2.4       rappdirs_0.3.4         
-##  [25] seriation_1.5.8         GenomeInfoDbData_1.2.13 enrichplot_1.26.6      
-##  [28] ggrepel_0.9.8           tidytree_0.4.7          svglite_2.2.2          
-##  [31] codetools_0.2-20        DelayedArray_0.32.0     DOSE_4.0.1             
-##  [34] xml2_1.5.2              tidyselect_1.2.1        aplot_0.2.9            
-##  [37] UCSC.utils_1.2.0        farver_2.1.2            TSP_1.2.7              
-##  [40] webshot_0.5.5           jsonlite_2.0.0          Formula_1.2-5          
-##  [43] iterators_1.0.14        systemfonts_1.3.2       bbmle_1.0.25.1         
-##  [46] foreach_1.5.2           tools_4.4.1             treeio_1.30.0          
-##  [49] Rcpp_1.1.1-1.1          glue_1.8.1              gridExtra_2.3          
-##  [52] SparseArray_1.6.2       xfun_0.57               qvalue_2.38.0          
-##  [55] ca_0.71.1               withr_3.0.2             numDeriv_2016.8-1.1    
-##  [58] fastmap_1.2.0           digest_0.6.39           timechange_0.4.0       
-##  [61] R6_2.6.1                gridGraphics_0.5-1      textshaping_1.0.5      
-##  [64] colorspace_2.1-2        GO.db_3.20.0            RSQLite_2.4.6          
-##  [67] R.methodsS3_1.8.2       generics_0.1.4          data.table_1.18.2.1    
-##  [70] httr_1.4.8              htmlwidgets_1.6.4       S4Arrays_1.6.0         
-##  [73] pkgconfig_2.0.3         gtable_0.3.6            registry_0.5-1         
-##  [76] blob_1.3.0              S7_0.2.2                XVector_0.46.0         
-##  [79] htmltools_0.5.9         carData_3.0-6           bookdown_0.46          
-##  [82] scales_1.4.0            png_0.1-9               ggfun_0.2.0            
-##  [85] rstudioapi_0.18.0       tzdb_0.5.0              coda_0.19-4.1          
-##  [88] nlme_3.1-168            bdsmatrix_1.3-7         cachem_1.1.0           
-##  [91] parallel_4.4.1          AnnotationDbi_1.68.0    apeglm_1.28.0          
-##  [94] pillar_1.11.1           grid_4.4.1              vctrs_0.7.3            
-##  [97] car_3.1-5               evaluate_1.0.5          mvtnorm_1.3-6          
-## [100] cli_3.6.6               locfit_1.5-9.12         compiler_4.4.1         
-## [103] rlang_1.2.0             crayon_1.5.3            ggsignif_0.6.4         
-## [106] labeling_0.4.3          emdbook_1.3.14          plyr_1.8.9             
-## [109] fs_2.1.0                stringi_1.8.7           BiocParallel_1.40.2    
-## [112] assertthat_0.2.1        Biostrings_2.74.1       lazyeval_0.2.3         
-## [115] GOSemSim_2.32.0         Matrix_1.7-5            hms_1.1.4              
-## [118] patchwork_1.3.2         bit64_4.8.0             igraph_2.2.2           
-## [121] broom_1.0.12            memoise_2.0.1           bslib_0.10.0           
-## [124] ggtree_3.14.0           fastmatch_1.1-8         bit_4.6.0              
-## [127] ape_5.8-1               gson_0.1.0</code></pre>
+##  [1] gridExtra_2.3           rlang_1.2.0             magrittr_2.0.5         
+##  [4] otel_0.2.0              compiler_4.4.1          png_0.1-9              
+##  [7] systemfonts_1.3.2       vctrs_0.7.3             pkgconfig_2.0.3        
+## [10] crayon_1.5.3            fastmap_1.2.0           backports_1.5.1        
+## [13] XVector_0.46.0          labeling_0.4.3          ca_0.71.1              
+## [16] rmarkdown_2.31          tzdb_0.5.0              UCSC.utils_1.2.0       
+## [19] xfun_0.57               zlibbioc_1.52.0         cachem_1.1.0           
+## [22] jsonlite_2.0.0          DelayedArray_0.32.0     BiocParallel_1.40.2    
+## [25] broom_1.0.12            parallel_4.4.1          R6_2.6.1               
+## [28] bslib_0.10.0            stringi_1.8.7           car_3.1-5              
+## [31] numDeriv_2016.8-1.1     jquerylib_0.1.4         iterators_1.0.14       
+## [34] assertthat_0.2.1        Rcpp_1.1.1-1.1          bookdown_0.46          
+## [37] Matrix_1.7-5            timechange_0.4.0        tidyselect_1.2.1       
+## [40] rstudioapi_0.18.0       abind_1.4-8             yaml_2.3.12            
+## [43] TSP_1.2.7               codetools_0.2-20        lattice_0.22-9         
+## [46] plyr_1.8.9              withr_3.0.2             S7_0.2.2               
+## [49] coda_0.19-4.1           evaluate_1.0.5          xml2_1.5.2             
+## [52] Biostrings_2.74.1       pillar_1.11.1           carData_3.0-6          
+## [55] foreach_1.5.2           generics_0.1.4          emdbook_1.3.14         
+## [58] hms_1.1.4               scales_1.4.0            glue_1.8.1             
+## [61] lazyeval_0.2.3          tools_4.4.1             apeglm_1.28.0          
+## [64] dendextend_1.19.1       data.table_1.18.2.1     webshot_0.5.5          
+## [67] locfit_1.5-9.12         ggsignif_0.6.4          registry_0.5-1         
+## [70] mvtnorm_1.3-6           fastmatch_1.1-8         cowplot_1.2.0          
+## [73] grid_4.4.1              bbmle_1.0.25.1          seriation_1.5.8        
+## [76] crosstalk_1.2.2         bdsmatrix_1.3-7         colorspace_2.1-2       
+## [79] GenomeInfoDbData_1.2.13 Formula_1.2-5           cli_3.6.6              
+## [82] textshaping_1.0.5       S4Arrays_1.6.0          svglite_2.2.2          
+## [85] gtable_0.3.6            rstatix_0.7.3           sass_0.4.10            
+## [88] digest_0.6.39           SparseArray_1.6.2       ggrepel_0.9.8          
+## [91] htmlwidgets_1.6.4       farver_2.1.2            htmltools_0.5.9        
+## [94] lifecycle_1.0.5         httr_1.4.8              MASS_7.3-65</code></pre>
 
 </div>
 <!-- </div> -->

@@ -200,7 +200,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>4.8</b> Sample Correlation Heatmap</a></li>
 <li class="chapter" data-level="4.9" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>4.9</b> Principal Component Analysis (PCA)</a></li>
 <li class="chapter" data-level="4.10" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>4.10</b> Detecting Outliers</a></li>
-<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a></li>
+<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html#add-gene-names"><i class="fa fa-check"></i><b>4.11.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="4.12" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>4.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>5</b> Differential Expression Analysis</a>
@@ -212,7 +215,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="visualisation.html"><a href="visualisation.html"><i class="fa fa-check"></i><b>5.5</b> Visualisation</a></li>
 <li class="chapter" data-level="5.6" data-path="ma-plot.html"><a href="ma-plot.html"><i class="fa fa-check"></i><b>5.6</b> MA Plot</a></li>
 <li class="chapter" data-level="5.7" data-path="top-gene-count-plot.html"><a href="top-gene-count-plot.html"><i class="fa fa-check"></i><b>5.7</b> Top Gene Count Plot</a></li>
-<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a></li>
+<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a>
+<ul>
+<li class="chapter" data-level="5.8.1" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html#add-gene-names-1"><i class="fa fa-check"></i><b>5.8.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="5.9" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>5.9</b> Saving Results</a></li>
 <li class="chapter" data-level="5.10" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>5.10</b> Summary</a></li>
 </ul></li>
@@ -274,30 +280,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="saving-results-1" class="section level2 hasAnchor" number="6.6">
 <h2><span class="header-section-number">6.6</span> Saving Results<a href="saving-results-1.html#saving-results-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="saving-results-1.html#cb169-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
-<span id="cb169-2"><a href="saving-results-1.html#cb169-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb169-3"><a href="saving-results-1.html#cb169-3" tabindex="-1"></a></span>
-<span id="cb169-4"><a href="saving-results-1.html#cb169-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb169-5"><a href="saving-results-1.html#cb169-5" tabindex="-1"></a>  <span class="fu">bind_rows</span>(ora_up, ora_down),</span>
-<span id="cb169-6"><a href="saving-results-1.html#cb169-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;ORA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
-<span id="cb169-7"><a href="saving-results-1.html#cb169-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb169-8"><a href="saving-results-1.html#cb169-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb169-9"><a href="saving-results-1.html#cb169-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb169-10"><a href="saving-results-1.html#cb169-10" tabindex="-1"></a>)</span>
-<span id="cb169-11"><a href="saving-results-1.html#cb169-11" tabindex="-1"></a></span>
-<span id="cb169-12"><a href="saving-results-1.html#cb169-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb169-13"><a href="saving-results-1.html#cb169-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(gsea_results) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>leadingEdge),</span>
-<span id="cb169-14"><a href="saving-results-1.html#cb169-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;GSEA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
-<span id="cb169-15"><a href="saving-results-1.html#cb169-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb169-16"><a href="saving-results-1.html#cb169-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb169-17"><a href="saving-results-1.html#cb169-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb169-18"><a href="saving-results-1.html#cb169-18" tabindex="-1"></a>)</span>
-<span id="cb169-19"><a href="saving-results-1.html#cb169-19" tabindex="-1"></a></span>
-<span id="cb169-20"><a href="saving-results-1.html#cb169-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Results saved to:&quot;</span>, results_dir, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="saving-results-1.html#cb174-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
+<span id="cb174-2"><a href="saving-results-1.html#cb174-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb174-3"><a href="saving-results-1.html#cb174-3" tabindex="-1"></a></span>
+<span id="cb174-4"><a href="saving-results-1.html#cb174-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb174-5"><a href="saving-results-1.html#cb174-5" tabindex="-1"></a>  <span class="fu">bind_rows</span>(ora_up, ora_down),</span>
+<span id="cb174-6"><a href="saving-results-1.html#cb174-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;ORA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
+<span id="cb174-7"><a href="saving-results-1.html#cb174-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb174-8"><a href="saving-results-1.html#cb174-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb174-9"><a href="saving-results-1.html#cb174-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb174-10"><a href="saving-results-1.html#cb174-10" tabindex="-1"></a>)</span>
+<span id="cb174-11"><a href="saving-results-1.html#cb174-11" tabindex="-1"></a></span>
+<span id="cb174-12"><a href="saving-results-1.html#cb174-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb174-13"><a href="saving-results-1.html#cb174-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(gsea_results) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>leadingEdge),</span>
+<span id="cb174-14"><a href="saving-results-1.html#cb174-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;GSEA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
+<span id="cb174-15"><a href="saving-results-1.html#cb174-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb174-16"><a href="saving-results-1.html#cb174-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb174-17"><a href="saving-results-1.html#cb174-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb174-18"><a href="saving-results-1.html#cb174-18" tabindex="-1"></a>)</span>
+<span id="cb174-19"><a href="saving-results-1.html#cb174-19" tabindex="-1"></a></span>
+<span id="cb174-20"><a href="saving-results-1.html#cb174-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Results saved to:&quot;</span>, results_dir, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Results saved to: /Users/jasge/Documents/GitHub/dsp_transcriptomics_training/results</code></pre>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="saving-results-1.html#cb171-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  ORA  -&gt; ORA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="saving-results-1.html#cb176-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  ORA  -&gt; ORA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##   ORA  -&gt; ORA_KEGG_treatment_vs_control.tsv</code></pre>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="saving-results-1.html#cb173-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  GSEA -&gt; GSEA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="saving-results-1.html#cb178-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  GSEA -&gt; GSEA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##   GSEA -&gt; GSEA_KEGG_treatment_vs_control.tsv</code></pre>
 </div>
             </section>

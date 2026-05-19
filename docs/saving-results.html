@@ -200,7 +200,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>4.8</b> Sample Correlation Heatmap</a></li>
 <li class="chapter" data-level="4.9" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>4.9</b> Principal Component Analysis (PCA)</a></li>
 <li class="chapter" data-level="4.10" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>4.10</b> Detecting Outliers</a></li>
-<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a></li>
+<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html#add-gene-names"><i class="fa fa-check"></i><b>4.11.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="4.12" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>4.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>5</b> Differential Expression Analysis</a>
@@ -212,7 +215,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="visualisation.html"><a href="visualisation.html"><i class="fa fa-check"></i><b>5.5</b> Visualisation</a></li>
 <li class="chapter" data-level="5.6" data-path="ma-plot.html"><a href="ma-plot.html"><i class="fa fa-check"></i><b>5.6</b> MA Plot</a></li>
 <li class="chapter" data-level="5.7" data-path="top-gene-count-plot.html"><a href="top-gene-count-plot.html"><i class="fa fa-check"></i><b>5.7</b> Top Gene Count Plot</a></li>
-<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a></li>
+<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a>
+<ul>
+<li class="chapter" data-level="5.8.1" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html#add-gene-names-1"><i class="fa fa-check"></i><b>5.8.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="5.9" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>5.9</b> Saving Results</a></li>
 <li class="chapter" data-level="5.10" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>5.10</b> Summary</a></li>
 </ul></li>
@@ -274,26 +280,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="saving-results" class="section level2 hasAnchor" number="5.9">
 <h2><span class="header-section-number">5.9</span> Saving Results<a href="saving-results.html#saving-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="saving-results.html#cb78-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
-<span id="cb78-2"><a href="saving-results.html#cb78-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb78-3"><a href="saving-results.html#cb78-3" tabindex="-1"></a></span>
-<span id="cb78-4"><a href="saving-results.html#cb78-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb78-5"><a href="saving-results.html#cb78-5" tabindex="-1"></a>  res_df,</span>
-<span id="cb78-6"><a href="saving-results.html#cb78-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_all.tsv&quot;</span>),</span>
-<span id="cb78-7"><a href="saving-results.html#cb78-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb78-8"><a href="saving-results.html#cb78-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb78-9"><a href="saving-results.html#cb78-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb78-10"><a href="saving-results.html#cb78-10" tabindex="-1"></a>)</span>
-<span id="cb78-11"><a href="saving-results.html#cb78-11" tabindex="-1"></a></span>
-<span id="cb78-12"><a href="saving-results.html#cb78-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb78-13"><a href="saving-results.html#cb78-13" tabindex="-1"></a>  res_sig,</span>
-<span id="cb78-14"><a href="saving-results.html#cb78-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_significant.tsv&quot;</span>),</span>
-<span id="cb78-15"><a href="saving-results.html#cb78-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb78-16"><a href="saving-results.html#cb78-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb78-17"><a href="saving-results.html#cb78-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb78-18"><a href="saving-results.html#cb78-18" tabindex="-1"></a>)</span>
-<span id="cb78-19"><a href="saving-results.html#cb78-19" tabindex="-1"></a></span>
-<span id="cb78-20"><a href="saving-results.html#cb78-20" tabindex="-1"></a><span class="co">#cat(&quot;Results saved to:&quot;, results_dir, &quot;\n&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="saving-results.html#cb83-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
+<span id="cb83-2"><a href="saving-results.html#cb83-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb83-3"><a href="saving-results.html#cb83-3" tabindex="-1"></a></span>
+<span id="cb83-4"><a href="saving-results.html#cb83-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb83-5"><a href="saving-results.html#cb83-5" tabindex="-1"></a>  res_df,</span>
+<span id="cb83-6"><a href="saving-results.html#cb83-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_all.tsv&quot;</span>),</span>
+<span id="cb83-7"><a href="saving-results.html#cb83-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb83-8"><a href="saving-results.html#cb83-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb83-9"><a href="saving-results.html#cb83-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb83-10"><a href="saving-results.html#cb83-10" tabindex="-1"></a>)</span>
+<span id="cb83-11"><a href="saving-results.html#cb83-11" tabindex="-1"></a></span>
+<span id="cb83-12"><a href="saving-results.html#cb83-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb83-13"><a href="saving-results.html#cb83-13" tabindex="-1"></a>  res_sig,</span>
+<span id="cb83-14"><a href="saving-results.html#cb83-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_significant.tsv&quot;</span>),</span>
+<span id="cb83-15"><a href="saving-results.html#cb83-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb83-16"><a href="saving-results.html#cb83-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb83-17"><a href="saving-results.html#cb83-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb83-18"><a href="saving-results.html#cb83-18" tabindex="-1"></a>)</span>
+<span id="cb83-19"><a href="saving-results.html#cb83-19" tabindex="-1"></a></span>
+<span id="cb83-20"><a href="saving-results.html#cb83-20" tabindex="-1"></a><span class="co">#cat(&quot;Results saved to:&quot;, results_dir, &quot;\n&quot;)</span></span></code></pre></div>
 <hr />
 </div>
             </section>

@@ -200,7 +200,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="sample-correlation-heatmap.html"><a href="sample-correlation-heatmap.html"><i class="fa fa-check"></i><b>4.8</b> Sample Correlation Heatmap</a></li>
 <li class="chapter" data-level="4.9" data-path="principal-component-analysis-pca.html"><a href="principal-component-analysis-pca.html"><i class="fa fa-check"></i><b>4.9</b> Principal Component Analysis (PCA)</a></li>
 <li class="chapter" data-level="4.10" data-path="detecting-outliers.html"><a href="detecting-outliers.html"><i class="fa fa-check"></i><b>4.10</b> Detecting Outliers</a></li>
-<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a></li>
+<li class="chapter" data-level="4.11" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html"><i class="fa fa-check"></i><b>4.11</b> Top Variable Genes Heatmap</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="top-variable-genes-heatmap.html"><a href="top-variable-genes-heatmap.html#add-gene-names"><i class="fa fa-check"></i><b>4.11.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="4.12" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>4.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="differential-expression-analysis.html"><a href="differential-expression-analysis.html"><i class="fa fa-check"></i><b>5</b> Differential Expression Analysis</a>
@@ -212,7 +215,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="visualisation.html"><a href="visualisation.html"><i class="fa fa-check"></i><b>5.5</b> Visualisation</a></li>
 <li class="chapter" data-level="5.6" data-path="ma-plot.html"><a href="ma-plot.html"><i class="fa fa-check"></i><b>5.6</b> MA Plot</a></li>
 <li class="chapter" data-level="5.7" data-path="top-gene-count-plot.html"><a href="top-gene-count-plot.html"><i class="fa fa-check"></i><b>5.7</b> Top Gene Count Plot</a></li>
-<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a></li>
+<li class="chapter" data-level="5.8" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html"><i class="fa fa-check"></i><b>5.8</b> Heatmap of Significant Genes</a>
+<ul>
+<li class="chapter" data-level="5.8.1" data-path="heatmap-of-significant-genes.html"><a href="heatmap-of-significant-genes.html#add-gene-names-1"><i class="fa fa-check"></i><b>5.8.1</b> Add gene names</a></li>
+</ul></li>
 <li class="chapter" data-level="5.9" data-path="saving-results.html"><a href="saving-results.html"><i class="fa fa-check"></i><b>5.9</b> Saving Results</a></li>
 <li class="chapter" data-level="5.10" data-path="summary-1.html"><a href="summary-1.html"><i class="fa fa-check"></i><b>5.10</b> Summary</a></li>
 </ul></li>
@@ -296,11 +302,11 @@ are used exclusively for <strong>ranking and visualisation</strong> (volcano plo
 <p>For a treatment vs control design in <em>E. coli</em>, <code>apeglm</code> is the right choice.
 See <a href="https://doi.org/10.1093/bioinformatics/btz585">Zhu <em>et al.</em>, 2019</a> for benchmarks.</p>
 </div>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="log2-fold-change-shrinkage.html#cb62-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
-<span id="cb62-2"><a href="log2-fold-change-shrinkage.html#cb62-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
-<span id="cb62-3"><a href="log2-fold-change-shrinkage.html#cb62-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
-<span id="cb62-4"><a href="log2-fold-change-shrinkage.html#cb62-4" tabindex="-1"></a></span>
-<span id="cb62-5"><a href="log2-fold-change-shrinkage.html#cb62-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk, <span class="at">alpha =</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="log2-fold-change-shrinkage.html#cb66-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
+<span id="cb66-2"><a href="log2-fold-change-shrinkage.html#cb66-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
+<span id="cb66-3"><a href="log2-fold-change-shrinkage.html#cb66-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
+<span id="cb66-4"><a href="log2-fold-change-shrinkage.html#cb66-4" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="log2-fold-change-shrinkage.html#cb66-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk, <span class="at">alpha =</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <pre><code>## 
 ## out of 3698 with nonzero total read count
 ## adjusted p-value &lt; 0.05
