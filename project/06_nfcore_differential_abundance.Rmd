@@ -1,0 +1,62 @@
+# EXTRA: Running nf-core/differentialabundance
+
+We will use pipeline release [v1.5](https://nf-co.re/differentialabundance/1.5.0), which
+takes the count matrix and sample metadata produced by nf-core/rnaseq and performs
+differential expression analysis using DESeq2.
+
+**To process the data, run the following command:**
+
+```bash
+nextflow run nf-core/differentialabundance \
+    -r 1.5.0 \
+    -profile docker \
+    -params-file params_degs.json \
+    --outdir results/differentialabundance
+```
+
+The Nextflow command is stored in a bash script and can be executed by running:
+
+```bash
+bash 01_scripts/nfcore_differential_abundance.sh
+```
+
+The processing time is about 5 minutes.
+
+## Key parameters
+
+The pipeline is configured via `params_degs.json`. The most important parameters we set
+are described below.
+
+**Inputs**
+
+- `input` — sample sheet linking each sample to its condition
+- `matrix` — raw gene count matrix from Salmon (`salmon.merged.gene_counts.tsv`)
+- `transcript_length_matrix` — gene length matrix for TPM normalisation
+- `contrasts` — CSV file defining which groups to compare (treatment vs control)
+- `gtf` — genome annotation file for *E. coli* K-12 MG1655
+
+**Feature annotation**
+
+- `features_id_col: "gene_id"` — locus tags (e.g. `b0001`) are used as the primary identifier
+- `features_name_col: "gene_name"` — gene symbols (e.g. `thrL`) are used as display names
+- `features_gtf_feature_type: "transcript"` — annotations are extracted at transcript level
+
+**Filtering** — genes must pass all three criteria to be retained:
+
+- `filtering_min_abundance: 10` — minimum count of 10
+- `filtering_min_samples: 2` — present in at least 2 samples
+- `filtering_grouping_var: "group"` — filtering applied per experimental group
+
+**DESeq2**
+
+- `deseq2_fit_type: "local"` — uses a local dispersion fit, more appropriate for
+  smaller sample sizes than the default parametric fit
+
+**Differential expression threshold**
+
+- `differential_min_fold_change: 1.0` — only genes with |FC| ≥ 1.5 are reported as DE
+
+**Disabled modules**
+
+- `gprofiler2_run: false` and `gsea_run: false` — the pipeline's built-in functional
+  enrichment steps are turned off because to save time here.

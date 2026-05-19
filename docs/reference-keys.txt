@@ -65,3 +65,5 @@ enrichment-plot-top-pathways
 part-3-comparing-ora-and-gsea
 saving-results-1
 summary-2
+extra-running-nf-coredifferentialabundance
+key-parameters

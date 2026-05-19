@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.2 Getting the Metadata | Introduction to Transcriptomics</title>
-  <meta name="description" content="4.2 Getting the Metadata | Introduction to Transcriptomics" />
+  <title>7 EXTRA: Running nf-core/differentialabundance | Introduction to Transcriptomics</title>
+  <meta name="description" content="7 EXTRA: Running nf-core/differentialabundance | Introduction to Transcriptomics" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.2 Getting the Metadata | Introduction to Transcriptomics" />
+  <meta property="og:title" content="7 EXTRA: Running nf-core/differentialabundance | Introduction to Transcriptomics" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.2 Getting the Metadata | Introduction to Transcriptomics" />
+  <meta name="twitter:title" content="7 EXTRA: Running nf-core/differentialabundance | Introduction to Transcriptomics" />
   
   
   
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="setup-the-environment.html"/>
-<link rel="next" href="loading-count-data.html"/>
+<link rel="prev" href="summary-2.html"/>
+<link rel="next" href="key-parameters.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -282,44 +282,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="getting-the-metadata" class="section level2 hasAnchor" number="4.2">
-<h2><span class="header-section-number">4.2</span> Getting the Metadata<a href="getting-the-metadata.html#getting-the-metadata" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The metadata file describes the experimental design: which sample belongs to which condition and replicate. This information is essential for <code>DESeq2</code> to model expression differences correctly.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="getting-the-metadata.html#cb11-1" tabindex="-1"></a>git_root <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="st">&quot;git rev-parse --show-toplevel&quot;</span>, <span class="at">intern =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb11-2"><a href="getting-the-metadata.html#cb11-2" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="getting-the-metadata.html#cb11-3" tabindex="-1"></a>samples_info <span class="ot">&lt;-</span> <span class="fu">read.table</span>(</span>
-<span id="cb11-4"><a href="getting-the-metadata.html#cb11-4" tabindex="-1"></a>  <span class="fu">file.path</span>(git_root, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;metadata&quot;</span>, <span class="st">&quot;metadata.tsv&quot;</span>),</span>
-<span id="cb11-5"><a href="getting-the-metadata.html#cb11-5" tabindex="-1"></a>  <span class="at">header      =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb11-6"><a href="getting-the-metadata.html#cb11-6" tabindex="-1"></a>  <span class="at">sep         =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb11-7"><a href="getting-the-metadata.html#cb11-7" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">TRUE</span></span>
-<span id="cb11-8"><a href="getting-the-metadata.html#cb11-8" tabindex="-1"></a>)</span></code></pre></div>
-<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:10px 0;">
-<p><strong>💡 Tip:</strong> Use the interactive table below to verify your sample metadata before proceeding.</p>
-</div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="getting-the-metadata.html#cb12-1" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(</span>
-<span id="cb12-2"><a href="getting-the-metadata.html#cb12-2" tabindex="-1"></a>  <span class="at">data       =</span> samples_info,</span>
-<span id="cb12-3"><a href="getting-the-metadata.html#cb12-3" tabindex="-1"></a>  <span class="at">rownames   =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb12-4"><a href="getting-the-metadata.html#cb12-4" tabindex="-1"></a>  <span class="at">extensions =</span> <span class="fu">c</span>(<span class="st">&#39;Buttons&#39;</span>, <span class="st">&#39;Scroller&#39;</span>),</span>
-<span id="cb12-5"><a href="getting-the-metadata.html#cb12-5" tabindex="-1"></a>  <span class="at">options    =</span> <span class="fu">list</span>(</span>
-<span id="cb12-6"><a href="getting-the-metadata.html#cb12-6" tabindex="-1"></a>    <span class="at">dom         =</span> <span class="st">&#39;Bfrtip&#39;</span>,</span>
-<span id="cb12-7"><a href="getting-the-metadata.html#cb12-7" tabindex="-1"></a>    <span class="at">buttons     =</span> <span class="fu">c</span>(<span class="st">&#39;copy&#39;</span>, <span class="st">&#39;csv&#39;</span>),</span>
-<span id="cb12-8"><a href="getting-the-metadata.html#cb12-8" tabindex="-1"></a>    <span class="at">deferRender =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb12-9"><a href="getting-the-metadata.html#cb12-9" tabindex="-1"></a>    <span class="at">scrollX     =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb12-10"><a href="getting-the-metadata.html#cb12-10" tabindex="-1"></a>    <span class="at">scrollY     =</span> <span class="dv">200</span>,</span>
-<span id="cb12-11"><a href="getting-the-metadata.html#cb12-11" tabindex="-1"></a>    <span class="at">scroller    =</span> <span class="cn">TRUE</span></span>
-<span id="cb12-12"><a href="getting-the-metadata.html#cb12-12" tabindex="-1"></a>  ),</span>
-<span id="cb12-13"><a href="getting-the-metadata.html#cb12-13" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&#39;Sample metadata — E. coli MG1655&#39;</span></span>
-<span id="cb12-14"><a href="getting-the-metadata.html#cb12-14" tabindex="-1"></a>)</span></code></pre></div>
-<div class="datatables html-widget html-fill-item" id="htmlwidget-e580a98fb7a2c3f46ca3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-e580a98fb7a2c3f46ca3">{"x":{"filter":"none","vertical":false,"extensions":["Buttons","Scroller"],"caption":"<caption>Sample metadata — E. coli MG1655<\/caption>","data":[["C1","C2","C3","sac1","sac2","sac3"],["control","control","control","treatment","treatment","treatment"],[1,2,3,1,2,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>sample<\/th>\n      <th>group<\/th>\n      <th>replicate<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv"],"deferRender":true,"scrollX":true,"scrollY":200,"scroller":true,"columnDefs":[{"className":"dt-right","targets":2},{"name":"sample","targets":0},{"name":"group","targets":1},{"name":"replicate","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="extra-running-nf-coredifferentialabundance" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">7</span> EXTRA: Running nf-core/differentialabundance<a href="extra-running-nf-coredifferentialabundance.html#extra-running-nf-coredifferentialabundance" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We will use pipeline release <a href="https://nf-co.re/differentialabundance/1.5.0">v1.5</a>, which
+takes the count matrix and sample metadata produced by nf-core/rnaseq and performs
+differential expression analysis using DESeq2.</p>
+<p><strong>To process the data, run the following command:</strong></p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb182-1"><a href="extra-running-nf-coredifferentialabundance.html#cb182-1" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/differentialabundance <span class="dt">\</span></span>
+<span id="cb182-2"><a href="extra-running-nf-coredifferentialabundance.html#cb182-2" tabindex="-1"></a>    <span class="at">-r</span> 1.5.0 <span class="dt">\</span></span>
+<span id="cb182-3"><a href="extra-running-nf-coredifferentialabundance.html#cb182-3" tabindex="-1"></a>    <span class="at">-profile</span> docker <span class="dt">\</span></span>
+<span id="cb182-4"><a href="extra-running-nf-coredifferentialabundance.html#cb182-4" tabindex="-1"></a>    <span class="at">-params-file</span> params_degs.json <span class="dt">\</span></span>
+<span id="cb182-5"><a href="extra-running-nf-coredifferentialabundance.html#cb182-5" tabindex="-1"></a>    <span class="at">--outdir</span> results/differentialabundance</span></code></pre></div>
+<p>The Nextflow command is stored in a bash script and can be executed by running:</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb183-1"><a href="extra-running-nf-coredifferentialabundance.html#cb183-1" tabindex="-1"></a><span class="fu">bash</span> 01_scripts/nfcore_differential_abundance.sh</span></code></pre></div>
+<p>The processing time is about 5 minutes.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="setup-the-environment.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="loading-count-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="summary-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="key-parameters.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

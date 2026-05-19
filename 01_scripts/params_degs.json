@@ -30,7 +30,7 @@
 
     "deseq2_fit_type": "local",
 
-    "differential_min_fold_change": 1.5,
+    "differential_min_fold_change": 1.0,
 
     "gprofiler2_run": false,
     "gsea_run": false,
