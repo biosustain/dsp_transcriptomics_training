@@ -29,7 +29,7 @@
   
   
 <link rel="prev" href="summary-2.html"/>
-<link rel="next" href="key-parameters.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7" data-path="extra-running-nf-coredifferentialabundance.html"><a href="extra-running-nf-coredifferentialabundance.html"><i class="fa fa-check"></i><b>7</b> EXTRA: Running nf-core/differentialabundance</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="key-parameters.html"><a href="key-parameters.html"><i class="fa fa-check"></i><b>7.1</b> Key parameters</a></li>
+<li class="chapter" data-level="7.0.1" data-path="extra-running-nf-coredifferentialabundance.html"><a href="extra-running-nf-coredifferentialabundance.html#key-parameters"><i class="fa fa-check"></i><b>7.0.1</b> Key parameters</a></li>
 </ul></li>
 <li class="divider"></li>
 <p style="text-align:center; font-size:12px; color:#777;">
@@ -296,14 +296,54 @@ differential expression analysis using DESeq2.</p>
 <p>The Nextflow command is stored in a bash script and can be executed by running:</p>
 <div class="sourceCode" id="cb183"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb183-1"><a href="extra-running-nf-coredifferentialabundance.html#cb183-1" tabindex="-1"></a><span class="fu">bash</span> 01_scripts/nfcore_differential_abundance.sh</span></code></pre></div>
 <p>The processing time is about 5 minutes.</p>
+<div id="key-parameters" class="section level3 hasAnchor" number="7.0.1">
+<h3><span class="header-section-number">7.0.1</span> Key parameters<a href="extra-running-nf-coredifferentialabundance.html#key-parameters" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The pipeline is configured via <code>params_degs.json</code>. The most important parameters we set
+are described below.</p>
+<p><strong>Inputs</strong></p>
+<ul>
+<li><code>input</code> — sample sheet linking each sample to its condition</li>
+<li><code>matrix</code> — raw gene count matrix from Salmon (<code>salmon.merged.gene_counts.tsv</code>)</li>
+<li><code>transcript_length_matrix</code> — gene length matrix for TPM normalisation</li>
+<li><code>contrasts</code> — CSV file defining which groups to compare (treatment vs control)</li>
+<li><code>gtf</code> — genome annotation file for <em>E. coli</em> K-12 MG1655</li>
+</ul>
+<p><strong>Feature annotation</strong></p>
+<ul>
+<li><code>features_id_col: "gene_id"</code> — locus tags (e.g. <code>b0001</code>) are used as the primary identifier</li>
+<li><code>features_name_col: "gene_name"</code> — gene symbols (e.g. <code>thrL</code>) are used as display names</li>
+<li><code>features_gtf_feature_type: "transcript"</code> — annotations are extracted at transcript level</li>
+</ul>
+<p><strong>Filtering</strong> — genes must pass all three criteria to be retained:</p>
+<ul>
+<li><code>filtering_min_abundance: 10</code> — minimum count of 10</li>
+<li><code>filtering_min_samples: 2</code> — present in at least 2 samples</li>
+<li><code>filtering_grouping_var: "group"</code> — filtering applied per experimental group</li>
+</ul>
+<p><strong>DESeq2</strong></p>
+<ul>
+<li><code>deseq2_fit_type: "local"</code> — uses a local dispersion fit, more appropriate for
+smaller sample sizes than the default parametric fit</li>
+</ul>
+<p><strong>Differential expression threshold</strong></p>
+<ul>
+<li><code>differential_min_fold_change: 1.0</code> — only genes with |FC| ≥ 1.5 are reported as DE</li>
+</ul>
+<p><strong>Disabled modules</strong></p>
+<ul>
+<li><code>gprofiler2_run: false</code> and <code>gsea_run: false</code> — the pipeline’s built-in functional
+enrichment steps are turned off because to save time here.</li>
+</ul>
+
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="summary-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="key-parameters.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="summary-2.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
