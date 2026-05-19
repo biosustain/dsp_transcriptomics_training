@@ -1,0 +1,7 @@
+﻿sample,fastq_1,fastq_2,strandedness,seq_platform,group,replicate
+C1,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606313_1.fastq.gz,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606313_2.fastq.gz,auto,ILLUMINA,control,1
+C2,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606312_1.fastq.gz,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606312_2.fastq.gz,auto,ILLUMINA,control,2
+C3,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606311_1.fastq.gz,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606311_2.fastq.gz,auto,ILLUMINA,control,3
+sac1,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606316_1.fastq.gz,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606316_2.fastq.gz,auto,ILLUMINA,treatment,1
+sac2,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606315_1.fastq.gz,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606315_2.fastq.gz,auto,ILLUMINA,treatment,2
+sac3,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606314_1.fastq.gz,az://seqera/raw/transcriptomics_course_may_2026/datasets/deDios_2025/SRR30606314_2.fastq.gz,auto,ILLUMINA,treatment,3
