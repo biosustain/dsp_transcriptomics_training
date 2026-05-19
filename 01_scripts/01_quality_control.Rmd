@@ -210,6 +210,23 @@ dds <- DESeqDataSetFromMatrix(
 )
 ```
 
+<div class="note">
+  <strong>📘 Note:</strong> The design formula uses R's formula syntax, where the tilde (`~`, pronounced **"TIL-duh"**)
+means **"is modelled by"**. So `~ condition` reads as: *"gene expression is modelled by
+condition"*.
+
+In a general linear model, the tilde separates the **response variable** (left side) from
+the **predictors** (right side). For example:
+
+- `gene_expression ~ condition` — model expression as a function of condition
+- `y ~ x1 + x2` — model y as a function of two predictors
+
+In DESeq2, the left side is omitted because the count matrix is already the response —
+you only need to specify which variable explains the differences between samples.
+`~ condition` therefore tells DESeq2 to test whether gene counts differ between your
+experimental groups.
+</div>
+
 ## Sanity Checks
 
 <div class="remember">
@@ -465,7 +482,7 @@ ggplotly(PCAPlot)
 ```
 
 :::boxy
-PC1 capturing 85.4% and separating conditions cleanly is a strong positive signal — the saccharin treatment has a large, consistent transcriptional effect. C3 separating on PC2 is worth noting: it passed normalization QC but shows some residual transcriptional difference from C1/C2. This is within acceptable range for biological replicates, but in a real experiment you would document it and check if C3 was grown or processed differently.
+PC1 capturing 85.4% and separating conditions cleanly is a strong positive signal — the saccharin treatment has a large, consistent transcriptional effect. C3 separating on PC2 is worth noting: it passed normalization QC but shows some residual transcriptional difference from C1/C2. This is within acceptable range for biological replicates, but we need to document it and check if C3 was grown or processed differently.
 :::
 
 ## Detecting Outliers

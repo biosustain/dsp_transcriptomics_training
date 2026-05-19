@@ -275,13 +275,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ma-plot" class="section level2 hasAnchor" number="5.6">
 <h2><span class="header-section-number">5.6</span> MA Plot<a href="ma-plot.html#ma-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>An MA plot shows log2 fold change (y-axis) against mean expression (x-axis). It helps assess whether the fold change estimates are stable across the expression range. After shrinkage, estimates for lowly expressed genes (left side) should be pulled toward zero.</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="ma-plot.html#cb74-1" tabindex="-1"></a><span class="fu">plotMA</span>(res_shrunk,</span>
-<span id="cb74-2"><a href="ma-plot.html#cb74-2" tabindex="-1"></a>       <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
-<span id="cb74-3"><a href="ma-plot.html#cb74-3" tabindex="-1"></a>       <span class="at">main  =</span> <span class="st">&quot;MA Plot — Treatment vs Control (shrunken LFC)&quot;</span>,</span>
-<span id="cb74-4"><a href="ma-plot.html#cb74-4" tabindex="-1"></a>       <span class="at">colSig =</span> <span class="st">&quot;#d7191c&quot;</span>,</span>
-<span id="cb74-5"><a href="ma-plot.html#cb74-5" tabindex="-1"></a>       <span class="at">colNonSig =</span> <span class="st">&quot;grey70&quot;</span>,</span>
-<span id="cb74-6"><a href="ma-plot.html#cb74-6" tabindex="-1"></a>       <span class="at">ylab  =</span> <span class="st">&quot;log2 Fold Change&quot;</span>)</span>
-<span id="cb74-7"><a href="ma-plot.html#cb74-7" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="ma-plot.html#cb75-1" tabindex="-1"></a><span class="fu">plotMA</span>(res_shrunk,</span>
+<span id="cb75-2"><a href="ma-plot.html#cb75-2" tabindex="-1"></a>       <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb75-3"><a href="ma-plot.html#cb75-3" tabindex="-1"></a>       <span class="at">main  =</span> <span class="st">&quot;MA Plot — Treatment vs Control (shrunken LFC)&quot;</span>,</span>
+<span id="cb75-4"><a href="ma-plot.html#cb75-4" tabindex="-1"></a>       <span class="at">colSig =</span> <span class="st">&quot;#d7191c&quot;</span>,</span>
+<span id="cb75-5"><a href="ma-plot.html#cb75-5" tabindex="-1"></a>       <span class="at">colNonSig =</span> <span class="st">&quot;grey70&quot;</span>,</span>
+<span id="cb75-6"><a href="ma-plot.html#cb75-6" tabindex="-1"></a>       <span class="at">ylab  =</span> <span class="st">&quot;log2 Fold Change&quot;</span>)</span>
+<span id="cb75-7"><a href="ma-plot.html#cb75-7" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/ma-plot-1.png" alt="" width="672" /></p>
 </div>
             </section>

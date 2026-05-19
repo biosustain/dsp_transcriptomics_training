@@ -175,7 +175,7 @@ res_shrunk <- lfcShrink(dds,
                         coef  = "condition_treatment_vs_control",
                         type  = "apeglm")
 
-summary(res_shrunk)
+summary(res_shrunk, alpha = 0.05)
 ```
 
 ---

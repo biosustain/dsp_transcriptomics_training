@@ -286,6 +286,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-6"><a href="creating-the-deseqdataset.html#cb19-6" tabindex="-1"></a>  <span class="at">colData   =</span> samples_info,</span>
 <span id="cb19-7"><a href="creating-the-deseqdataset.html#cb19-7" tabindex="-1"></a>  <span class="at">design    =</span> <span class="sc">~</span> condition</span>
 <span id="cb19-8"><a href="creating-the-deseqdataset.html#cb19-8" tabindex="-1"></a>)</span></code></pre></div>
+<div class="note">
+<p><strong>📘 Note:</strong> The design formula uses R’s formula syntax, where the tilde (<code>~</code>, pronounced <strong>“TIL-duh”</strong>)
+means <strong>“is modelled by”</strong>. So <code>~ condition</code> reads as: <em>“gene expression is modelled by
+condition”</em>.</p>
+<p>In a general linear model, the tilde separates the <strong>response variable</strong> (left side) from
+the <strong>predictors</strong> (right side). For example:</p>
+<ul>
+<li><code>gene_expression ~ condition</code> — model expression as a function of condition</li>
+<li><code>y ~ x1 + x2</code> — model y as a function of two predictors</li>
+</ul>
+<p>In DESeq2, the left side is omitted because the count matrix is already the response —
+you only need to specify which variable explains the differences between samples.
+<code>~ condition</code> therefore tells DESeq2 to test whether gene counts differ between your
+experimental groups.</p>
+</div>
 </div>
             </section>
 
