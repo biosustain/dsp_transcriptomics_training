@@ -626,7 +626,7 @@ heat_plot
 dev.off()
 ```
 
-```{r heat0-0, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, fig.width=8, fig.height=12}
+```{r heat0-0, echo=FALSE, eval=FALSE, include=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=12}
 
 library(heatmaply)
 
