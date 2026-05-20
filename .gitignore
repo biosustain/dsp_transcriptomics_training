@@ -5,3 +5,8 @@ data/nf-core_rnaseq/salmon.merged.transcript.SummarizedExperiment.rds
 .Rhistory
 **/.Rhistory
 Working.Rmd
+
+# ignore nextflow files
+.nextflow
+work
+.nextflow*
