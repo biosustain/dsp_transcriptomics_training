@@ -288,13 +288,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 takes the count matrix and sample metadata produced by nf-core/rnaseq and performs
 differential expression analysis using DESeq2.</p>
 <p><strong>To process the data, run the following command:</strong></p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb182-1"><a href="extra-running-nf-coredifferentialabundance.html#cb182-1" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/differentialabundance <span class="dt">\</span></span>
-<span id="cb182-2"><a href="extra-running-nf-coredifferentialabundance.html#cb182-2" tabindex="-1"></a>    <span class="at">-r</span> 1.5.0 <span class="dt">\</span></span>
-<span id="cb182-3"><a href="extra-running-nf-coredifferentialabundance.html#cb182-3" tabindex="-1"></a>    <span class="at">-profile</span> docker <span class="dt">\</span></span>
-<span id="cb182-4"><a href="extra-running-nf-coredifferentialabundance.html#cb182-4" tabindex="-1"></a>    <span class="at">-params-file</span> params_degs.json <span class="dt">\</span></span>
-<span id="cb182-5"><a href="extra-running-nf-coredifferentialabundance.html#cb182-5" tabindex="-1"></a>    <span class="at">--outdir</span> results/differentialabundance</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb189-1"><a href="extra-running-nf-coredifferentialabundance.html#cb189-1" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/differentialabundance <span class="dt">\</span></span>
+<span id="cb189-2"><a href="extra-running-nf-coredifferentialabundance.html#cb189-2" tabindex="-1"></a>    <span class="at">-r</span> 1.5.0 <span class="dt">\</span></span>
+<span id="cb189-3"><a href="extra-running-nf-coredifferentialabundance.html#cb189-3" tabindex="-1"></a>    <span class="at">-profile</span> docker <span class="dt">\</span></span>
+<span id="cb189-4"><a href="extra-running-nf-coredifferentialabundance.html#cb189-4" tabindex="-1"></a>    <span class="at">-params-file</span> params_degs.json <span class="dt">\</span></span>
+<span id="cb189-5"><a href="extra-running-nf-coredifferentialabundance.html#cb189-5" tabindex="-1"></a>    <span class="at">--outdir</span> results/differentialabundance</span></code></pre></div>
 <p>The Nextflow command is stored in a bash script and can be executed by running:</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb183-1"><a href="extra-running-nf-coredifferentialabundance.html#cb183-1" tabindex="-1"></a><span class="fu">bash</span> 01_scripts/nfcore_differential_abundance.sh</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb190-1"><a href="extra-running-nf-coredifferentialabundance.html#cb190-1" tabindex="-1"></a><span class="fu">bash</span> 01_scripts/nfcore_differential_abundance.sh</span></code></pre></div>
 <p>The processing time is about 5 minutes.</p>
 <div id="key-parameters" class="section level3 hasAnchor" number="7.0.1">
 <h3><span class="header-section-number">7.0.1</span> Key parameters<a href="extra-running-nf-coredifferentialabundance.html#key-parameters" class="anchor-section" aria-label="Anchor link to header"></a></h3>

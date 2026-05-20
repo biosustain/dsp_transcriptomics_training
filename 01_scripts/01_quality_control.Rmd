@@ -210,6 +210,7 @@ dds <- DESeqDataSetFromMatrix(
 )
 ```
 
+
 <div class="note">
   <strong>📘 Note:</strong> The design formula uses R's formula syntax, where the tilde (`~`, pronounced **"TIL-duh"**)
 means **"is modelled by"**. So `~ condition` reads as: *"gene expression is modelled by
@@ -361,6 +362,8 @@ counts_norm <- inner_join(
   by = "sample"
 )
 
+dir.create(file.path(git_root, "results", "plots"), recursive = TRUE, showWarnings = FALSE)
+
 distribution <- ggplot(counts_norm,
                        aes(x    = sample,
                            y    = log2(counts + 1),
@@ -374,6 +377,14 @@ distribution <- ggplot(counts_norm,
   scale_fill_manual(values = cols_condition)
 
 distribution
+
+ggsave(
+  filename = file.path(git_root, "results", "plots", "normalised_count_distribution.png"),
+  plot     = distribution,
+  width    = 8,
+  height   = 6,
+  dpi      = 300
+)
 ```
 
 <div class="extra">
@@ -383,7 +394,6 @@ distribution
 ```{r distribution-01}
 ggplotly(distribution)
 ```
-
 
 :::boxy
 C3 had a size factor of 2.324 — nearly 4x higher than C2 (0.584). Before normalization, C3 raw counts were inflated. After DESeq2's median-of-ratios normalization, all samples align. This is why you never skip the normalization check, and why raw counts must go into DESeq2 rather than pre-normalized values.
@@ -421,12 +431,22 @@ colnames(sampleDistMatrix) <- rownames(sampleDistMatrix)
 
 colours <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
 
-pheatmap(
+heat <- pheatmap(
   sampleDistMatrix,
   col          = colours,
   border_color = NA,
   main         = "Sample-to-sample distances (VST) — E. coli MG1655",
   fontsize     = 10
+)
+
+heat
+
+ggsave(
+  filename = file.path(git_root, "results", "plots", "heat.png"),
+  plot     = heat,
+  width    = 8,
+  height   = 12,
+  dpi      = 300
 )
 ```
 
@@ -471,6 +491,14 @@ PCAPlot <- ggplot(pca_data, aes(x     = PC1,
   scale_color_manual(values = cols_condition)
 
 PCAPlot
+
+ggsave(
+  filename = file.path(git_root, "results", "plots", "PCA_Plot.png"),
+  plot     = PCAPlot,
+  width    = 8,
+  height   = 6,
+  dpi      = 300
+)
 ```
 
 <div class="extra">
@@ -493,18 +521,44 @@ The PCA above uses only the top 500 most variable genes (DESeq2 default). Here w
 
 pca_full <- prcomp(t(assay(vsd)))
 
-fviz_screeplot(pca_full, addlabels = TRUE,
+screeplot <- fviz_screeplot(pca_full, addlabels = TRUE,
                main = "Scree plot — variance per PC")
-
-fviz_pca_ind(pca_full, geom = c("point", "text"), repel = TRUE,
+screeplot
+pca_ind <- fviz_pca_ind(pca_full, geom = c("point", "text"), repel = TRUE,
              title = "PCA — sample positions (full gene matrix)")
-
-fviz_pca_biplot(pca_full,
+pca_ind
+pca_biplot <- fviz_pca_biplot(pca_full,
                 repel        = TRUE,
                 select.var   = list(contrib = 50),  # top  genes only
                 title        = "Biplot — top 50 contributing genes and samples",
                 col.var      = "#92C5DE",
                 col.ind      = "black")
+
+pca_biplot
+
+ggsave(
+  filename = file.path(git_root, "results", "plots", "pca_screeplot.png"),
+  plot     = screeplot,
+  width    = 8,
+  height   = 6,
+  dpi      = 300
+)
+
+ggsave(
+  filename = file.path(git_root, "results", "plots", "pca_individuals.png"),
+  plot     = pca_ind,
+  width    = 8,
+  height   = 6,
+  dpi      = 300
+)
+
+ggsave(
+  filename = file.path(git_root, "results", "plots", "pca_biplot.png"),
+  plot     = pca_biplot,
+  width    = 8,
+  height   = 6,
+  dpi      = 300
+)
 ```
 
 :::boxy
@@ -532,7 +586,7 @@ Clustering the 50 most variable genes across samples provides a gene-level view 
 
 Row-scaling (z-score per gene) is applied so that highly expressed genes do not visually dominate over lowly expressed ones.
 
-```{r topvar-heatmap-0, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+```{r topvar-heatmap-0, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, fig.width=8, fig.height=12}
 
 topVarGenes <- head(order(rowVars(assay(vsd)), decreasing = TRUE), 50)
 
@@ -561,6 +615,94 @@ heat_plot <- pheatmap(
 
 heat_plot
 #install.packages("heatmaply")
+png(
+  filename = file.path(git_root, "results", "plots", "heatmap_top50_variable.png"),
+  width    = 8,
+  height   = 12,
+  units    = "in",
+  res      = 300
+)
+heat_plot
+dev.off()
+```
+
+```{r heat0-0, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, fig.width=8, fig.height=12}
+
+library(heatmaply)
+
+heatmaply(
+  assay(vsd)[topVarGenes, ],
+  scale                    = "row",
+  dist_method              = "euclidean",
+  hclust_method            = "complete",
+  col_side_colors          = df_anno,
+  colors                   = colorRampPalette(colsHeat)(255),
+  show_dendrogram          = c(TRUE, TRUE),
+  showticklabels           = c(TRUE, TRUE),
+  fontsize_row             = 7,
+  main                     = "Top 50 variable genes — E. coli MG1655 (VST, row-scaled)"
+)
+```
+
+### Add gene names
+```{r gene-name-map, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE}
+gtf_path <- file.path(git_root, "data/genome_files/gtf/GCF_000005845.2_ASM584v2_genomic_full.gtf")
+
+# Extract locus_tag and gene name from GTF attributes
+gtf_map <- read.table(gtf_path, sep = "\t", quote = "", comment.char = "#") %>%
+  filter(V3 == "gene") %>%
+  mutate(
+    locus_tag  = str_extract(V9, 'locus_tag "([^"]+)"', group = 1),
+    gene_name  = str_extract(V9, '(?<=gene ")([^"]+)',  group = 1)
+  ) %>%
+  filter(!is.na(locus_tag)) %>%
+  mutate(label = ifelse(!is.na(gene_name), gene_name, locus_tag)) %>%
+  select(locus_tag, label) %>%
+  distinct()
+
+cat("Mapping built:", nrow(gtf_map), "genes\n")
+saveRDS(gtf_map, file.path(git_root, "results", "gtf_map.rds"))
+```
+
+```{r heat-plot-name, echo=TRUE, eval=TRUE, include=TRUE, message=FALSE, warning=FALSE, fig.width=8, fig.height=12}
+topVarGenes <- head(order(rowVars(assay(vsd)), decreasing = TRUE), 50)
+
+# Swap locus tags to gene names for display
+heat_mat    <- assay(vsd)[topVarGenes, ]
+row_labels  <- gtf_map$label[match(rownames(heat_mat), gtf_map$locus_tag)]
+rownames(heat_mat) <- ifelse(is.na(row_labels), rownames(heat_mat), row_labels)
+
+df_anno     <- as.data.frame(colData(vsd)[, "condition", drop = FALSE])
+anno_colors <- list(condition = cols_condition)
+colsHeat    <- c("#F7F7F7", "#92C5DE", "#0571B0", "#F4A582", "#CA0020")
+
+heat_plot <- pheatmap(
+  heat_mat,
+  cluster_cols             = TRUE,
+  cluster_rows             = TRUE,
+  scale                    = "row",
+  clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean",
+  annotation_col           = df_anno,
+  annotation_colors        = anno_colors,
+  show_colnames            = TRUE,
+  show_rownames            = TRUE,
+  color                    = colorRampPalette(colsHeat)(255),
+  border_color             = "#f8edeb",
+  fontsize_row             = 7,
+  main                     = "Top 50 variable genes — E. coli MG1655 (VST, row-scaled)"
+)
+heat_plot
+
+png(
+  filename = file.path(git_root, "results", "plots", "heatmap_top50_DE_genes.png"),
+  width    = 8,
+  height   = 12,
+  units    = "in",
+  res      = 300
+)
+heat_plot
+dev.off()
 ```
 
 :::boxy
@@ -578,24 +720,6 @@ heat_plot
 - Genes in the **lower cluster** are downregulated in treatment (blue in sac, red in control)
 - Note that C3 sits slightly apart from C1/C2 in the dendrogram — consistent with what we observed in the PCA and sample distance heatmap
 :::
-
-```{r heat0-0, echo=TRUE, eval=FALSE, include=FALSE, message=FALSE, warning=FALSE}
-
-library(heatmaply)
-
-heatmaply(
-  assay(vsd)[topVarGenes, ],
-  scale                    = "row",
-  dist_method              = "euclidean",
-  hclust_method            = "complete",
-  col_side_colors          = df_anno,
-  colors                   = colorRampPalette(colsHeat)(255),
-  show_dendrogram          = c(TRUE, TRUE),
-  showticklabels           = c(TRUE, TRUE),
-  fontsize_row             = 7,
-  main                     = "Top 50 variable genes — E. coli MG1655 (VST, row-scaled)"
-)
-```
 
 ## Summary
 

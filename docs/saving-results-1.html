@@ -284,30 +284,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="saving-results-1" class="section level2 hasAnchor" number="6.6">
 <h2><span class="header-section-number">6.6</span> Saving Results<a href="saving-results-1.html#saving-results-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="saving-results-1.html#cb174-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
-<span id="cb174-2"><a href="saving-results-1.html#cb174-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb174-3"><a href="saving-results-1.html#cb174-3" tabindex="-1"></a></span>
-<span id="cb174-4"><a href="saving-results-1.html#cb174-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb174-5"><a href="saving-results-1.html#cb174-5" tabindex="-1"></a>  <span class="fu">bind_rows</span>(ora_up, ora_down),</span>
-<span id="cb174-6"><a href="saving-results-1.html#cb174-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;ORA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
-<span id="cb174-7"><a href="saving-results-1.html#cb174-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb174-8"><a href="saving-results-1.html#cb174-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb174-9"><a href="saving-results-1.html#cb174-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb174-10"><a href="saving-results-1.html#cb174-10" tabindex="-1"></a>)</span>
-<span id="cb174-11"><a href="saving-results-1.html#cb174-11" tabindex="-1"></a></span>
-<span id="cb174-12"><a href="saving-results-1.html#cb174-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb174-13"><a href="saving-results-1.html#cb174-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(gsea_results) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>leadingEdge),</span>
-<span id="cb174-14"><a href="saving-results-1.html#cb174-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;GSEA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
-<span id="cb174-15"><a href="saving-results-1.html#cb174-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb174-16"><a href="saving-results-1.html#cb174-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb174-17"><a href="saving-results-1.html#cb174-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb174-18"><a href="saving-results-1.html#cb174-18" tabindex="-1"></a>)</span>
-<span id="cb174-19"><a href="saving-results-1.html#cb174-19" tabindex="-1"></a></span>
-<span id="cb174-20"><a href="saving-results-1.html#cb174-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Results saved to:&quot;</span>, results_dir, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="saving-results-1.html#cb181-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
+<span id="cb181-2"><a href="saving-results-1.html#cb181-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb181-3"><a href="saving-results-1.html#cb181-3" tabindex="-1"></a></span>
+<span id="cb181-4"><a href="saving-results-1.html#cb181-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb181-5"><a href="saving-results-1.html#cb181-5" tabindex="-1"></a>  <span class="fu">bind_rows</span>(ora_up, ora_down),</span>
+<span id="cb181-6"><a href="saving-results-1.html#cb181-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;ORA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
+<span id="cb181-7"><a href="saving-results-1.html#cb181-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb181-8"><a href="saving-results-1.html#cb181-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb181-9"><a href="saving-results-1.html#cb181-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb181-10"><a href="saving-results-1.html#cb181-10" tabindex="-1"></a>)</span>
+<span id="cb181-11"><a href="saving-results-1.html#cb181-11" tabindex="-1"></a></span>
+<span id="cb181-12"><a href="saving-results-1.html#cb181-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb181-13"><a href="saving-results-1.html#cb181-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(gsea_results) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>leadingEdge),</span>
+<span id="cb181-14"><a href="saving-results-1.html#cb181-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;GSEA_KEGG_treatment_vs_control.tsv&quot;</span>),</span>
+<span id="cb181-15"><a href="saving-results-1.html#cb181-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb181-16"><a href="saving-results-1.html#cb181-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb181-17"><a href="saving-results-1.html#cb181-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb181-18"><a href="saving-results-1.html#cb181-18" tabindex="-1"></a>)</span>
+<span id="cb181-19"><a href="saving-results-1.html#cb181-19" tabindex="-1"></a></span>
+<span id="cb181-20"><a href="saving-results-1.html#cb181-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Results saved to:&quot;</span>, results_dir, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Results saved to: /Users/jasge/Documents/GitHub/dsp_transcriptomics_training/results</code></pre>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="saving-results-1.html#cb176-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  ORA  -&gt; ORA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="saving-results-1.html#cb183-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  ORA  -&gt; ORA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##   ORA  -&gt; ORA_KEGG_treatment_vs_control.tsv</code></pre>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="saving-results-1.html#cb178-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  GSEA -&gt; GSEA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="saving-results-1.html#cb185-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;  GSEA -&gt; GSEA_KEGG_treatment_vs_control.tsv</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##   GSEA -&gt; GSEA_KEGG_treatment_vs_control.tsv</code></pre>
 </div>
             </section>

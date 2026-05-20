@@ -284,26 +284,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="saving-results" class="section level2 hasAnchor" number="5.9">
 <h2><span class="header-section-number">5.9</span> Saving Results<a href="saving-results.html#saving-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="saving-results.html#cb83-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
-<span id="cb83-2"><a href="saving-results.html#cb83-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb83-3"><a href="saving-results.html#cb83-3" tabindex="-1"></a></span>
-<span id="cb83-4"><a href="saving-results.html#cb83-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb83-5"><a href="saving-results.html#cb83-5" tabindex="-1"></a>  res_df,</span>
-<span id="cb83-6"><a href="saving-results.html#cb83-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_all.tsv&quot;</span>),</span>
-<span id="cb83-7"><a href="saving-results.html#cb83-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb83-8"><a href="saving-results.html#cb83-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb83-9"><a href="saving-results.html#cb83-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb83-10"><a href="saving-results.html#cb83-10" tabindex="-1"></a>)</span>
-<span id="cb83-11"><a href="saving-results.html#cb83-11" tabindex="-1"></a></span>
-<span id="cb83-12"><a href="saving-results.html#cb83-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
-<span id="cb83-13"><a href="saving-results.html#cb83-13" tabindex="-1"></a>  res_sig,</span>
-<span id="cb83-14"><a href="saving-results.html#cb83-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_significant.tsv&quot;</span>),</span>
-<span id="cb83-15"><a href="saving-results.html#cb83-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
-<span id="cb83-16"><a href="saving-results.html#cb83-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb83-17"><a href="saving-results.html#cb83-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
-<span id="cb83-18"><a href="saving-results.html#cb83-18" tabindex="-1"></a>)</span>
-<span id="cb83-19"><a href="saving-results.html#cb83-19" tabindex="-1"></a></span>
-<span id="cb83-20"><a href="saving-results.html#cb83-20" tabindex="-1"></a><span class="co">#cat(&quot;Results saved to:&quot;, results_dir, &quot;\n&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="saving-results.html#cb90-1" tabindex="-1"></a>results_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>)</span>
+<span id="cb90-2"><a href="saving-results.html#cb90-2" tabindex="-1"></a><span class="fu">dir.create</span>(results_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb90-3"><a href="saving-results.html#cb90-3" tabindex="-1"></a></span>
+<span id="cb90-4"><a href="saving-results.html#cb90-4" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb90-5"><a href="saving-results.html#cb90-5" tabindex="-1"></a>  res_df,</span>
+<span id="cb90-6"><a href="saving-results.html#cb90-6" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_all.tsv&quot;</span>),</span>
+<span id="cb90-7"><a href="saving-results.html#cb90-7" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb90-8"><a href="saving-results.html#cb90-8" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb90-9"><a href="saving-results.html#cb90-9" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb90-10"><a href="saving-results.html#cb90-10" tabindex="-1"></a>)</span>
+<span id="cb90-11"><a href="saving-results.html#cb90-11" tabindex="-1"></a></span>
+<span id="cb90-12"><a href="saving-results.html#cb90-12" tabindex="-1"></a><span class="fu">write.table</span>(</span>
+<span id="cb90-13"><a href="saving-results.html#cb90-13" tabindex="-1"></a>  res_sig,</span>
+<span id="cb90-14"><a href="saving-results.html#cb90-14" tabindex="-1"></a>  <span class="at">file      =</span> <span class="fu">file.path</span>(results_dir, <span class="st">&quot;DE_treatment_vs_control_significant.tsv&quot;</span>),</span>
+<span id="cb90-15"><a href="saving-results.html#cb90-15" tabindex="-1"></a>  <span class="at">sep       =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>,</span>
+<span id="cb90-16"><a href="saving-results.html#cb90-16" tabindex="-1"></a>  <span class="at">quote     =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb90-17"><a href="saving-results.html#cb90-17" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb90-18"><a href="saving-results.html#cb90-18" tabindex="-1"></a>)</span>
+<span id="cb90-19"><a href="saving-results.html#cb90-19" tabindex="-1"></a></span>
+<span id="cb90-20"><a href="saving-results.html#cb90-20" tabindex="-1"></a><span class="co">#cat(&quot;Results saved to:&quot;, results_dir, &quot;\n&quot;)</span></span></code></pre></div>
 <hr />
 </div>
             </section>

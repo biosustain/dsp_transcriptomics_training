@@ -285,21 +285,48 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="detecting-outliers" class="section level2 hasAnchor" number="4.10">
 <h2><span class="header-section-number">4.10</span> Detecting Outliers<a href="detecting-outliers.html#detecting-outliers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The PCA above uses only the top 500 most variable genes (DESeq2 default). Here we run PCA on the full VST matrix and inspect a scree plot and biplot to assess whether any single sample drives an unusual amount of variance, a common sign of a technical outlier.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="detecting-outliers.html#cb41-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
-<span id="cb41-2"><a href="detecting-outliers.html#cb41-2" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="detecting-outliers.html#cb41-3" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb41-4"><a href="detecting-outliers.html#cb41-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="detecting-outliers.html#cb44-1" tabindex="-1"></a>pca_full <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(<span class="fu">assay</span>(vsd)))</span>
+<span id="cb44-2"><a href="detecting-outliers.html#cb44-2" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="detecting-outliers.html#cb44-3" tabindex="-1"></a>screeplot <span class="ot">&lt;-</span> <span class="fu">fviz_screeplot</span>(pca_full, <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-4"><a href="detecting-outliers.html#cb44-4" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">&quot;Scree plot — variance per PC&quot;</span>)</span>
+<span id="cb44-5"><a href="detecting-outliers.html#cb44-5" tabindex="-1"></a>screeplot</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-1.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="detecting-outliers.html#cb42-1" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb42-2"><a href="detecting-outliers.html#cb42-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="detecting-outliers.html#cb45-1" tabindex="-1"></a>pca_ind <span class="ot">&lt;-</span> <span class="fu">fviz_pca_ind</span>(pca_full, <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">&quot;point&quot;</span>, <span class="st">&quot;text&quot;</span>), <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb45-2"><a href="detecting-outliers.html#cb45-2" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">&quot;PCA — sample positions (full gene matrix)&quot;</span>)</span>
+<span id="cb45-3"><a href="detecting-outliers.html#cb45-3" tabindex="-1"></a>pca_ind</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-2.png" alt="" width="672" /></p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="detecting-outliers.html#cb43-1" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_full,</span>
-<span id="cb43-2"><a href="detecting-outliers.html#cb43-2" tabindex="-1"></a>                <span class="at">repel        =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb43-3"><a href="detecting-outliers.html#cb43-3" tabindex="-1"></a>                <span class="at">select.var   =</span> <span class="fu">list</span>(<span class="at">contrib =</span> <span class="dv">50</span>),  <span class="co"># top  genes only</span></span>
-<span id="cb43-4"><a href="detecting-outliers.html#cb43-4" tabindex="-1"></a>                <span class="at">title        =</span> <span class="st">&quot;Biplot — top 50 contributing genes and samples&quot;</span>,</span>
-<span id="cb43-5"><a href="detecting-outliers.html#cb43-5" tabindex="-1"></a>                <span class="at">col.var      =</span> <span class="st">&quot;#92C5DE&quot;</span>,</span>
-<span id="cb43-6"><a href="detecting-outliers.html#cb43-6" tabindex="-1"></a>                <span class="at">col.ind      =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="detecting-outliers.html#cb46-1" tabindex="-1"></a>pca_biplot <span class="ot">&lt;-</span> <span class="fu">fviz_pca_biplot</span>(pca_full,</span>
+<span id="cb46-2"><a href="detecting-outliers.html#cb46-2" tabindex="-1"></a>                <span class="at">repel        =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb46-3"><a href="detecting-outliers.html#cb46-3" tabindex="-1"></a>                <span class="at">select.var   =</span> <span class="fu">list</span>(<span class="at">contrib =</span> <span class="dv">50</span>),  <span class="co"># top  genes only</span></span>
+<span id="cb46-4"><a href="detecting-outliers.html#cb46-4" tabindex="-1"></a>                <span class="at">title        =</span> <span class="st">&quot;Biplot — top 50 contributing genes and samples&quot;</span>,</span>
+<span id="cb46-5"><a href="detecting-outliers.html#cb46-5" tabindex="-1"></a>                <span class="at">col.var      =</span> <span class="st">&quot;#92C5DE&quot;</span>,</span>
+<span id="cb46-6"><a href="detecting-outliers.html#cb46-6" tabindex="-1"></a>                <span class="at">col.ind      =</span> <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb46-7"><a href="detecting-outliers.html#cb46-7" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="detecting-outliers.html#cb46-8" tabindex="-1"></a>pca_biplot</span></code></pre></div>
 <p><img src="Introduction-to-Transcriptomics_files/figure-html/outlier-detection-0-3.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="detecting-outliers.html#cb47-1" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb47-2"><a href="detecting-outliers.html#cb47-2" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;plots&quot;</span>, <span class="st">&quot;pca_screeplot.png&quot;</span>),</span>
+<span id="cb47-3"><a href="detecting-outliers.html#cb47-3" tabindex="-1"></a>  <span class="at">plot     =</span> screeplot,</span>
+<span id="cb47-4"><a href="detecting-outliers.html#cb47-4" tabindex="-1"></a>  <span class="at">width    =</span> <span class="dv">8</span>,</span>
+<span id="cb47-5"><a href="detecting-outliers.html#cb47-5" tabindex="-1"></a>  <span class="at">height   =</span> <span class="dv">6</span>,</span>
+<span id="cb47-6"><a href="detecting-outliers.html#cb47-6" tabindex="-1"></a>  <span class="at">dpi      =</span> <span class="dv">300</span></span>
+<span id="cb47-7"><a href="detecting-outliers.html#cb47-7" tabindex="-1"></a>)</span>
+<span id="cb47-8"><a href="detecting-outliers.html#cb47-8" tabindex="-1"></a></span>
+<span id="cb47-9"><a href="detecting-outliers.html#cb47-9" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb47-10"><a href="detecting-outliers.html#cb47-10" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;plots&quot;</span>, <span class="st">&quot;pca_individuals.png&quot;</span>),</span>
+<span id="cb47-11"><a href="detecting-outliers.html#cb47-11" tabindex="-1"></a>  <span class="at">plot     =</span> pca_ind,</span>
+<span id="cb47-12"><a href="detecting-outliers.html#cb47-12" tabindex="-1"></a>  <span class="at">width    =</span> <span class="dv">8</span>,</span>
+<span id="cb47-13"><a href="detecting-outliers.html#cb47-13" tabindex="-1"></a>  <span class="at">height   =</span> <span class="dv">6</span>,</span>
+<span id="cb47-14"><a href="detecting-outliers.html#cb47-14" tabindex="-1"></a>  <span class="at">dpi      =</span> <span class="dv">300</span></span>
+<span id="cb47-15"><a href="detecting-outliers.html#cb47-15" tabindex="-1"></a>)</span>
+<span id="cb47-16"><a href="detecting-outliers.html#cb47-16" tabindex="-1"></a></span>
+<span id="cb47-17"><a href="detecting-outliers.html#cb47-17" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb47-18"><a href="detecting-outliers.html#cb47-18" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(git_root, <span class="st">&quot;results&quot;</span>, <span class="st">&quot;plots&quot;</span>, <span class="st">&quot;pca_biplot.png&quot;</span>),</span>
+<span id="cb47-19"><a href="detecting-outliers.html#cb47-19" tabindex="-1"></a>  <span class="at">plot     =</span> pca_biplot,</span>
+<span id="cb47-20"><a href="detecting-outliers.html#cb47-20" tabindex="-1"></a>  <span class="at">width    =</span> <span class="dv">8</span>,</span>
+<span id="cb47-21"><a href="detecting-outliers.html#cb47-21" tabindex="-1"></a>  <span class="at">height   =</span> <span class="dv">6</span>,</span>
+<span id="cb47-22"><a href="detecting-outliers.html#cb47-22" tabindex="-1"></a>  <span class="at">dpi      =</span> <span class="dv">300</span></span>
+<span id="cb47-23"><a href="detecting-outliers.html#cb47-23" tabindex="-1"></a>)</span></code></pre></div>
 <div class="boxy">
 <p><strong>How to read a biplot:</strong></p>
 <p><strong>Dots</strong> = samples (C1, C2, C3, sac1, sac2, sac3)</p>

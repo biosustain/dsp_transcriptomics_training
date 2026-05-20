@@ -306,11 +306,11 @@ are used exclusively for <strong>ranking and visualisation</strong> (volcano plo
 <p>For a treatment vs control design in <em>E. coli</em>, <code>apeglm</code> is the right choice.
 See <a href="https://doi.org/10.1093/bioinformatics/btz585">Zhu <em>et al.</em>, 2019</a> for benchmarks.</p>
 </div>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="log2-fold-change-shrinkage.html#cb66-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
-<span id="cb66-2"><a href="log2-fold-change-shrinkage.html#cb66-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
-<span id="cb66-3"><a href="log2-fold-change-shrinkage.html#cb66-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
-<span id="cb66-4"><a href="log2-fold-change-shrinkage.html#cb66-4" tabindex="-1"></a></span>
-<span id="cb66-5"><a href="log2-fold-change-shrinkage.html#cb66-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk, <span class="at">alpha =</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="log2-fold-change-shrinkage.html#cb73-1" tabindex="-1"></a>res_shrunk <span class="ot">&lt;-</span> <span class="fu">lfcShrink</span>(dds,</span>
+<span id="cb73-2"><a href="log2-fold-change-shrinkage.html#cb73-2" tabindex="-1"></a>                        <span class="at">coef  =</span> <span class="st">&quot;condition_treatment_vs_control&quot;</span>,</span>
+<span id="cb73-3"><a href="log2-fold-change-shrinkage.html#cb73-3" tabindex="-1"></a>                        <span class="at">type  =</span> <span class="st">&quot;apeglm&quot;</span>)</span>
+<span id="cb73-4"><a href="log2-fold-change-shrinkage.html#cb73-4" tabindex="-1"></a></span>
+<span id="cb73-5"><a href="log2-fold-change-shrinkage.html#cb73-5" tabindex="-1"></a><span class="fu">summary</span>(res_shrunk, <span class="at">alpha =</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <pre><code>## 
 ## out of 3698 with nonzero total read count
 ## adjusted p-value &lt; 0.05
