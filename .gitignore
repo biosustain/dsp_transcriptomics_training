@@ -5,3 +5,5 @@ data/nf-core_rnaseq/salmon.merged.transcript.SummarizedExperiment.rds
 .Rhistory
 **/.Rhistory
 Working.Rmd
+.Rproj.user
+*.Rproj
