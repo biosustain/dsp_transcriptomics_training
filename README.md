@@ -16,7 +16,7 @@ All materials, resources, and a **draft agenda** for the day are available in th
 
 | | |
 |---|---|
-| 📍 **Location** | Room 011 / ALC2, Building 208 |
+| 📍 **Location** | Room 011 / ALC2, Building 208 DTU |
 | 🕘 **Duration** | 9:00 – 16:30 |
 | ☕ **Catering** | Lunch & coffee provided! |
 

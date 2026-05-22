@@ -10,3 +10,7 @@ Working.Rmd
 .nextflow
 work
 .nextflow*
+
+# R related
+.Rproj.user
+*.Rproj
