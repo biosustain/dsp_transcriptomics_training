@@ -9,10 +9,14 @@ from IPython.display import display
 
 
 # %% data paths
+
+#input data
 results_r_path = '../results/DE_treatment_vs_control_all.tsv'
 results_python_path = '../results/DE_treatment_vs_control_all_pydeseq2.tsv'
 
+#output data
 outdir_path = './outdir_verification'
+outfile_name_prefix = 'all_genes'
 
 
 # %% read data and add prefix
@@ -41,7 +45,9 @@ display(log2fc_merged)
 log2fc_nan_counts = log2fc_merged.isna().sum()
 display(log2fc_nan_counts)
 
-log2fc_nan_counts.to_csv(f'{outdir_path}/log2fc_nan_counts.csv')
+log2fc_nan_counts.to_csv(
+    f'{outdir_path}/log2fc_nan_counts_{outfile_name_prefix}.csv'
+    )
 
 #calculate log2FC deviation of Python result from R result (difference and %):
 # direction of interpretation is relative to R result (python minus R OR Python/R)
@@ -53,9 +59,9 @@ display(log2fc_merged)
 
 #export as csv
 log2fc_merged.to_csv(
-                    f'{outdir_path}/log2fc_differences_python_vs_R.csv', 
-                    index=False
-                    )
+    f'{outdir_path}/log2fc_differences_python_vs_R_{outfile_name_prefix}.csv', 
+    index=False
+    )
 
 # create scatter plot --> fill NaN values with zero for plotting
 plt.scatter(log2fc_merged['log2FoldChange_R'].fillna(0), 
@@ -65,12 +71,11 @@ plt.scatter(log2fc_merged['log2FoldChange_R'].fillna(0),
 plt.grid(True)
 plt.xlabel('log2FoldChange_R')
 plt.ylabel('log2FoldChange_python')
-plt.title('log2FC in R and Python (NaN set to zero for visualisation)')
+plt.title(f'log2FC in R and Python ({outfile_name_prefix})\n(NaN set to zero for visualisation)')
 
-plt.savefig(f'{outdir_path}/log2FC_Python_vs_R.png', 
+plt.savefig(f'{outdir_path}/log2FC_Python_vs_R_{outfile_name_prefix}.png', 
             dpi=300
             )
-plt.show()
 
 
 
@@ -90,7 +95,9 @@ display(padj_merged)
 padj_nan_counts = padj_merged.isna().sum()
 display(padj_nan_counts)
 
-log2fc_nan_counts.to_csv(f'{outdir_path}/padj_nan_counts.csv')
+log2fc_nan_counts.to_csv(
+    f'{outdir_path}/padj_nan_counts_{outfile_name_prefix}.csv'
+    )
 
 #calculate padj deviation of Python result from R result (difference and %):
 # direction of interpretation is relative to R result (python minus R OR Python/R)
@@ -102,9 +109,9 @@ display(padj_merged)
 
 #export as csv
 padj_merged.to_csv(
-                    f'{outdir_path}/padj_differences_python_vs_R.csv', 
-                    index=False
-                    )
+    f'{outdir_path}/padj_differences_python_vs_R_{outfile_name_prefix}.csv', 
+    index=False
+    )
 
 # create scatter plot --> fill NaN values with zero for plotting
 plt.scatter(padj_merged['padj_R'].fillna(0), 
@@ -114,12 +121,11 @@ plt.scatter(padj_merged['padj_R'].fillna(0),
 plt.grid(True)
 plt.xlabel('padj_R')
 plt.ylabel('padj_python')
-plt.title('padj in R and Python (NaN set to zero for visualisation)')
+plt.title(f'padj in R and Python ({outfile_name_prefix})\n(NaN set to zero for visualisation)')
 
-plt.savefig(f'{outdir_path}/padj_Python_vs_R.png', 
+plt.savefig(f'{outdir_path}/padj_Python_vs_R_{outfile_name_prefix}.png', 
             dpi=300
             )
-plt.show()
 
 
 # %%
